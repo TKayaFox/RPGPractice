@@ -1,33 +1,48 @@
-﻿using System.Xml.Linq;
+﻿using System;
+using System.Xml.Linq;
 
 namespace RPGPractice
 {
     public class Battle
     {
+        private Mob[] villians;
+        private Mob[] heroes;
+        private int experience;
 
-        public event System.EventHandler Hit;
+
         public event System.EventHandler BattleEnd;
         public event System.EventHandler Death;
+        public event EventHandler<BattleEventArgs>? BattleEvent;
 
-        public Battle()
+        //Setters/Getters
+        public Mob[] Villians { get => villians; set => villians = value; }
+        public Mob[] Heroes { get => heroes; set => heroes = value; }
+
+        public Battle(Mob[] heroes)
         {
-            throw new System.NotImplementedException();
+            //Populate hero and villians for battle
+            this.heroes = heroes;
+            this.villians = GenerateEncounter();
+
+            //Load sprites onto BAttlefield EDIT
+
+            //Subscribe to all Mob events for all Mobs
+            SubscribeMobEvents(this.heroes);
+            SubscribeMobEvents(this.villians);
         }
 
-        public Mob[] villians
+        //Subscribes all Mob events for a single Mob or an array of Mobs
+        private void SubscribeMobEvents(Mob[] mobArr)
         {
-            get => default;
-            set
+            foreach (Mob mob in mobArr)
             {
+                SubscribeMobEvents(mob);
             }
         }
-
-        public int heroes
+        private void SubscribeMobEvents(Mob mob)
         {
-            get => default;
-            set
-            {
-            }
+            mob.BattleEvent += OnBattleEvent_Aggregator;
+            mob.Death += OnDeath_Aggregator;
         }
 
         public void RollInitiative()
@@ -55,14 +70,16 @@ namespace RPGPractice
             throw new System.NotImplementedException();
         }
 
-        public void OnBattleEnd()
+        public void OnBattleEnd(bool victory)
         {
-            throw new System.NotImplementedException();
+            //EDIT: Unsubscribe from all Mob events
+
+            //EDIT:Raise event telling GUI and Game that battle ended and win or loss
         }
 
-        public void GenerateEncounter()
+        public Mob[] GenerateEncounter()
         {
-            throw new System.NotImplementedException();
+            //EDIT: Implement
         }
 
         public void NewMob()
@@ -71,49 +88,64 @@ namespace RPGPractice
         }
 
 
-
+        /// <summary>
+        /// Tell attacker Mob to attack target
+        /// </summary>
+        /// <param name="attacker"></param>
+        /// <param name="target"></param>
         private void Attack(Mob attacker, Mob target)
         {
-            //Get all relevant data from attacker and defender
-            int attackRoll = attacker.RollAttack();
-            int defense = target.Defense;
-            String eventMessage;
-
-            //Check if attackRoll < target defense (If attack hits)
-            if (attackRoll > defense) 
-            {
-                //roll damage
-                int damage = attacker.RollDmg();
-                target.Hit(damage);
-
-                eventMessage = $"{attacker.Name} hit {target.Name} for {damage} Damage!";
-            }
-
-            //Check for Meeting defense
-            else if (attackRoll == defense)
-            {
-                eventMessage = $"{target.Name} barely dodged {attacker.Name}'s attack.";
-            }
-            else
-            {
-                eventMessage = $"{target.Name} dodged {attacker.Name}'s attack.";
-            }
-
-            //Raise BattleEvent to declare what happened
-            OnBattleEvent(eventMessage);
+            attacker.Attack(target);
         }
 
 
         //Events
 
         /// <summary>
-        /// Packages and raisesBattle Events (Which display for user a readout of what has happened in the battle so far)
+        /// When any Battle Event is raised, this re-raises the event for GUI
+        ///     This way we dont have to keep subscribing/unsubscribing the GUI to events every new battle/character
         /// </summary>
         /// <param name="output"></param>
-        private void OnBattleEvent(string output)
+        private void OnBattleEvent_Aggregator(object sender, BattleEventArgs e)
         {
-            //EDIT: Raise BattleEvent event and target the "output" string
+            //Relay the event
+            BattleEvent?.Invoke(sender, e);
+        }
 
+        /// <summary>
+        /// Aggregates Death events, and checks for end game state.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnDeath_Aggregator(object sender, BattleEventArgs e)
+        {
+            //Relay event
+            Death?.Invoke(sender, e);
+            //Check if all villians are dead
+            if (AreMobsDead(heroes))
+            {
+                bool victory = false;
+                OnBattleEnd(victory);
+            }
+
+            //Check if all heroes are dead
+            else if (AreMobsDead(villians) )
+            {
+                bool victory = true;
+                OnBattleEnd(victory);
+            }
+        }
+
+        /// <summary>
+        /// Checks all mobs in an array if they are ALL dead
+        /// returns true if zero Mobs are still alive
+        /// </summary>
+        /// <param name="mobArr"></param>
+        /// <returns></returns>
+        private static bool AreMobsDead(Mob[] mobArr)
+        {
+            // Simplified with LINQ for readability and performance
+            return mobArr.All(mob => !mob.IsAlive());
         }
     }
 }
