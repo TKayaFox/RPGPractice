@@ -11,67 +11,100 @@ namespace RPGPractice
     /// </summary>
     public abstract class Mob
     {
+        private bool userControlled;
         private int maxHitPoints;
+        private int hitPoints;
+        private int maxMana;
+        private int mana;
         private int initiative;
+        private int intelligence;
+        private int strength;
+        private int defense;
+        private int magicDefense;
+        private string name = "";
+
+        //Events
 
 
-        //Properties Getters/Setters. Protected so subclasses can modify them, but 
-        protected int maxHitPoints
+        /// <summary>
+        /// Public Setters are used throughout the game
+        /// </summary>
+        public string Name { get => name; }
+
+        /// <summary>
+        /// Protected Setters are only for subclasses!
+        /// Refactor: Most of these should only be set once, so there may be a way to optimize
+        /// </summary>
+        protected bool UserControlled { get => userControlled; set => userControlled = value; }
+        protected int MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
+        protected int HitPoints { get => hitPoints; set => hitPoints = value; }
+        protected int MaxMana { get => maxMana; set => maxMana = value; }
+        protected int Mana { get => mana; set => mana = value; }
+        protected int Initiative { get => initiative; set => initiative = value; }
+        protected int Intelligence { get => intelligence; set => intelligence = value; }
+        protected int Strength { get => strength; set => strength = value; }
+        protected int Defense { get => defense; set => defense = value; }
+        protected int MagicDefense { get => magicDefense; set => magicDefense = value; }
+
+        /// <summary>
+        /// Called from Game when a Mob attacks another mob. Automatically calls that Mob's Hit() method
+        /// </summary>
+        /// <returns></returns>
+        public void rollAttack(Mob target)
         {
-            get => default;
-            set { }
+            //Determine Attack Damage
+            //EDIT: Make some sort of dice roll or something to slightly randomize results.
+            int damage = Strength;
+
+            //Create output text for Game Events and send to event method
+            string eventMessage = ($"{name} Attacks {target.Name} for {damage}!");
+
+            //Tell target that it has been hit
+            target.Hit(damage, this);
+
+            //Raise Battle Event to display what happens
+            OnBattleEvent(eventMessage);
         }
 
-        protected int initiative
+        /// <summary>
+        /// Called whenever the Mob is attacked
+        /// Determines what damage Mob receives, then raises an event flag with the outcome. 
+        ///     If damage being dealt is negative, do not apply defense and simply heal HP "Mob was healed for <damage>"
+        ///     Else
+        ///         subtract defense from damage
+        ///         if remaining damage less than or equal to zero "Mobs avoided damage!"
+        ///         else "Mob was hit for <damage>"
+        /// </summary>
+        public void Hit(int damage, Mob attacker)
         {
-            get => default;
-            set { }
+            String eventMessage;
+
+            //Determine what the result of the damage is,
+            //  and generate an message for Battle Event message
+            if (damage < 0) 
+            {
+                eventMessage =  $"{name} was healed for {damage}" ;
+            }
+            else
+            {
+                if (damage == 0)
+                {
+                    eventMessage = "Attack was deflected!";
+                }
+                else
+                {
+                    eventMessage = ($"{name} is hit for {damage} Damage!");
+                }
+            }
+
+            //Raise BattleEvent to declare what happened
+            OnBattleEvent(eventMessage);
         }
 
-        protected bool userControlled
+        private void OnBattleEvent(string output)
         {
-            get => default;
-            set { }
-        }
+            //EDIT: Raise BattleEvent event and target the "output" string
 
-        protected int defenseMagMod
-        {
-            get => default;
-            set { }
-        }
-
-        protected int defensePhysMod
-        {
-            get => default;
-            set { }
-        }
-
-        protected int intelligence
-        {
-            get => default;
-            set { }
-        }
-
-        protected int strength
-        {
-            get => default;
-            set { }
-        }
-
-        protected int name
-        {
-            get => default;
-            set { }
-        }
-
-        public int Attack()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void Defend()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }
