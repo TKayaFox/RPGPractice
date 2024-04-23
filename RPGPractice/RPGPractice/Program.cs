@@ -2,6 +2,22 @@ namespace RPGPractice
 {
     internal static class Program
     {
+        public static Game Game
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public static GUI GUI
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -11,7 +27,7 @@ namespace RPGPractice
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.Run(new GUI());
         }
     }
 }
