@@ -23,6 +23,7 @@ namespace RPGPractice
         private int defense;
         private int magicDefense;
         private string name;
+        protected Random random;
 
         //Events
         public event EventHandler<BattleEventArgs>? BattleEvent;
@@ -57,10 +58,15 @@ namespace RPGPractice
         /// <summary>
         /// Constructor initializes default fields
         /// </summary>
-        public Mob(string name)
+        public Mob(string name, Random random)
         {
             this.name = name;
+            this.random = random;
+
+            //Initialize all variables
             Initialize();
+
+            //Set mana and hitpoints to max
             mana = MaxMana;
             HitPoints = MaxHitPoints;
         }
@@ -68,56 +74,49 @@ namespace RPGPractice
         /// <summary>
         /// Sets All stats for Mob
         /// </summary>
-        public void Initialize()
-        {
-            UserControlled = false;
-            MaxHitPoints = 10;
-            MaxMana = 0; //Only casters get Mana
-            Initiative = 10;
-            Intelligence = 10;
-            Strength = 10;
-            AttackMod = 0;
-            Defense = 0;
-            MagicDefense = 0;
-        }
+        public abstract void Initialize();
 
         /// <summary>
         /// Called from Game when a Mob attacks another mob.
         /// Returns an initial Attack Roll to see if hits
         /// </summary>
         /// <returns></returns>
-        public void Attack(Mob target)
+        public virtual void Attack(Mob target)
         {
-            //Determine Attack Roll
-            //EDIT: Make some sort of dice roll or something to slightly randomize results.
-            //EDIT: Make some sort of dice roll, perhaps use damage modifier instead of strength
-            int attackRoll = attackMod;
-            int damage = Strength;
+            //Determine Attack Roll (attackMod + 1d20)
+            int attackRoll = random.Next(21);
+
+            //Determine damage Roll (attackMod + 1d8)
+            int damage = random.Next(9);
+
+            //Critical Hit: If attack roll was a 20, then slightly boost hit chance (attackRoll) and boost damage
+            if (attackRoll >=20)
+            {
+                attackRoll += 5;
+                damage += random.Next(9); //add another d8
+            }
+
+            //Add modifiers
+            attackRoll += attackMod;
+            damage += strength;
 
             //Tell target they are being attacked
             //  Be polite though and tell them who you are
-            target.Hit(attackRoll, damage, name);
+            target.Hit( attackRoll, damage, name);
         }
 
         /// <summary>
         /// Called when an attack (or heal) hits Mob
         /// Modifies HP as needed
         /// </summary>
-        public void Hit(int attackRoll, int damage, string attacker)
+        public virtual void Hit(int attackRoll, int damage, string attacker)
         {
-            string eventMessage;
+            string eventMessage="";
             
             //If attack is for negative damage, dont attempt to defend just take the heal
             if (attackRoll < 0)
             {
-                hitPoints -= damage;
-
-                //prevent over-healing
-                if(hitPoints > MaxHitPoints )
-                {
-                    hitPoints = MaxHitPoints;
-                }
-                eventMessage = $"{attacker} healed {name} back to {hitPoints} health!";
+                Heal(damage, attacker);
             }
 
             //If attack hits reduce hitpoints as needed
@@ -150,6 +149,26 @@ namespace RPGPractice
                 OnDeath();
             }
         }
+
+        /// <summary>
+        /// Heals hitpoints
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="healer"></param>
+        public void Heal(int damage, string healer)
+        {
+            hitPoints += damage;
+
+            //prevent over-healing
+            if (hitPoints > MaxHitPoints)
+            {
+                hitPoints = MaxHitPoints;
+            }
+            OnBattleEvent($"{healer} healed {name} back to {hitPoints} health!");
+        }
+
+        //EDIT: Add magicAttack
+        //EDIT: Add magicDefense
 
 
         /// <summary>
