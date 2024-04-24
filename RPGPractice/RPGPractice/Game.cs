@@ -43,9 +43,22 @@ namespace RPGPractice
             throw new System.NotImplementedException();
         }
 
-        public void OnBattleEnd_Handler()
+
+        public void OnBattleEnd_Handler(object sender, BattleEndEventArgs e)
         {
-            throw new System.NotImplementedException();
+            //IF result of battle was player victory, keep looping
+            if (e.Result == true)
+            {
+                //Increment victory count
+
+                //EDIT: heal heroes;
+
+                //Edit: Start new Battle
+            }
+            else
+            {
+                //Edit: End game logic, save result to leaderboard, etc
+            }
         }
 
         public void HealParty()

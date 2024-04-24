@@ -8,6 +8,7 @@ namespace RPGPractice
         private Mob[] villians;
         private Mob[] heroes;
         private int experience;
+        private int combatLevel;
 
 
         public event System.EventHandler BattleEnd;
@@ -18,11 +19,17 @@ namespace RPGPractice
         public Mob[] Villians { get => villians; set => villians = value; }
         public Mob[] Heroes { get => heroes; set => heroes = value; }
 
-        public Battle(Mob[] heroes)
+        /// <summary>
+        /// Construtor
+        /// </summary>
+        /// <param name="heroes"></param>
+        /// <param name="combatLevel"></param>
+        public Battle(Mob[] heroes, int combatLevel)
         {
             //Populate hero and villians for battle
             this.heroes = heroes;
             this.villians = GenerateEncounter();
+            this.combatLevel = combatLevel;
 
             //Load sprites onto BAttlefield EDIT
 
@@ -30,6 +37,7 @@ namespace RPGPractice
             SubscribeMobEvents(this.heroes);
             SubscribeMobEvents(this.villians);
         }
+
 
         //Subscribes all Mob events for a single Mob or an array of Mobs
         private void SubscribeMobEvents(Mob[] mobArr)
@@ -117,7 +125,7 @@ namespace RPGPractice
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDeath_Aggregator(object sender, BattleEventArgs e)
+        private void OnDeath_Aggregator(object sender, EventArgs e)
         {
             //Relay event
             Death?.Invoke(sender, e);

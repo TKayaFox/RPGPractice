@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RPGPractice
 {
-    public class Dragon : Mob
+    public class Dragon : Mob, NPC
     {
 
         public Dragon(Random random) : base("Dragon", random) { }
@@ -25,6 +25,12 @@ namespace RPGPractice
             AttackMod = 4;
             Defense = 17; 
             MagicDefense = 17;
+        }
+
+        public void TakeTurn()
+        {
+            //EDIT: Insert turn decision logic
+            //      IF really crazy, have dragon keep track of who last attacked and who is currently at most health and actually set decision tree
         }
 
         //Edit: Add Breath attack (Targets one Hero, does magic damage)

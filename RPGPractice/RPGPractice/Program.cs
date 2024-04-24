@@ -2,21 +2,6 @@ namespace RPGPractice
 {
     internal static class Program
     {
-        public static Game Game
-        {
-            get => default;
-            set
-            {
-            }
-        }
-
-        public static GUI GUI
-        {
-            get => default;
-            set
-            {
-            }
-        }
 
         /// <summary>
         ///  The main entry point for the application.

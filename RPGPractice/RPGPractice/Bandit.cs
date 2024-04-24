@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RPGPractice
 {
-    public class Bandit : Mob
+    public class Bandit : Mob, NPC
     {
         public Bandit(Random random) : base("Bandit", random) { }
 
@@ -23,6 +23,11 @@ namespace RPGPractice
             AttackMod = 0;
             Defense = 10;
             MagicDefense = 10;
+        }
+
+        public void TakeTurn()
+        {
+            //Edit: Implement
         }
     }
 }

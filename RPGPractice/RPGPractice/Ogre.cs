@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RPGPractice
 {
-    public class Ogre : Mob
+    public class Ogre : Mob, NPC
     {
         public Ogre(Random random) : base("Ogre", random) { }
 
@@ -25,7 +25,13 @@ namespace RPGPractice
             Defense = 18;
             MagicDefense = 8;
         }
-        
+
+
+        public void TakeTurn()
+        {
+            //Edit: Implement
+        }
+
         //EDIT: Add damage multiplier for magic attacks
     }
 }
