@@ -27,7 +27,7 @@ namespace RPGPractice
 
         //Events
         public event EventHandler<BattleEventArgs>? BattleEvent;
-        public event EventHandler Death;
+        public event System.EventHandler Death;
 
 
         /// <summary>

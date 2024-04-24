@@ -7,6 +7,7 @@ namespace RPGPractice
     {
         private Mob[] villians;
         private Mob[] heroes;
+        EventManager eventManager;
         private int experience;
         private int combatLevel;
 
@@ -24,33 +25,23 @@ namespace RPGPractice
         /// </summary>
         /// <param name="heroes"></param>
         /// <param name="combatLevel"></param>
-        public Battle(Mob[] heroes, int combatLevel)
+        public Battle(Mob[] heroes, int combatLevel, EventManager eventManager)
         {
             //Populate hero and villians for battle
             this.heroes = heroes;
             this.villians = GenerateEncounter();
             this.combatLevel = combatLevel;
+            this.eventManager = eventManager;
 
             //Load sprites onto BAttlefield EDIT
 
-            //Subscribe to all Mob events for all Mobs
-            SubscribeMobEvents(this.heroes);
-            SubscribeMobEvents(this.villians);
-        }
+            //publish all mobs and battle to eventManager so events are relayed
+            eventManager.Publish(this.heroes);
+            eventManager.Publish(this.villians);
+            eventManager.Publish(this);
 
-
-        //Subscribes all Mob events for a single Mob or an array of Mobs
-        private void SubscribeMobEvents(Mob[] mobArr)
-        {
-            foreach (Mob mob in mobArr)
-            {
-                SubscribeMobEvents(mob);
-            }
-        }
-        private void SubscribeMobEvents(Mob mob)
-        {
-            mob.BattleEvent += OnBattleEvent_Aggregator;
-            mob.Death += OnDeath_Aggregator;
+            //Subscribe to events
+            eventManager.Death += OnDeath_Handler;
         }
 
         public void RollInitiative()
@@ -69,11 +60,6 @@ namespace RPGPractice
         }
 
         public void OnHit()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnDeath()
         {
             throw new System.NotImplementedException();
         }
@@ -108,27 +94,14 @@ namespace RPGPractice
 
 
         //Events
-
         /// <summary>
-        /// When any Battle Event is raised, this re-raises the event for GUI
-        ///     This way we dont have to keep subscribing/unsubscribing the GUI to events every new battle/character
-        /// </summary>
-        /// <param name="output"></param>
-        private void OnBattleEvent_Aggregator(object sender, BattleEventArgs e)
-        {
-            //Relay the event
-            BattleEvent?.Invoke(sender, e);
-        }
-
-        /// <summary>
-        /// Aggregates Death events, and checks for end game state.
+        /// Checks for Battle end state every time a Mob dies 
+        /// (If all villians or all heroes are dead)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnDeath_Aggregator(object sender, EventArgs e)
+        private void OnDeath_Handler(object sender, EventArgs e)
         {
-            //Relay event
-            Death?.Invoke(sender, e);
             //Check if all villians are dead
             if (AreMobsDead(heroes))
             {
