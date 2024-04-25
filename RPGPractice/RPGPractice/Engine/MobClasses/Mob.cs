@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using RPGPractice.Events;
 
-namespace RPGPractice.MobClasses
+namespace RPGPractice.Engine.MobClasses
 {
     /// <summary>
     /// Mob represents any creature (Player Character or Non Player Character)
@@ -51,6 +51,16 @@ namespace RPGPractice.MobClasses
             //Set mana and hitpoints to max
             mana = MaxMana;
             HitPoints = MaxHitPoints;
+        }
+
+        /// <summary>
+        /// Returns initiative for battle initiative order
+        /// Currently just a getter, but will eventually actually make a roll
+        /// </summary>
+        /// <returns></returns>
+        public int RollInitiative()
+        {
+            return initiative;
         }
 
 
@@ -166,7 +176,7 @@ namespace RPGPractice.MobClasses
         {
             return hitPoints > 0;
         }
-
+        public bool UserControlled { get => userControlled; set => userControlled = value; }
         #endregion
 
         //=========================================
@@ -176,12 +186,11 @@ namespace RPGPractice.MobClasses
 
         public string Name { get => name; set => name = value; }
         protected int Defense { get => defense; set => defense = value; }
-        protected bool UserControlled { get => userControlled; set => userControlled = value; }
         protected int MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
         protected int HitPoints { get => hitPoints; set => hitPoints = value; }
         protected int MaxMana { get => maxMana; set => maxMana = value; }
         protected int Mana { get => mana; set => mana = value; }
-        protected int Initiative { get => initiative; set => initiative = value; }
+        protected int Initiative {set => initiative = value; }
         protected int Intelligence { get => intelligence; set => intelligence = value; }
         protected int Strength { get => strength; set => strength = value; }
         protected int MagicDefense { get => magicDefense; set => magicDefense = value; }
@@ -196,6 +205,7 @@ namespace RPGPractice.MobClasses
         public event EventHandler<BattleEventArgs>? BattleEvent;
         public event EventHandler<MobUpdateArgs>? MobUpdate;
         public event EventHandler Death;
+        public event EventHandler TurnEnd;
 
         #region Events
 
@@ -217,25 +227,11 @@ namespace RPGPractice.MobClasses
         {
             //Raise a death event stating that Mob has died
             Death?.Invoke(this, EventArgs.Empty);
-
-            //raise update Event as well
-            OnMobUpdate();
         }
 
-        /// <summary>
-        /// Called every time important data for the Mob is changed
-        /// Semds updated information
-        /// </summary>
-        public void OnMobUpdate()
+        private void OnTurnEnd()
         {
-            MobUpdateArgs args = new MobUpdateArgs();
-            args.Name = name;
-            args.Sprite = sprite;
-            args.HitPoints = hitPoints;
-            args.Mana = mana;
-            args.IsAlive = IsAlive();
-
-            MobUpdate(this, args);
+            TurnEnd?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

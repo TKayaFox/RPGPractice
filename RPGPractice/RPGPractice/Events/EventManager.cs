@@ -5,7 +5,7 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using RPGPractice.Engine;
-using RPGPractice.MobClasses;
+using RPGPractice.Engine.MobClasses;
 
 namespace RPGPractice.Events
 {
@@ -21,10 +21,13 @@ namespace RPGPractice.Events
         //      Events that can be published
         //=========================================
         //  Remember to add an aggregator below as well to relay the event, and subscriber in appropriate method
+        public event EventHandler<BattleStartEventArgs>? BattleStart;
+        public event EventHandler<PlayerTurnEventArgs>? PlayerTurn;
         public event EventHandler<BattleEndEventArgs>? BattleEnd;
-        public event EventHandler Death;
         public event EventHandler<BattleEventArgs>? BattleEvent;
-        public event EventHandler<BattleStartEventArgs> BattleStart;
+        public event EventHandler Death;
+        public event EventHandler NewGame;
+        public event EventHandler TurnEnd;
 
         //=========================================
         //             Public Methods
@@ -53,6 +56,17 @@ namespace RPGPractice.Events
                         Subscribe(battle);
                         numPublished++;
                         break;
+
+                    case GameForm form:
+                        Subscribe(form);
+                        numPublished++;
+                        break;
+
+                    case BattleField battlefield:
+                        Subscribe(battlefield);
+                        numPublished++;
+                        break;
+
                     default:
                         //Refactor: Eventually come back here and add exception throwing and on publisher side add exception handling
                         break;
@@ -84,7 +98,6 @@ namespace RPGPractice.Events
             //ensure publisher actually exists
             if (publisher != null)
             {
-
                 //send publisher to correct subscription method if implemented
                 switch (publisher)
                 {
@@ -96,6 +109,17 @@ namespace RPGPractice.Events
                         UnSubscribe(battle);
                         unpublished++;
                         break;
+
+                    case GameForm form:
+                        UnSubscribe(form);
+                        unpublished++;
+                        break;
+
+                    case BattleField battlefield:
+                        UnSubscribe(battlefield);
+                        unpublished++;
+                        break;
+
                     default:
                         //Refactor: Eventually come back here and add exception throwing and on publisher side add exception handling
                         break;
@@ -109,7 +133,7 @@ namespace RPGPractice.Events
 
             foreach (T publisher in publishers)
             {
-                numUnpublished += Publish(publisher);
+                numUnpublished += Unpublish(publisher);
             }
             return numUnpublished;
         }
@@ -131,12 +155,21 @@ namespace RPGPractice.Events
             //Events
             mob.BattleEvent += OnBattleEvent_Aggregator;
             mob.Death += OnDeath_Aggregator;
+            mob.TurnEnd += OnTurnEnd_Aggregator;
         }
         private void Subscribe(Battle battle)
         {
             //Events
             battle.BattleEnd += OnBattleEnd_Aggregator;
             battle.BattleEvent += OnBattleEvent_Aggregator;
+        }
+        private void Subscribe(GameForm gameForm)
+        {
+            gameForm.NewGame += OnNewGame_Aggregator;
+        }
+        private void Subscribe(BattleField battlefield)
+        {
+            //
         }
 
         /// <summary>
@@ -148,12 +181,21 @@ namespace RPGPractice.Events
             //Events
             mob.BattleEvent -= OnBattleEvent_Aggregator;
             mob.Death -= OnDeath_Aggregator;
+            mob.TurnEnd -= OnTurnEnd_Aggregator;
         }
         private void UnSubscribe(Battle battle)
         {
             //Events
             battle.BattleEnd -= OnBattleEnd_Aggregator;
             battle.BattleEvent -= OnBattleEvent_Aggregator;
+        }
+        private void UnSubscribe(GameForm gameForm)
+        {
+            gameForm.NewGame -= OnNewGame_Aggregator;
+        }
+        private void UnSubscribe(BattleField battlefield)
+        {
+            //
         }
 
         #endregion
@@ -178,10 +220,22 @@ namespace RPGPractice.Events
             //Relay the event
             BattleEnd?.Invoke(sender, e);
         }
-        private void OnBattleStart(object? sender, BattleStartEventArgs e)
+        private void OnBattleStart_Aggregator(object? sender, BattleStartEventArgs e)
         {
             //Relay the event
             BattleStart?.Invoke(sender, e);
+        }
+        private void OnNewGame_Aggregator(object? sender, EventArgs e)
+        {
+            NewGame?.Invoke(sender, e);
+        }
+        private void OnPlayerTurn_Aggregator(object? sender, PlayerTurnEventArgs e)
+        {
+            PlayerTurn?.Invoke(sender, e);
+        }
+        private void OnTurnEnd_Aggregator(object? sender, EventArgs e)
+        {
+            TurnEnd?.Invoke(sender, e);
         }
         #endregion
     }

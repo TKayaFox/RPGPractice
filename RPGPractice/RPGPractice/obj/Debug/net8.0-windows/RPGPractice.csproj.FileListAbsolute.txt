@@ -3,7 +3,6 @@ C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPG
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.runtimeconfig.json
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.dll
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.pdb
-C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.GUI.resources
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.csproj.GenerateResource.cache
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.AssemblyInfoInputs.cache

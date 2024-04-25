@@ -1,0 +1,3 @@
+Developed by Taylor Fox
+For University of Colorado Springs
+	Course: CS3020 Advanced Object Oriented Programming

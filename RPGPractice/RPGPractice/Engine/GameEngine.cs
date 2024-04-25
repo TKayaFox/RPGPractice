@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using RPGPractice.Engine.MobClasses;
 using RPGPractice.Events;
-using RPGPractice.MobClasses;
 
 namespace RPGPractice.Engine
 {
@@ -35,17 +36,14 @@ namespace RPGPractice.Engine
         /// <param name="eventManager"></param>
         public GameEngine(EventManager eventManager)
         {
-
+            random= new Random();
             this.eventManager = eventManager;
 
             //subscribe to events
             ManageEvents();
 
-            //Setup player's Party of heroes
-            heroes = BuildHeroes();
-
-            //Start a new Battle
-            NewBattle();
+            //start new game
+            NewGame();
         }
 
         /// <summary>
@@ -64,6 +62,38 @@ namespace RPGPractice.Engine
             return heroes;
         }
 
+        private void NewGame()
+        {
+            //Setup player's Party of heroes
+            heroes = BuildHeroes();
+
+            //Start a new Battle
+            NewBattle();
+        }
+
+        /// <summary>
+        /// When a battle has ended, stop event managing for battle and save game data
+        /// </summary>
+        private void EndGame(bool victory)
+        {
+            //stop publishing battle and unsubscribe it from all events
+            battle.UnManageEvents(eventManager);
+
+            //IF result of battle was player victory, keep looping
+            if (victory)
+            {
+                //Increment victory count
+
+                //EDIT: heal heroes;
+            }
+            else
+            {
+                //Edit: End game logic, save result to leaderboard, etc
+            }
+
+            //Edit: Save game data
+        }
+
         /// <summary>
         /// Starts a new Battle encounter
         /// </summary>
@@ -77,6 +107,9 @@ namespace RPGPractice.Engine
 
             //Add new Battle object to eventManager
             eventManager.Publish(battle);
+
+            //Actually Start Battle logic
+            battle.Start();
         }
 
         #endregion
@@ -105,31 +138,27 @@ namespace RPGPractice.Engine
 
             //edit: Subscribe to any needed events
             eventManager.BattleEnd += OnBattleEnd_Handler;
+            eventManager.NewGame += OnNewGame_Handler;
         }
 
         /// <summary>
         /// When a battle has ended, stop managing for battle and save game data
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void OnBattleEnd_Handler(object sender, BattleEndEventArgs e)
+        /// <param name="args"></param>
+        public void OnBattleEnd_Handler(object sender, BattleEndEventArgs args)
         {
-            //stop publishing battle and unsubscribe it from all events
-            battle.UnManageEvents(eventManager);
+            EndGame(args.Victory);
+        }
 
-            //IF result of battle was player victory, keep looping
-            if (e.Victory == true)
-            {
-                //Increment victory count
-
-                //EDIT: heal heroes;
-
-                //Edit: Start new Battle
-            }
-            else
-            {
-                //Edit: End game logic, save result to leaderboard, etc
-            }
+        /// <summary>
+        /// Start a new Game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
+        public void OnNewGame_Handler(object sender, EventArgs args)
+        {
+            NewGame();
         }
 
         #endregion

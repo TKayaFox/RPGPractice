@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPGPractice.MobClasses
+namespace RPGPractice.Engine.MobClasses
 {
-    public class Ogre : Mob, NPC
+    public class Ogre : NPC
     {
         public Ogre(Random random) : base("Ogre", random) { }
         public Ogre(string name, Random random) : base(name, random) { }

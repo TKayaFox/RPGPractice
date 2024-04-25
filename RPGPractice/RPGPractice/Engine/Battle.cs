@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
+using RPGPractice.Engine.MobClasses;
 using RPGPractice.Events;
-using RPGPractice.MobClasses;
 
 namespace RPGPractice.Engine
 {
@@ -12,7 +13,9 @@ namespace RPGPractice.Engine
         //=========================================
         private Mob[] villians;
         private Mob[] heroes;
-        Random random;
+        private Mob currentTurn;
+        private Initiative initiative; 
+        private Random random;
         private int combatLevel;
 
         //=========================================
@@ -30,21 +33,44 @@ namespace RPGPractice.Engine
             this.combatLevel = combatLevel;
             this.random = random;
 
+            //generate villians
             villians = GenerateEncounter();
 
-            //EDIT: Load sprites onto Battlefield 
+            //setup initiative order
+            initiative = new Initiative(heroes, villians);
         }
 
-        public void RollInitiative()
+        public void Start()
         {
-            throw new NotImplementedException();
+            //EDIT: Load sprites onto Battlefield 
+
+            //EDIT: Load background to battlefield
+
+            //Start Turns
+            NextTurn();
         }
 
+        /// <summary>
+        /// Either tell NPCs to take their turn OR get Player input
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
         public void NextTurn()
         {
-            throw new NotImplementedException();
-        }
 
+            currentTurn = initiative.NextTurn();
+
+            //If currentMob is Not player controlled tell it to take it's turn
+            if (currentTurn is NPC npc)
+            {
+                // Tell the NPC to take its turn
+                npc.TakeTurn(heroes);
+            }
+            //Else display Action buttons for user and wait for players move
+            else
+            {
+                OnPlayerTurn();
+            }
+        }
 
         /// <summary>
         /// Checks all mobs in an array if they are ALL dead
@@ -75,6 +101,28 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
+        /// Checks for Battle end state every time a Mob dies 
+        /// (If all villians or all heroes are dead)
+        /// </summary>
+        private void EndGame()
+        {
+
+            //Check if all villians are dead
+            if (AreMobsDead(heroes))
+            {
+                bool victory = false;
+                OnBattleEnd(victory);
+            }
+
+            //Check if all heroes are dead
+            else if (AreMobsDead(villians))
+            {
+                bool victory = true;
+                OnBattleEnd(victory);
+            }
+        }
+
+        /// <summary>
         /// Tell attacker Mob to attack target
         /// </summary>
         /// <param name="attacker"></param>
@@ -97,6 +145,7 @@ namespace RPGPractice.Engine
         public event EventHandler<BattleEventArgs>? BattleEvent;
         public event EventHandler<BattleStartEventArgs> BattleStart;
         public event EventHandler<BattleEndEventArgs> BattleEnd;
+        public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
 
         public void OnBattleStart()
         {
@@ -114,6 +163,14 @@ namespace RPGPractice.Engine
             //EDIT:Raise event telling GUI and Game that battle ended and win or loss
         }
 
+        public void OnPlayerTurn()
+        {
+            PlayerTurnEventArgs args = new PlayerTurnEventArgs();
+            args.Mob = currentTurn;
+
+            PlayerTurn?.Invoke(this, args);
+        }
+
         //=========================================
         //                Event Handlers
         //=========================================
@@ -124,7 +181,6 @@ namespace RPGPractice.Engine
         /// <param name="eventManager"></param>
         public void ManageEvents(EventManager eventManager)
         {
-
             //publish events to eventManager
             eventManager.Publish(this);
 
@@ -153,32 +209,14 @@ namespace RPGPractice.Engine
             }
         }
 
-        public void OnAttack_Handler()
-        {
-            throw new NotImplementedException();
-        }
-
         /// <summary>
-        /// Checks for Battle end state every time a Mob dies 
-        /// (If all villians or all heroes are dead)
+        /// Check for EndGame when someone dies
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDeath_Handler(object sender, EventArgs e)
         {
-            //Check if all villians are dead
-            if (AreMobsDead(heroes))
-            {
-                bool victory = false;
-                OnBattleEnd(victory);
-            }
-
-            //Check if all heroes are dead
-            else if (AreMobsDead(villians))
-            {
-                bool victory = true;
-                OnBattleEnd(victory);
-            }
+            EndGame();
         }
     }
 }

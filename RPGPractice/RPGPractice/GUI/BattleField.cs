@@ -7,8 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RPGPractice.Engine.MobClasses;
 using RPGPractice.Events;
-using RPGPractice.MobClasses;
 
 namespace RPGPractice
 {
@@ -43,6 +43,20 @@ namespace RPGPractice
             {
                 UpdateMob(mob);
             }
+        }
+
+        public void ShowActionMenu()
+        {
+            //Show and enable ActionGroupBox
+            ActionGroupBox.Enabled = true;
+            ActionGroupBox.Visible = true;
+        }
+
+        //Hides action menu so player doesnt try to make a move when not their turn
+        public void HideActionMenu()
+        {
+            ActionGroupBox.Enabled = false;
+            ActionGroupBox.Visible = false;
         }
 
         #endregion
@@ -86,8 +100,7 @@ namespace RPGPractice
 
         public void OnPlayerTurn_Handler()
         {
-            //EDIT: Allow player to make a selection
-            throw new System.NotImplementedException();
+            ShowActionMenu();
         }
 
         public void OnDeath_Handler()

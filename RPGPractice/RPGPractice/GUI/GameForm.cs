@@ -1,5 +1,6 @@
+using RPGPractice.Engine;
+using RPGPractice.Engine.MobClasses;
 using RPGPractice.Events;
-using RPGPractice.MobClasses;
 
 namespace RPGPractice
 {
@@ -29,24 +30,68 @@ namespace RPGPractice
         }
 
         /// <summary>
-        /// Starts a new Game
+        /// Read in txt file and displays it as a MessageBox
         /// </summary>
-        public void NewGame()
+        /// <param name="fileName"></param>
+        /// <returns></returns>
+        private void txtToMessageBox(string fileName, string header)
         {
-            //EDIT: Get a name for the game save
-            //String saveName = 
 
-            //Call NewGame event
-            //OnNewGame(saveName);
+            String data = "";
+
+            try
+            {
+                StreamReader reader = new StreamReader(fileName);
+
+                while (!reader.EndOfStream)
+                {
+                    data += reader.ReadLine() + "\n";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            //Display information in messagebox
+            MessageBox.Show(data, header, MessageBoxButtons.OK);
         }
+
         #endregion
 
         //=========================================
         //                Events
         //=========================================
-        public event System.EventHandler Attack;
+        public event System.EventHandler NewGame;
 
         #region Events
+        /// <summary>
+        /// Starts a new Game
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnNewGame(object sender, EventArgs e)
+        {
+            NewGame?.Invoke(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// Displays contents of About.txt for user
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //read data from about and display in message box
+            txtToMessageBox("About.txt", "About");
+        }
+        #endregion
+
+        //=========================================
+        //             Event Handlers
+        //=========================================
+        #region Event Handlers
+
         /// <summary>
         /// Publishes Class and subscribes to all events
         /// Refactor: Remove if not in use
@@ -59,20 +104,6 @@ namespace RPGPractice
 
             //edit: Subscribe to any needed events
         }
-
-        public void OnNewGame(String saveName)
-        {
-            //edit: package saveName into eventargs
-
-            //edit: raise newGame event to tell engine to start a new game
-        }
-#endregion
-
-        //=========================================
-        //             Event Handlers
-        //=========================================
-        #region Event Handlers
-
         public void OnBattleStart_Handler(object sender, BattleStartEventArgs args)
         {
             //edit: unpack relevent data from BattleStartEventArgs
@@ -83,6 +114,7 @@ namespace RPGPractice
             //Initialize battleField then add it to eventManager
             battlefield = new BattleField(heroes, villians);
             battlefield.ManageEvents(eventManager);
+            Controls.Add(battlefield);
         }
 
         /// <summary>
@@ -98,7 +130,6 @@ namespace RPGPractice
             //Edit: hide battlefield from form
         }
 
-#endregion
-
+        #endregion
     }
 }

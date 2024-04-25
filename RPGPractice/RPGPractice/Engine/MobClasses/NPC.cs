@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGPractice.MobClasses
+namespace RPGPractice.Engine.MobClasses
 {
     public abstract class NPC : Mob
     {
@@ -22,7 +22,7 @@ namespace RPGPractice.MobClasses
         public void TakeTurn(Mob[] heroes)
         {
             //randomly decide target
-            int targetIndex = random.Next((heroes.Length));
+            int targetIndex = random.Next(heroes.Length);
             Mob target = heroes[targetIndex];
 
             //BAndit only knows to attack
