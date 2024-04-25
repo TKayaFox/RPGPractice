@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGPractice
+namespace RPGPractice.Events
 {
-    internal class MobUpdateArgs
+    public class MobUpdateArgs
     {
         private string name;
         private string sprite;

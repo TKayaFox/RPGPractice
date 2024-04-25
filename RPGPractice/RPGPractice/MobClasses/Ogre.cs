@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPGPractice
+namespace RPGPractice.MobClasses
 {
     public class Ogre : Mob, NPC
     {
         public Ogre(Random random) : base("Ogre", random) { }
+        public Ogre(string name, Random random) : base(name, random) { }
 
         /// <summary>
         /// Sets All stats for Mob
@@ -18,7 +19,7 @@ namespace RPGPractice
             UserControlled = false;
             MaxHitPoints = 30;
             MaxMana = 0; //Only casters get Mana
-            Initiative = random.Next(20) -5;  //roll 1d20+2
+            Initiative = random.Next(20) - 5;  //roll 1d20+2
             Intelligence = 0;
             Strength = 3;
             AttackMod = 3;

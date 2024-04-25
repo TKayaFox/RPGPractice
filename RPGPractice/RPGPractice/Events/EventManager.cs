@@ -4,8 +4,10 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using RPGPractice.Engine;
+using RPGPractice.MobClasses;
 
-namespace RPGPractice
+namespace RPGPractice.Events
 {
     /// <summary>
     /// Subscriber Class tracks all Objects and what evens they may raise.
@@ -20,8 +22,9 @@ namespace RPGPractice
         //=========================================
         //  Remember to add an aggregator below as well to relay the event, and subscriber in appropriate method
         public event EventHandler<BattleEndEventArgs>? BattleEnd;
-        public event System.EventHandler Death;
+        public event EventHandler Death;
         public event EventHandler<BattleEventArgs>? BattleEvent;
+        public event EventHandler<BattleStartEventArgs> BattleStart;
 
         //=========================================
         //             Public Methods
@@ -44,7 +47,7 @@ namespace RPGPractice
                 {
                     case Mob mob:
                         Subscribe(mob);
-                        numPublished ++;
+                        numPublished++;
                         break;
                     case Battle battle:
                         Subscribe(battle);
@@ -61,7 +64,7 @@ namespace RPGPractice
         {
             int numPublished = 0;
 
-            foreach( T publisher in publishers)
+            foreach (T publisher in publishers)
             {
                 numPublished += Publish(publisher);
             }
@@ -174,6 +177,11 @@ namespace RPGPractice
         {
             //Relay the event
             BattleEnd?.Invoke(sender, e);
+        }
+        private void OnBattleStart(object? sender, BattleStartEventArgs e)
+        {
+            //Relay the event
+            BattleStart?.Invoke(sender, e);
         }
         #endregion
     }

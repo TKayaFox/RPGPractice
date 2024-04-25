@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RPGPractice.Events;
+using RPGPractice.MobClasses;
 
 namespace RPGPractice
 {
@@ -77,7 +79,7 @@ namespace RPGPractice
         public void UnManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
-            eventManager.UnPublish(this);
+            eventManager.Unpublish(this);
 
             //unSubscribe to any needed events
         }

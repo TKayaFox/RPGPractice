@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGPractice
+namespace RPGPractice.Events
 {
     public class BattleEndEventArgs
     {

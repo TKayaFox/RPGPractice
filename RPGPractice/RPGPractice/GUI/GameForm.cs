@@ -1,3 +1,6 @@
+using RPGPractice.Events;
+using RPGPractice.MobClasses;
+
 namespace RPGPractice
 {
     public partial class GameForm : Form
@@ -8,6 +11,7 @@ namespace RPGPractice
         #region Variables
         private BattleField battlefield;
         private EventManager eventManager;
+
         #endregion
 
         //=========================================
@@ -34,7 +38,6 @@ namespace RPGPractice
 
             //Call NewGame event
             //OnNewGame(saveName);
-
         }
         #endregion
 
@@ -70,13 +73,15 @@ namespace RPGPractice
         //=========================================
         #region Event Handlers
 
-        public void OnBattleStart_Handler(object sender, BattleStartEventArgs e)
+        public void OnBattleStart_Handler(object sender, BattleStartEventArgs args)
         {
             //edit: unpack relevent data from BattleStartEventArgs
 
+            Mob[] heroes = args.Heroes;
+            Mob[] villians = args.Villians;
 
             //Initialize battleField then add it to eventManager
-            battleField = new BattleField(heroes, villians);
+            battlefield = new BattleField(heroes, villians);
             battlefield.ManageEvents(eventManager);
         }
 

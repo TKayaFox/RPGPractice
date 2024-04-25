@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPGPractice
+namespace RPGPractice.MobClasses
 {
     public class Dragon : Mob, NPC
     {
 
         public Dragon(Random random) : base("Dragon", random) { }
+        public Dragon(string name, Random random) : base(name, random) { }
 
         /// <summary>
         /// Sets All stats for Mob
@@ -23,7 +24,7 @@ namespace RPGPractice
             Intelligence = 4;
             Strength = 4;
             AttackMod = 4;
-            Defense = 17; 
+            Defense = 17;
             MagicDefense = 17;
         }
 

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPGPractice
+namespace RPGPractice.MobClasses
 {
     public class Cleric : Mob
     {
         public Cleric(Random random) : base("Cleric", random) { }
+        public Cleric(string name, Random random) : base(name, random) { }
 
         /// <summary>
         /// Sets All stats for Mob

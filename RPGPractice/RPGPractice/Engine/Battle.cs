@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Xml.Linq;
+using RPGPractice.Events;
+using RPGPractice.MobClasses;
 
-namespace RPGPractice
+namespace RPGPractice.Engine
 {
     public class Battle
     {
@@ -10,7 +12,7 @@ namespace RPGPractice
         //=========================================
         private Mob[] villians;
         private Mob[] heroes;
-        EventManager eventManager;
+        Random random;
         private int combatLevel;
 
         //=========================================
@@ -21,25 +23,26 @@ namespace RPGPractice
         /// </summary>
         /// <param name="heroes"></param>
         /// <param name="combatLevel"></param>
-        public Battle(Mob[] heroes, int combatLevel)
+        public Battle(Mob[] heroes, int combatLevel, Random random)
         {
             //Populate hero and villians for battle
             this.heroes = heroes;
-            this.villians = GenerateEncounter();
             this.combatLevel = combatLevel;
-            this.eventManager = eventManager;
+            this.random = random;
 
-            //EDIT: Load sprites onto BAttlefield 
+            villians = GenerateEncounter();
+
+            //EDIT: Load sprites onto Battlefield 
         }
 
         public void RollInitiative()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void NextTurn()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
 
@@ -55,17 +58,21 @@ namespace RPGPractice
             return mobArr.All(mob => !mob.IsAlive());
         }
 
-
+        /// <summary>
+        /// Initializes an array of Mobs for a combat encounter
+        /// </summary>
+        /// <returns>Mob[] array of villians/NPCs</returns>
         public Mob[] GenerateEncounter()
         {
-            //EDIT: Implement
+            //EDIT: Implement actuall encounter variation depending on Combat Level
+            Mob[] villians = new Mob[3];
+            
+            for (int i = 0; i < villians.Length; i++)
+            {
+                villians[i] = new Bandit(random);
+            }
+            return villians;
         }
-
-        public void NewMob()
-        {
-            throw new System.NotImplementedException();
-        }
-
 
         /// <summary>
         /// Tell attacker Mob to attack target
@@ -87,9 +94,29 @@ namespace RPGPractice
         //=========================================
         //                Events
         //=========================================
-        public event EventHandler<BattleEndEventArgs> BattleEnd;
-        public event System.EventHandler Death;
         public event EventHandler<BattleEventArgs>? BattleEvent;
+        public event EventHandler<BattleStartEventArgs> BattleStart;
+        public event EventHandler<BattleEndEventArgs> BattleEnd;
+
+        public void OnBattleStart()
+        {
+            BattleStartEventArgs args = new BattleStartEventArgs();
+            args.Villians = villians;
+            args.Heroes = heroes;
+
+            BattleStart?.Invoke(this, args);
+        }
+
+        public void OnBattleEnd(bool victory)
+        {
+            //EDIT: Unsubscribe from all Mob events
+
+            //EDIT:Raise event telling GUI and Game that battle ended and win or loss
+        }
+
+        //=========================================
+        //                Event Handlers
+        //=========================================
 
         /// <summary>
         /// Publishes Class and subscribes to all events
@@ -126,25 +153,9 @@ namespace RPGPractice
             }
         }
 
-        public void OnHit()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnBattleEnd(bool victory)
-        {
-            //EDIT: Unsubscribe from all Mob events
-
-            //EDIT:Raise event telling GUI and Game that battle ended and win or loss
-        }
-
-        //=========================================
-        //                Event Handlers
-        //=========================================
-
         public void OnAttack_Handler()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -163,11 +174,11 @@ namespace RPGPractice
             }
 
             //Check if all heroes are dead
-            else if (AreMobsDead(villians) )
+            else if (AreMobsDead(villians))
             {
                 bool victory = true;
                 OnBattleEnd(victory);
-            }           
+            }
         }
     }
 }

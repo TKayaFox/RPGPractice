@@ -1,3 +1,6 @@
+using RPGPractice.Engine;
+using RPGPractice.Events;
+
 namespace RPGPractice
 {
     internal static class Program

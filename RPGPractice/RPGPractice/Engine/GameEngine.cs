@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RPGPractice.Events;
+using RPGPractice.MobClasses;
 
-namespace RPGPractice
+namespace RPGPractice.Engine
 {
     public class GameEngine
     {
@@ -54,7 +56,7 @@ namespace RPGPractice
             Mob[] heroes = new Mob[NUM_HEROES];
 
             // Build heroes EDIT: Modify with actual hero layout
-            for (int i = 0; i < NUM_HEROES; i++)
+            for (int i = 0; i < heroes.Length; i++)
             {
                 heroes[i] = new Warrior($"Warrior {i}", random);
             }
@@ -62,22 +64,28 @@ namespace RPGPractice
             return heroes;
         }
 
-
         /// <summary>
         /// Starts a new Battle encounter
         /// </summary>
-        /// <exception cref="System.NotImplementedException"></exception>
+        /// <exception cref="NotImplementedException"></exception>
         public void NewBattle()
         {
             //edit: Revive all party members to full hp
 
             //Initialize a new Battle object
-            Battle battle = new Battle(heroes, numWins);
+            Battle battle = new Battle(heroes, numWins, random);
 
             //Add new Battle object to eventManager
             eventManager.Publish(battle);
         }
 
+        #endregion
+
+
+        //=========================================
+        //              Events
+        //=========================================
+        #region Events
         #endregion
 
         //=========================================
@@ -98,7 +106,6 @@ namespace RPGPractice
             //edit: Subscribe to any needed events
             eventManager.BattleEnd += OnBattleEnd_Handler;
         }
-
 
         /// <summary>
         /// When a battle has ended, stop managing for battle and save game data
@@ -125,6 +132,6 @@ namespace RPGPractice
             }
         }
 
-#endregion
+        #endregion
     }
 }

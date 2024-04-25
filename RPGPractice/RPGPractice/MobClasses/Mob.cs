@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RPGPractice.Events;
 
-namespace RPGPractice
+namespace RPGPractice.MobClasses
 {
     /// <summary>
     /// Mob represents any creature (Player Character or Non Player Character)
@@ -29,7 +30,7 @@ namespace RPGPractice
         private string name;
         private string sprite;
         protected Random random;
-#endregion
+        #endregion
 
         //=========================================
         //              Main Methods
@@ -161,10 +162,9 @@ namespace RPGPractice
         /// <summary>
         /// Public Getters are used throughout the game
         /// </summary>
-        public string Name { get => name; }
         public bool IsAlive()
         {
-            return (hitPoints > 0);
+            return hitPoints > 0;
         }
 
         #endregion
@@ -174,8 +174,8 @@ namespace RPGPractice
         //=========================================
         #region Protected Getters/Setters
 
-        public string Name { get => name; }
-        protected int Defense { get => defense;  set => defense = value; }
+        public string Name { get => name; set => name = value; }
+        protected int Defense { get => defense; set => defense = value; }
         protected bool UserControlled { get => userControlled; set => userControlled = value; }
         protected int MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
         protected int HitPoints { get => hitPoints; set => hitPoints = value; }
@@ -186,16 +186,64 @@ namespace RPGPractice
         protected int Strength { get => strength; set => strength = value; }
         protected int MagicDefense { get => magicDefense; set => magicDefense = value; }
         protected int AttackMod { get => attackMod; set => attackMod = value; }
+        public string Sprite { get => sprite; set => sprite = value; }
 
         #endregion
 
         //=========================================
         //                  Events
         //=========================================
-        #region Events
         public event EventHandler<BattleEventArgs>? BattleEvent;
-        public event System.EventHandler Death;
+        public event EventHandler<MobUpdateArgs>? MobUpdate;
+        public event EventHandler Death;
 
+        #region Events
+
+        /// <summary>
+        /// Packages and raisesBattle Events (Which display for user a readout of what has happened in the battle so far)
+        /// </summary>
+        /// <param name="output"></param>
+        private void OnBattleEvent(string output)
+        {
+            //Package and send battle message
+            BattleEventArgs e = new BattleEventArgs();
+            e.EventMessage = output;
+            BattleEvent?.Invoke(this, e);
+        }
+        /// <summary>
+        /// When Mob HP is reduced below 0HP they are dead.
+        /// </summary>
+        private void OnDeath()
+        {
+            //Raise a death event stating that Mob has died
+            Death?.Invoke(this, EventArgs.Empty);
+
+            //raise update Event as well
+            OnMobUpdate();
+        }
+
+        /// <summary>
+        /// Called every time important data for the Mob is changed
+        /// Semds updated information
+        /// </summary>
+        public void OnMobUpdate()
+        {
+            MobUpdateArgs args = new MobUpdateArgs();
+            args.Name = name;
+            args.Sprite = sprite;
+            args.HitPoints = hitPoints;
+            args.Mana = mana;
+            args.IsAlive = IsAlive();
+
+            MobUpdate(this, args);
+        }
+
+        #endregion
+
+        //=========================================
+        //              Event Handlers
+        //=========================================
+        #region Event Handlers
         /// <summary>
         /// Publishes Class and subscribes to all events
         /// </summary>
@@ -221,47 +269,6 @@ namespace RPGPractice
             //unSubscribe to any needed events
         }
 
-        /// <summary>
-        /// Packages and raisesBattle Events (Which display for user a readout of what has happened in the battle so far)
-        /// </summary>
-        /// <param name="output"></param>
-        private void OnBattleEvent(string output)
-        {
-            //Package and send battle message
-            BattleEventArgs e = new BattleEventArgs();
-            e.EventMessage = output;
-            BattleEvent?.Invoke(this, e);
-        }
-        /// <summary>
-        /// When Mob HP is reduced below 0HP they are dead.
-        /// </summary>
-        private void OnDeath()
-        {
-            //Raise a death event stating that Mob has died
-            Death?.Invoke(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Called every time important data for the Mob is changes
-        /// Semds updated information
-        /// </summary>
-        public void OnMobUpdate()
-        {
-            MobUpdateArgs args = new MobUpdateArgs();
-            args.Name = name;
-            args.HitPoints = hitPoints;
-            args.Mana = mana;
-            args.IsAlive = IsAlive();
-            args.Sprite = sprite;
-        }
-
-#endregion
-        //=========================================
-        //                Event Handlers
-        //=========================================
-        #region Event Handlers
-
-        //None
         #endregion
     }
 }
