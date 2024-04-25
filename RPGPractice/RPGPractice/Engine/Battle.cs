@@ -32,21 +32,24 @@ namespace RPGPractice.Engine
             this.heroes = heroes;
             this.combatLevel = combatLevel;
             this.random = random;
-
-            //generate villians
-            villians = GenerateEncounter();
-
-            //setup initiative order
-            initiative = new Initiative(heroes, villians);
         }
 
-        public void Start()
+        public void Start(EventManager eventManager)
         {
             //EDIT: Load sprites onto Battlefield 
 
             //EDIT: Load background to battlefield
 
-            //Start Turns
+            //subscribe to Events
+            ManageEvents(eventManager);
+
+
+            //setup initiative order and villians
+            villians = GenerateEncounter(eventManager);
+            initiative = new Initiative(heroes, villians);
+
+            //Start Game
+            OnBattleStart();
             NextTurn();
         }
 
@@ -81,21 +84,23 @@ namespace RPGPractice.Engine
         private static bool AreMobsDead(Mob[] mobArr)
         {
             // Simplified with LINQ for readability and performance
-            return mobArr.All(mob => !mob.IsAlive());
+            return mobArr.All(mob => !mob.IsAlive);
         }
 
         /// <summary>
         /// Initializes an array of Mobs for a combat encounter
         /// </summary>
         /// <returns>Mob[] array of villians/NPCs</returns>
-        public Mob[] GenerateEncounter()
+        public Mob[] GenerateEncounter(EventManager eventManager)
         {
             //EDIT: Implement actuall encounter variation depending on Combat Level
             Mob[] villians = new Mob[3];
             
             for (int i = 0; i < villians.Length; i++)
             {
-                villians[i] = new Bandit(random);
+                Mob villain = new Warrior($"Warrior {i}", random);
+                villain.ManageEvents(eventManager);
+                villians[i] = villain;
             }
             return villians;
         }
@@ -187,7 +192,6 @@ namespace RPGPractice.Engine
             //Subscribe to events from eventManager
             eventManager.Death += OnDeath_Handler;
         }
-
 
         /// <summary>
         /// UnPublishes Class and unsubscribes from all events

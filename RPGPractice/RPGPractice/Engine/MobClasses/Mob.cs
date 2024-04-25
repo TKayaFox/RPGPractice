@@ -136,7 +136,7 @@ namespace RPGPractice.Engine.MobClasses
             OnBattleEvent(eventMessage);
 
             //raise appropriate events in case of Mob death
-            if (!IsAlive())
+            if (!IsAlive)
             {
                 OnBattleEvent($"{name} has died");
                 OnDeath();
@@ -172,11 +172,15 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Public Getters are used throughout the game
         /// </summary>
-        public bool IsAlive()
+        public bool IsAlive
         {
-            return hitPoints > 0;
+            get
+            {
+                return (hitPoints > 0);
+            }
         }
         public bool UserControlled { get => userControlled; set => userControlled = value; }
+        public string Sprite { get => sprite; set => sprite = value; }
         #endregion
 
         //=========================================
@@ -184,7 +188,7 @@ namespace RPGPractice.Engine.MobClasses
         //=========================================
         #region Protected Getters/Setters
 
-        public string Name { get => name; set => name = value; }
+        protected string Name { get => name; set => name = value; }
         protected int Defense { get => defense; set => defense = value; }
         protected int MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
         protected int HitPoints { get => hitPoints; set => hitPoints = value; }
@@ -195,7 +199,6 @@ namespace RPGPractice.Engine.MobClasses
         protected int Strength { get => strength; set => strength = value; }
         protected int MagicDefense { get => magicDefense; set => magicDefense = value; }
         protected int AttackMod { get => attackMod; set => attackMod = value; }
-        public string Sprite { get => sprite; set => sprite = value; }
 
         #endregion
 

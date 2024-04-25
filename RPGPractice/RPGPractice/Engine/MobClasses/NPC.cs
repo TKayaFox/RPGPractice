@@ -21,12 +21,24 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="heroes"></param>
         public void TakeTurn(Mob[] heroes)
         {
-            //randomly decide target
-            int targetIndex = random.Next(heroes.Length);
-            Mob target = heroes[targetIndex];
+            Mob target = SetTarget(heroes);
 
             //BAndit only knows to attack
             Attack(target);
+        }
+
+        private Mob SetTarget(Mob[] heroes)
+        {
+            Mob target;
+
+            //randomly choose a target, but make sure that it is actualy alive (stop beating the dead horse!)
+            do
+            {
+                int targetIndex = random.Next(heroes.Length);
+                target = heroes[targetIndex];
+            } while (!target.IsAlive);
+
+            return target;
         }
     }
 }

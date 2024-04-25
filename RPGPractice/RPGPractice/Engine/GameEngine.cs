@@ -56,7 +56,9 @@ namespace RPGPractice.Engine
             // Build heroes EDIT: Modify with actual hero layout
             for (int i = 0; i < heroes.Length; i++)
             {
-                heroes[i] = new Warrior($"Warrior {i}", random);
+                Mob newHero= new Warrior($"Warrior {i}", random);
+                newHero.ManageEvents(eventManager);
+                heroes[i] = newHero;
             }
 
             return heroes;
@@ -109,7 +111,7 @@ namespace RPGPractice.Engine
             eventManager.Publish(battle);
 
             //Actually Start Battle logic
-            battle.Start();
+            battle.Start(eventManager);
         }
 
         #endregion

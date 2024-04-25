@@ -27,6 +27,17 @@ namespace RPGPractice
         {
             InitializeComponent();
             this.eventManager = eventManager;
+
+            ManageEvents();
+        }
+
+        private void NewBattle(Mob[] heroes, Mob[] villians)
+        {
+
+            //Initialize battleField then add it to eventManager
+            battlefield = new BattleField(heroes, villians);
+            battlefield.ManageEvents(eventManager);
+            Controls.Add(battlefield);
         }
 
         /// <summary>
@@ -103,18 +114,17 @@ namespace RPGPractice
             eventManager.Publish(this);
 
             //edit: Subscribe to any needed events
+            eventManager.BattleStart += OnBattleStart_Handler;
         }
+
         public void OnBattleStart_Handler(object sender, BattleStartEventArgs args)
         {
-            //edit: unpack relevent data from BattleStartEventArgs
-
+            //unpack relevent data from BattleStartEventArgs
             Mob[] heroes = args.Heroes;
             Mob[] villians = args.Villians;
 
-            //Initialize battleField then add it to eventManager
-            battlefield = new BattleField(heroes, villians);
-            battlefield.ManageEvents(eventManager);
-            Controls.Add(battlefield);
+            //Send to appropriate Method
+            NewBattle(heroes, villians);
         }
 
         /// <summary>

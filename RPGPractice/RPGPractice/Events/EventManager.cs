@@ -162,6 +162,7 @@ namespace RPGPractice.Events
             //Events
             battle.BattleEnd += OnBattleEnd_Aggregator;
             battle.BattleEvent += OnBattleEvent_Aggregator;
+            battle.BattleStart += OnBattleStart_Aggregator;
         }
         private void Subscribe(GameForm gameForm)
         {
@@ -188,6 +189,7 @@ namespace RPGPractice.Events
             //Events
             battle.BattleEnd -= OnBattleEnd_Aggregator;
             battle.BattleEvent -= OnBattleEvent_Aggregator;
+            battle.BattleStart -= OnBattleStart_Aggregator;
         }
         private void UnSubscribe(GameForm gameForm)
         {

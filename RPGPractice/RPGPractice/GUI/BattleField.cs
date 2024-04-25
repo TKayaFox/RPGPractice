@@ -15,6 +15,14 @@ namespace RPGPractice
     public partial class BattleField : UserControl
     {
         //=========================================
+        //               Variables
+        //=========================================
+        private const int Max_Sprites = 5;
+
+        PictureBox[] heroSprites;
+        PictureBox[] villianSprites;
+
+        //=========================================
         //              Main Methods
         //=========================================
         #region Main Methods
@@ -27,6 +35,17 @@ namespace RPGPractice
             UpdateMob(villians);
 
             //edit:Add all mob names to TargetComboBox
+
+            //Make arrays for PictureBoxes for easier Sprite Handling
+            PictureBox[] heroSprites = new PictureBox[Max_Sprites];
+            PictureBox[] villianSprites = new PictureBox[Max_Sprites];
+
+            // Assign PictureBoxes to arrays using a loop
+            for (int i = 0; i < Max_Sprites; i++)
+            {
+                heroSprites[i] = Controls.Find($"heroSprite{i + 1}", true).FirstOrDefault() as PictureBox;
+                villianSprites[i] = Controls.Find($"villainSprite{i + 1}", true).FirstOrDefault() as PictureBox;
+            }
         }
 
         /// <summary>
@@ -35,7 +54,7 @@ namespace RPGPractice
         /// <param name="mob"></param>
         public void UpdateMob(Mob mob)
         {
-            //edit: Display hero and villian information/sprites on display
+            //edit: Display hero and villian information/sprites
         }
         public void UpdateMob(Mob[] mobs)
         {
@@ -84,6 +103,9 @@ namespace RPGPractice
             eventManager.Publish(this);
 
             //Subscribe to any needed events
+            eventManager.BattleEvent += OnBattleEvent_Handler;
+            eventManager.PlayerTurn += OnPlayerTurn_Handler;
+            eventManager.TurnEnd += OnTurnEnd_Handler;
         }
 
         /// <summary>
@@ -96,6 +118,24 @@ namespace RPGPractice
             eventManager.Unpublish(this);
 
             //unSubscribe to any needed events
+            eventManager.BattleEvent -= OnBattleEvent_Handler;
+            eventManager.PlayerTurn -= OnPlayerTurn_Handler;
+            eventManager.TurnEnd -= OnTurnEnd_Handler;
+        }
+
+        private void OnTurnEnd_Handler(object? sender, EventArgs e)
+        {
+            HideActionMenu();
+        }
+
+        private void OnPlayerTurn_Handler(object? sender, PlayerTurnEventArgs e)
+        {
+            ShowActionMenu();
+        }
+
+        private void OnBattleEvent_Handler(object? sender, BattleEventArgs e)
+        {
+            //Edit: add new line to BattleEvent display
         }
 
         public void OnPlayerTurn_Handler()
@@ -105,8 +145,10 @@ namespace RPGPractice
 
         public void OnDeath_Handler()
         {
+            //Edit: Find Mobs sprite
+
             //Edit: change sprite to show Mob as dead
-            throw new System.NotImplementedException();
+            heroSprite1.Visible = false;
         }
         #endregion
 
