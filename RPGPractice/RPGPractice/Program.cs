@@ -12,12 +12,13 @@ namespace RPGPractice
         [STAThread]
         static void Main()
         {
-            //create GameEngine and EventManager
-            EventManager eventManager= new EventManager();
+            //Start EventManager to handle Event relay between engine and Gui
+            EventManager eventManager = new EventManager();
+
+            //start GameEngine to run the actual game
             GameEngine gameEngine = new GameEngine(eventManager);
 
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            // Start GameForm GUI for display
             ApplicationConfiguration.Initialize();
             Application.Run(new GameForm(eventManager));
         }

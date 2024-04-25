@@ -41,9 +41,6 @@ namespace RPGPractice.Engine
 
             //subscribe to events
             ManageEvents();
-
-            //start new game
-            NewGame();
         }
 
         /// <summary>

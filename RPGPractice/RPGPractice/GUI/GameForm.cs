@@ -29,6 +29,9 @@ namespace RPGPractice
             this.eventManager = eventManager;
 
             ManageEvents();
+
+            //start Game
+            OnNewGame(this, EventArgs.Empty);
         }
 
         private void NewBattle(Mob[] heroes, Mob[] villians)
