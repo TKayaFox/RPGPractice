@@ -1,6 +1,6 @@
 ﻿namespace RPGPractice
 {
-    partial class GUI
+    partial class GameForm
     {
         /// <summary>
         ///  Required designer variable.

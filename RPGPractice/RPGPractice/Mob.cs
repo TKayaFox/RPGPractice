@@ -11,6 +11,10 @@ namespace RPGPractice
     /// </summary>
     public abstract class Mob
     {
+        //=========================================
+        //                Variables
+        //=========================================
+        #region Variables
         private bool userControlled;
         private int maxHitPoints;
         private int hitPoints;
@@ -23,37 +27,14 @@ namespace RPGPractice
         private int defense;
         private int magicDefense;
         private string name;
+        private string sprite;
         protected Random random;
+#endregion
 
-        //Events
-        public event EventHandler<BattleEventArgs>? BattleEvent;
-        public event System.EventHandler Death;
-
-
-        /// <summary>
-        /// Public Getters are used throughout the game
-        /// </summary>
-        public string Name { get => name; }
-        public bool IsAlive()
-        {
-            return (hitPoints > 0);
-        }
-
-        /// <summary>
-        /// Protected Setters are only for subclasses!
-        /// Refactor: Most of these should only be set once, so there may be a way to optimize
-        /// </summary>
-        protected int Defense { get => defense;  set => defense = value; }
-        protected bool UserControlled { get => userControlled; set => userControlled = value; }
-        protected int MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
-        protected int HitPoints { get => hitPoints; set => hitPoints = value; }
-        protected int MaxMana { get => maxMana; set => maxMana = value; }
-        protected int Mana { get => mana; set => mana = value; }
-        protected int Initiative { get => initiative; set => initiative = value; }
-        protected int Intelligence { get => intelligence; set => intelligence = value; }
-        protected int Strength { get => strength; set => strength = value; }
-        protected int MagicDefense { get => magicDefense; set => magicDefense = value; }
-        protected int AttackMod { get => attackMod; set => attackMod = value; }
+        //=========================================
+        //              Main Methods
+        //=========================================
+        #region Main Methods
 
         /// <summary>
         /// Constructor initializes default fields
@@ -70,6 +51,7 @@ namespace RPGPractice
             mana = MaxMana;
             HitPoints = MaxHitPoints;
         }
+
 
         /// <summary>
         /// Sets All stats for Mob
@@ -90,7 +72,7 @@ namespace RPGPractice
             int damage = random.Next(9);
 
             //Critical Hit: If attack roll was a 20, then slightly boost hit chance (attackRoll) and boost damage
-            if (attackRoll >=20)
+            if (attackRoll >= 20)
             {
                 attackRoll += 5;
                 damage += random.Next(9); //add another d8
@@ -102,7 +84,7 @@ namespace RPGPractice
 
             //Tell target they are being attacked
             //  Be polite though and tell them who you are
-            target.Hit( attackRoll, damage, name);
+            target.Hit(attackRoll, damage, name);
         }
 
         /// <summary>
@@ -111,8 +93,8 @@ namespace RPGPractice
         /// </summary>
         public virtual void Hit(int attackRoll, int damage, string attacker)
         {
-            string eventMessage="";
-            
+            string eventMessage = "";
+
             //If attack is for negative damage, dont attempt to defend just take the heal
             if (attackRoll < 0)
             {
@@ -170,6 +152,74 @@ namespace RPGPractice
         //EDIT: Add magicAttack
         //EDIT: Add magicDefense
 
+        #endregion
+
+        //=========================================
+        //          Public Getters/Setters
+        //=========================================
+        #region Public Getters/Setters
+        /// <summary>
+        /// Public Getters are used throughout the game
+        /// </summary>
+        public string Name { get => name; }
+        public bool IsAlive()
+        {
+            return (hitPoints > 0);
+        }
+
+        #endregion
+
+        //=========================================
+        //        Protected Getters/Setters
+        //=========================================
+        #region Protected Getters/Setters
+
+        public string Name { get => name; }
+        protected int Defense { get => defense;  set => defense = value; }
+        protected bool UserControlled { get => userControlled; set => userControlled = value; }
+        protected int MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
+        protected int HitPoints { get => hitPoints; set => hitPoints = value; }
+        protected int MaxMana { get => maxMana; set => maxMana = value; }
+        protected int Mana { get => mana; set => mana = value; }
+        protected int Initiative { get => initiative; set => initiative = value; }
+        protected int Intelligence { get => intelligence; set => intelligence = value; }
+        protected int Strength { get => strength; set => strength = value; }
+        protected int MagicDefense { get => magicDefense; set => magicDefense = value; }
+        protected int AttackMod { get => attackMod; set => attackMod = value; }
+
+        #endregion
+
+        //=========================================
+        //                  Events
+        //=========================================
+        #region Events
+        public event EventHandler<BattleEventArgs>? BattleEvent;
+        public event System.EventHandler Death;
+
+        /// <summary>
+        /// Publishes Class and subscribes to all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public void ManageEvents(EventManager eventManager)
+        {
+            //publish events to eventManager
+            eventManager.Publish(this);
+
+            //Subscribe to any needed events
+        }
+
+
+        /// <summary>
+        /// UnPublishes Class and unsubscribes from all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public void UnManageEvents(EventManager eventManager)
+        {
+            //publish events to eventManager
+            eventManager.Unpublish(this);
+
+            //unSubscribe to any needed events
+        }
 
         /// <summary>
         /// Packages and raisesBattle Events (Which display for user a readout of what has happened in the battle so far)
@@ -182,7 +232,6 @@ namespace RPGPractice
             e.EventMessage = output;
             BattleEvent?.Invoke(this, e);
         }
-
         /// <summary>
         /// When Mob HP is reduced below 0HP they are dead.
         /// </summary>
@@ -191,5 +240,28 @@ namespace RPGPractice
             //Raise a death event stating that Mob has died
             Death?.Invoke(this, EventArgs.Empty);
         }
+
+        /// <summary>
+        /// Called every time important data for the Mob is changes
+        /// Semds updated information
+        /// </summary>
+        public void OnMobUpdate()
+        {
+            MobUpdateArgs args = new MobUpdateArgs();
+            args.Name = name;
+            args.HitPoints = hitPoints;
+            args.Mana = mana;
+            args.IsAlive = IsAlive();
+            args.Sprite = sprite;
+        }
+
+#endregion
+        //=========================================
+        //                Event Handlers
+        //=========================================
+        #region Event Handlers
+
+        //None
+        #endregion
     }
 }

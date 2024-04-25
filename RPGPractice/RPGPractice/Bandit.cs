@@ -27,7 +27,10 @@ namespace RPGPractice
 
         public void TakeTurn()
         {
-            //Edit: Implement
+            //edit: randomly decide target
+
+            //BAndit only knows to attack
+            Attack(target);
         }
     }
 }

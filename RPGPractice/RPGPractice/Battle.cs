@@ -5,27 +5,23 @@ namespace RPGPractice
 {
     public class Battle
     {
+        //=========================================
+        //                Variables
+        //=========================================
         private Mob[] villians;
         private Mob[] heroes;
         EventManager eventManager;
-        private int experience;
         private int combatLevel;
 
-
-        public event System.EventHandler BattleEnd;
-        public event System.EventHandler Death;
-        public event EventHandler<BattleEventArgs>? BattleEvent;
-
-        //Setters/Getters
-        public Mob[] Villians { get => villians; set => villians = value; }
-        public Mob[] Heroes { get => heroes; set => heroes = value; }
-
+        //=========================================
+        //              Main Methods
+        //=========================================
         /// <summary>
         /// Construtor
         /// </summary>
         /// <param name="heroes"></param>
         /// <param name="combatLevel"></param>
-        public Battle(Mob[] heroes, int combatLevel, EventManager eventManager)
+        public Battle(Mob[] heroes, int combatLevel)
         {
             //Populate hero and villians for battle
             this.heroes = heroes;
@@ -33,15 +29,7 @@ namespace RPGPractice
             this.combatLevel = combatLevel;
             this.eventManager = eventManager;
 
-            //Load sprites onto BAttlefield EDIT
-
-            //publish all mobs and battle to eventManager so events are relayed
-            eventManager.Publish(this.heroes);
-            eventManager.Publish(this.villians);
-            eventManager.Publish(this);
-
-            //Subscribe to events
-            eventManager.Death += OnDeath_Handler;
+            //EDIT: Load sprites onto BAttlefield 
         }
 
         public void RollInitiative()
@@ -54,22 +42,19 @@ namespace RPGPractice
             throw new System.NotImplementedException();
         }
 
-        public void OnAttack_Handler()
+
+        /// <summary>
+        /// Checks all mobs in an array if they are ALL dead
+        /// returns true if zero Mobs are still alive
+        /// </summary>
+        /// <param name="mobArr"></param>
+        /// <returns></returns>
+        private static bool AreMobsDead(Mob[] mobArr)
         {
-            throw new System.NotImplementedException();
+            // Simplified with LINQ for readability and performance
+            return mobArr.All(mob => !mob.IsAlive());
         }
 
-        public void OnHit()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void OnBattleEnd(bool victory)
-        {
-            //EDIT: Unsubscribe from all Mob events
-
-            //EDIT:Raise event telling GUI and Game that battle ended and win or loss
-        }
 
         public Mob[] GenerateEncounter()
         {
@@ -92,8 +77,76 @@ namespace RPGPractice
             attacker.Attack(target);
         }
 
+        //=========================================
+        //             Getters/Setters
+        //=========================================
 
-        //Events
+        public Mob[] Villians { get => villians; set => villians = value; }
+        public Mob[] Heroes { get => heroes; set => heroes = value; }
+
+        //=========================================
+        //                Events
+        //=========================================
+        public event EventHandler<BattleEndEventArgs> BattleEnd;
+        public event System.EventHandler Death;
+        public event EventHandler<BattleEventArgs>? BattleEvent;
+
+        /// <summary>
+        /// Publishes Class and subscribes to all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public void ManageEvents(EventManager eventManager)
+        {
+
+            //publish events to eventManager
+            eventManager.Publish(this);
+
+            //Subscribe to events from eventManager
+            eventManager.Death += OnDeath_Handler;
+        }
+
+
+        /// <summary>
+        /// UnPublishes Class and unsubscribes from all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public void UnManageEvents(EventManager eventManager)
+        {
+            //publish events to eventManager
+            eventManager.Unpublish(this);
+
+            //unSubscribe to any needed events
+            eventManager.Death -= OnDeath_Handler;
+
+
+            //edit: Unpublish all villian Mobs
+            foreach (Mob villian in villians)
+            {
+                villian.UnManageEvents(eventManager);
+            }
+        }
+
+        public void OnHit()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void OnBattleEnd(bool victory)
+        {
+            //EDIT: Unsubscribe from all Mob events
+
+            //EDIT:Raise event telling GUI and Game that battle ended and win or loss
+        }
+
+        //=========================================
+        //                Event Handlers
+        //=========================================
+
+        public void OnAttack_Handler()
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <summary>
         /// Checks for Battle end state every time a Mob dies 
         /// (If all villians or all heroes are dead)
@@ -114,19 +167,7 @@ namespace RPGPractice
             {
                 bool victory = true;
                 OnBattleEnd(victory);
-            }
-        }
-
-        /// <summary>
-        /// Checks all mobs in an array if they are ALL dead
-        /// returns true if zero Mobs are still alive
-        /// </summary>
-        /// <param name="mobArr"></param>
-        /// <returns></returns>
-        private static bool AreMobsDead(Mob[] mobArr)
-        {
-            // Simplified with LINQ for readability and performance
-            return mobArr.All(mob => !mob.IsAlive());
+            }           
         }
     }
 }
