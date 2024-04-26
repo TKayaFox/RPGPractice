@@ -86,8 +86,7 @@ namespace RPGPractice.Engine
             if (victory)
             {
                 //Increment victory count
-
-                //EDIT: heal heroes;
+                numWins++;
             }
             else
             {
@@ -108,9 +107,6 @@ namespace RPGPractice.Engine
             //Initialize a new Battle object
             Battle battle = new Battle(heroes, numWins, random);
 
-            //Add new Battle object to eventManager
-            eventManager.Publish(battle);
-
             //Actually Start Battle logic
             battle.Start(eventManager);
         }
@@ -124,11 +120,7 @@ namespace RPGPractice.Engine
         #region Events
         #endregion
 
-        //=========================================
-        //                Event Handlers
-        //=========================================
-        #region Event Handlers
-
+        #region Event Manager
         /// <summary>
         /// Publishes MobData and subscribes to all events
         /// Refactor: Remove if not in use
@@ -137,13 +129,19 @@ namespace RPGPractice.Engine
         public void ManageEvents()
         {
             //publish events to eventManager
-            eventManager.Publish(this);
 
             //edit: Subscribe to any needed events
             eventManager.BattleEnd += OnBattleEnd_Handler;
             eventManager.NewGame += OnNewGame_Handler;
             eventManager.PlayerAction += OnPlayerAction_handler;
         }
+        #endregion
+
+        //=========================================
+        //                Event Handlers
+        //=========================================
+        #region Event Handlers
+
 
         /// <summary>
         /// When a battle has ended, stop managing for battle and save game data
