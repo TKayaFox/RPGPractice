@@ -21,7 +21,7 @@ namespace RPGPractice
 
         PictureBox[] heroSprites;
         PictureBox[] villianSprites;
-        List<int> mobIDs;
+        Dictionary<int, MobData> mobDictionary;
 
         //=========================================
         //              Main Methods
@@ -30,8 +30,7 @@ namespace RPGPractice
         public BattleField(Mob[] heroes, Mob[] villians)
         {
             InitializeComponent();
-
-            mobIDs = new List<int>();
+            mobDictionary = new Dictionary<int, mobData>;
 
             //Add all mobs into battlefield display
             UpdateMobs(heroes);
@@ -165,7 +164,7 @@ namespace RPGPractice
         //=========================================
         #region Event Handlers
         /// <summary>
-        /// Publishes Class and subscribes to all events
+        /// Publishes MobData and subscribes to all events
         /// </summary>
         /// <param name="eventManager"></param>
         public void ManageEvents(EventManager eventManager)
@@ -180,7 +179,7 @@ namespace RPGPractice
         }
 
         /// <summary>
-        /// UnPublishes Class and unsubscribes from all events
+        /// UnPublishes MobData and unsubscribes from all events
         /// </summary>
         /// <param name="eventManager"></param>
         public void UnManageEvents(EventManager eventManager)

@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.Events;
+using RPGPractice.GUI;
 
 namespace RPGPractice.Engine
 {
@@ -119,6 +120,7 @@ namespace RPGPractice.Engine
             {
                 Mob villain = new Warrior($"Warrior {i}", random);
                 villain.ManageEvents(eventManager);
+                villain.UniqueID = i + 100;
                 villians[i] = villain;
             }
             return villians;
@@ -173,10 +175,25 @@ namespace RPGPractice.Engine
         public void OnBattleStart()
         {
             BattleStartEventArgs args = new BattleStartEventArgs();
-            args.Villians = villians;
-            args.Heroes = heroes;
+
+            //Package only needed Mob data into MobData object for sending to Gui
+            Mob[] mobs;
+            List<MobData> mobDataList = new List<MobData>();
+            CompileMobData(heroes, mobDataList);
+            CompileMobData(villians, mobDataList);
+
+            args.MobDataList = mobDataList;
 
             BattleStart?.Invoke(this, args);
+        }
+
+        private static void CompileMobData(Mob[] mobs, List<MobData> mobDataList)
+        {
+            foreach (Mob mob in mobs)
+            {
+                MobData data = mob.GetMobData();
+                mobDataList.Add(data);
+            }
         }
 
         public void OnBattleEnd(bool victory)
@@ -199,7 +216,7 @@ namespace RPGPractice.Engine
         //=========================================
 
         /// <summary>
-        /// Publishes Class and subscribes to all events
+        /// Publishes MobData and subscribes to all events
         /// </summary>
         /// <param name="eventManager"></param>
         public void ManageEvents(EventManager eventManager)
@@ -212,7 +229,7 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// UnPublishes Class and unsubscribes from all events
+        /// UnPublishes MobData and unsubscribes from all events
         /// </summary>
         /// <param name="eventManager"></param>
         public void UnManageEvents(EventManager eventManager)

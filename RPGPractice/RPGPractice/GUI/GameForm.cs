@@ -107,7 +107,7 @@ namespace RPGPractice
         #region Event Handlers
 
         /// <summary>
-        /// Publishes Class and subscribes to all events
+        /// Publishes MobData and subscribes to all events
         /// Refactor: Remove if not in use
         /// </summary>
         /// <param name="eventManager"></param>

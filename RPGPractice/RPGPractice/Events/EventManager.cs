@@ -10,7 +10,7 @@ using RPGPractice.Engine.MobClasses;
 namespace RPGPractice.Events
 {
     /// <summary>
-    /// Subscriber Class tracks all Objects and what evens they may raise.
+    /// Subscriber MobData tracks all Objects and what evens they may raise.
     /// Trying to juggle subscribing to events for every object, and what events should be subscribed to, can be messy.
     /// 
     /// Public methods allow the program to subscribe to all events that it needs at once.

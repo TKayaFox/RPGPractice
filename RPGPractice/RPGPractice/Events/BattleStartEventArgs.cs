@@ -4,17 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RPGPractice.Engine.MobClasses;
+using RPGPractice.GUI;
 
 namespace RPGPractice.Events
 {
     public class BattleStartEventArgs : EventArgs
     {
-        Mob[] heroes;
-        Mob[] villians;
-        int combatLevel;
+        List<MobData> mobDataList;
 
-        public Mob[] Heroes { get => heroes; set => heroes = value; }
-        public Mob[] Villians { get => villians; set => villians = value; }
-        public int CombatLevel { get => combatLevel; set => combatLevel = value; }
+        public List<MobData> MobDataList { get => mobDataList; set => mobDataList = value; }
     }
 }
