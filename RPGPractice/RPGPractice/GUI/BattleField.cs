@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.Events;
+using RPGPractice.GUI;
 
 namespace RPGPractice
 {
@@ -26,15 +27,11 @@ namespace RPGPractice
         //=========================================
         //              Main Methods
         //=========================================
-        #region Main Methods
-        public BattleField(Mob[] heroes, Mob[] villians)
+        #region Public Methods
+        public BattleField(List<MobData> mobDataList)
         {
             InitializeComponent();
-            mobDictionary = new Dictionary<int, mobData>;
-
-            //Add all mobs into battlefield display
-            UpdateMobs(heroes);
-            UpdateMobs(villians);
+            mobDictionary = new Dictionary<int, MobData>();
 
             //Make arrays for PictureBoxes for easier Sprite Handling
             PictureBox[] heroSprites = new PictureBox[Max_Sprites];
@@ -46,60 +43,64 @@ namespace RPGPractice
                 heroSprites[i] = Controls.Find($"heroSprite{i + 1}", true).FirstOrDefault() as PictureBox;
                 villianSprites[i] = Controls.Find($"villainSprite{i + 1}", true).FirstOrDefault() as PictureBox;
             }
+
+            //Add all mobs into battlefield display and assign to PictureBoxes
+            UpdateMobs(mobDataList);
         }
+
+        #endregion
+
+        #region Private Methods
 
         /// <summary>
         /// gets all initial data needed from mob array
         /// </summary>
         /// <param name="mobs"></param>
-        private void UpdateMobs(Mob[] mobs)
+        private void UpdateMobs(List<MobData> mobDataList)
         {
-            foreach (Mob mob in mobs)
+            foreach (MobData data in mobDataList)
             {
-                //get unique ID
-                int uniqueID = mob.UniqueID;
-                mobIDs.Add(uniqueID);
-
-                //Assign a PictureBox for the sprite
-
+                //Assign a PictureBox for the pixtureBox
                 //determine if mob is a Hero or Villain(NPC) and assign to Sprite
-                if (mob is NPC)
+                if (data.IsNPC)
                 {
-                    AssignSprite(mob, villianSprites);
+                    AssignSprite(data, villianSprites);
                 }
                 else
                 {
-                    AssignSprite(mob, heroSprites);
+                    AssignSprite(data, heroSprites);
                 }
+
+                //Add mob data to dictionary
+                mobDictionary.Add(data.UniqueID, data);
             }
         }
 
 
         /// <summary>
-        /// Assigns a sprite to a picturebox in the picturebox array (Only if there is room)
+        /// Assigns a pixtureBox to a picturebox in the picturebox array (Only if there is room)
         /// </summary>
         /// <param name="mob"></param>
         /// <param name="sprites"></param>
-        private void AssignSprite(Mob mob, PictureBox[] sprites)
+        private void AssignSprite(MobData data, PictureBox[] sprites)
         {
             int i = 0;
             bool identified = false;
             while (!identified && i < sprites.Length)
             {
-                PictureBox sprite = sprites[i];
-                if (sprite.Tag == null)
+                PictureBox pixtureBox = sprites[i];
+                if (pixtureBox.Tag == null)
                 {
                     identified = true;
-                    sprite.Tag = mob.UniqueID;
 
-                    //change PictureBox to the mob's sprite
-                    sprite.Image = mob.Sprite;
+                    //add PictureBox to MobData (automatically changes Sprite)
+                    data.PictureBox = pixtureBox;
                 }
                 i++;
             }
         }
 
-        public void ShowActionMenu()
+        private void ShowActionMenu()
         {
             //Show and enable ActionGroupBox
             ActionButtonBox.Enabled = true;
@@ -107,7 +108,7 @@ namespace RPGPractice
         }
 
         //Hides action menu so player doesnt try to make a move when not their turn
-        public void HideActionMenu()
+        private void HideActionMenu()
         {
             ActionButtonBox.Enabled = false;
             ActionButtonBox.Visible = false;
@@ -225,9 +226,9 @@ namespace RPGPractice
         public void OnDeath_Handler()
         {
             //Edit: Decipher which Mob died
-            //Edit: Find Mobs sprite
+            //Edit: Find Mobs pixtureBox
 
-            //Edit: change sprite to show Mob as dead
+            //Edit: change pixtureBox to show Mob as dead
             heroSprite1.Visible = false;
         }
         #endregion

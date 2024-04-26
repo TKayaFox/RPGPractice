@@ -1,6 +1,7 @@
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.Events;
+using RPGPractice.GUI;
 
 namespace RPGPractice
 {
@@ -18,7 +19,7 @@ namespace RPGPractice
         //=========================================
         //              Main Methods
         //=========================================
-        #region Main Methods
+        #region Public Methods
         /// <summary>
         /// Constructor
         /// </summary>
@@ -34,11 +35,14 @@ namespace RPGPractice
             OnNewGame(this, EventArgs.Empty);
         }
 
-        private void NewBattle(Mob[] heroes, Mob[] villians)
-        {
+        #endregion
 
+        #region Private Methods
+
+        private void NewBattle(List<MobData> mobDataList)
+        {
             //Initialize battleField then add it to eventManager
-            battlefield = new BattleField(heroes, villians);
+            battlefield = new BattleField(mobDataList);
             battlefield.ManageEvents(eventManager);
             Controls.Add(battlefield);
         }
@@ -123,11 +127,10 @@ namespace RPGPractice
         public void OnBattleStart_Handler(object sender, BattleStartEventArgs args)
         {
             //unpack relevent data from BattleStartEventArgs
-            Mob[] heroes = args.Heroes;
-            Mob[] villians = args.Villians;
+            List<MobData> mobDataList = args.MobDataList;
 
             //Send to appropriate Method
-            NewBattle(heroes, villians);
+            NewBattle(mobDataList);
         }
 
         /// <summary>

@@ -15,9 +15,9 @@ namespace RPGPractice.Engine.MobClasses
         /// Sets All stats for Mob
         /// Meant to be overridden
         /// </summary>
-        public override void Initialize()
+        protected override void Initialize()
         {
-            UserControlled = true;
+            Sprite = Properties.Resources.Mage;
             MaxHitPoints = 16;
             MaxMana = 6; //Only casters get Mana
             Initiative = random.Next(20);  //roll 1d20

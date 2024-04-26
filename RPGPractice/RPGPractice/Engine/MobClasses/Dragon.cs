@@ -15,9 +15,9 @@ namespace RPGPractice.Engine.MobClasses
         /// Sets All stats for Mob
         /// Meant to be overridden
         /// </summary>
-        public override void Initialize()
+        protected override void Initialize()
         {
-            UserControlled = false;
+            Sprite = Properties.Resources.Dragon;
             MaxHitPoints = 50;
             MaxMana = 0; //Breath Attacks dont use Mana
             Initiative = 0; //Always last in initiative

@@ -13,12 +13,12 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Sets All stats for Mob
         /// </summary>
-        public override void Initialize()
+        protected override void Initialize()
         {
             MaxHitPoints = random.Next(11); //roll 1d10 
             MaxMana = 0; //Only casters get Mana
             Initiative = random.Next(21) + 3; //roll 1d20 + 3
-            UserControlled = false;
+            Sprite = Properties.Resources.Bandit;
             Intelligence = 0;
             Strength = 0;
             AttackMod = 0;

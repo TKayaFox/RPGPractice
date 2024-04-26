@@ -69,7 +69,7 @@ namespace RPGPractice.Engine.MobClasses
             data.Sprite = sprite;
             data.Name = name;
             data.UniqueID = uniqueID;
-            data.IsHero = !(this is NPC); //if this object falls under NPC (Mob subclass)
+            data.IsNPC = (this is NPC); //if this object falls under NPC (Mob subclass)
             return data;
         }
 

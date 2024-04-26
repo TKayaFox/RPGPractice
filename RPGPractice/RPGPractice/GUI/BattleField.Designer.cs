@@ -109,6 +109,16 @@
             attackButton.UseVisualStyleBackColor = true;
             attackButton.Click += ActionButton_Click;
             // 
+            // heroSprite5
+            // 
+            heroSprite5.BackColor = Color.Transparent;
+            heroSprite5.Location = new Point(38, 71);
+            heroSprite5.Name = "heroSprite5";
+            heroSprite5.Size = new Size(100, 100);
+            heroSprite5.SizeMode = PictureBoxSizeMode.StretchImage;
+            heroSprite5.TabIndex = 2;
+            heroSprite5.TabStop = false;
+            // 
             // battleSummaryTBox
             // 
             battleSummaryTBox.BackgroundImageLayout = ImageLayout.Stretch;
@@ -129,35 +139,15 @@
             battleSummaryTBox.TabStop = false;
             battleSummaryTBox.Text = "groupBox1";
             // 
-            // heroSprite1
+            // villianSprite4
             // 
-            heroSprite1.BackColor = Color.Transparent;
-            heroSprite1.Location = new Point(182, 236);
-            heroSprite1.Name = "heroSprite1";
-            heroSprite1.Size = new Size(100, 100);
-            heroSprite1.SizeMode = PictureBoxSizeMode.StretchImage;
-            heroSprite1.TabIndex = 3;
-            heroSprite1.TabStop = false;
-            // 
-            // heroSprite2
-            // 
-            heroSprite2.BackColor = Color.Transparent;
-            heroSprite2.Location = new Point(54, 177);
-            heroSprite2.Name = "heroSprite2";
-            heroSprite2.Size = new Size(100, 100);
-            heroSprite2.SizeMode = PictureBoxSizeMode.StretchImage;
-            heroSprite2.TabIndex = 5;
-            heroSprite2.TabStop = false;
-            // 
-            // heroSprite3
-            // 
-            heroSprite3.BackColor = Color.Transparent;
-            heroSprite3.Location = new Point(160, 127);
-            heroSprite3.Name = "heroSprite3";
-            heroSprite3.Size = new Size(100, 100);
-            heroSprite3.SizeMode = PictureBoxSizeMode.StretchImage;
-            heroSprite3.TabIndex = 4;
-            heroSprite3.TabStop = false;
+            villianSprite4.BackColor = Color.Transparent;
+            villianSprite4.Location = new Point(617, 282);
+            villianSprite4.Name = "villianSprite4";
+            villianSprite4.Size = new Size(100, 100);
+            villianSprite4.SizeMode = PictureBoxSizeMode.StretchImage;
+            villianSprite4.TabIndex = 6;
+            villianSprite4.TabStop = false;
             // 
             // heroSprite4
             // 
@@ -169,26 +159,15 @@
             heroSprite4.TabIndex = 6;
             heroSprite4.TabStop = false;
             // 
-            // heroSprite5
+            // heroSprite2
             // 
-            heroSprite5.BackColor = Color.Transparent;
-            heroSprite5.Location = new Point(38, 71);
-            heroSprite5.Name = "heroSprite5";
-            heroSprite5.Size = new Size(100, 100);
-            heroSprite5.SizeMode = PictureBoxSizeMode.StretchImage;
-            heroSprite5.TabIndex = 2;
-            heroSprite5.TabStop = false;
-            // 
-            // villianSprite1
-            // 
-            villianSprite1.BackColor = Color.Transparent;
-            villianSprite1.Location = new Point(486, 236);
-            villianSprite1.Name = "villianSprite1";
-            villianSprite1.Size = new Size(100, 100);
-            villianSprite1.SizeMode = PictureBoxSizeMode.StretchImage;
-            villianSprite1.TabIndex = 3;
-            villianSprite1.TabStop = false;
-            villianSprite1.Visible = false;
+            heroSprite2.BackColor = Color.Transparent;
+            heroSprite2.Location = new Point(54, 177);
+            heroSprite2.Name = "heroSprite2";
+            heroSprite2.Size = new Size(100, 100);
+            heroSprite2.SizeMode = PictureBoxSizeMode.StretchImage;
+            heroSprite2.TabIndex = 5;
+            heroSprite2.TabStop = false;
             // 
             // villianSprite2
             // 
@@ -200,6 +179,16 @@
             villianSprite2.TabIndex = 5;
             villianSprite2.TabStop = false;
             // 
+            // heroSprite3
+            // 
+            heroSprite3.BackColor = Color.Transparent;
+            heroSprite3.Location = new Point(160, 127);
+            heroSprite3.Name = "heroSprite3";
+            heroSprite3.Size = new Size(100, 100);
+            heroSprite3.SizeMode = PictureBoxSizeMode.StretchImage;
+            heroSprite3.TabIndex = 4;
+            heroSprite3.TabStop = false;
+            // 
             // villianSprite3
             // 
             villianSprite3.BackColor = Color.Transparent;
@@ -210,15 +199,15 @@
             villianSprite3.TabIndex = 4;
             villianSprite3.TabStop = false;
             // 
-            // villianSprite4
+            // heroSprite1
             // 
-            villianSprite4.BackColor = Color.Transparent;
-            villianSprite4.Location = new Point(617, 282);
-            villianSprite4.Name = "villianSprite4";
-            villianSprite4.Size = new Size(100, 100);
-            villianSprite4.SizeMode = PictureBoxSizeMode.StretchImage;
-            villianSprite4.TabIndex = 6;
-            villianSprite4.TabStop = false;
+            heroSprite1.BackColor = Color.Transparent;
+            heroSprite1.Location = new Point(182, 236);
+            heroSprite1.Name = "heroSprite1";
+            heroSprite1.Size = new Size(100, 100);
+            heroSprite1.SizeMode = PictureBoxSizeMode.StretchImage;
+            heroSprite1.TabIndex = 3;
+            heroSprite1.TabStop = false;
             // 
             // villianSprite5
             // 
@@ -229,6 +218,17 @@
             villianSprite5.SizeMode = PictureBoxSizeMode.StretchImage;
             villianSprite5.TabIndex = 2;
             villianSprite5.TabStop = false;
+            // 
+            // villianSprite1
+            // 
+            villianSprite1.BackColor = Color.Transparent;
+            villianSprite1.Location = new Point(486, 236);
+            villianSprite1.Name = "villianSprite1";
+            villianSprite1.Size = new Size(100, 100);
+            villianSprite1.SizeMode = PictureBoxSizeMode.StretchImage;
+            villianSprite1.TabIndex = 3;
+            villianSprite1.TabStop = false;
+            villianSprite1.Visible = false;
             // 
             // ActionMenuGrou
             // 
