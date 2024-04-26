@@ -113,7 +113,8 @@ namespace RPGPractice.Engine
         /// <returns>MobID[] array of villians/NPCs</returns>
         public Mob[] GenerateEncounter(EventManager eventManager)
         {
-            //EDIT: Implement actuall encounter variation depending on Combat Level
+            //TODO: Implement actuall encounter scaling
+            //      depending on Combat Level
             Mob[] villians = new Mob[3];
 
             for (int i = 0; i < villians.Length; i++)
@@ -194,13 +195,6 @@ namespace RPGPractice.Engine
                 MobData data = mob.GetMobData();
                 mobDataList.Add(data);
             }
-        }
-
-        public void OnBattleEnd(bool victory)
-        {
-            //EDIT: Unsubscribe from all MobID events
-
-            //EDIT:Raise event telling GUI and Game that battle ended and win or loss
         }
 
         public void OnPlayerTurn()

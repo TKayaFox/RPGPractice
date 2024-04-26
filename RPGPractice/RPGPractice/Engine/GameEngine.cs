@@ -50,7 +50,7 @@ namespace RPGPractice.Engine
         {
             Mob[] heroes = new Mob[NUM_HEROES];
 
-            // Build heroes EDIT: Modify with actual hero layout
+            // Build heroes TODO: Modify with actual hero layout
             for (int i = 0; i < heroes.Length; i++)
             {
                 //Initialize Hero and give a uniqueID
@@ -90,10 +90,11 @@ namespace RPGPractice.Engine
             }
             else
             {
-                //Edit: End game logic, save result to leaderboard, etc
+                //TODO: End game logic
+                //  save result to leaderboard, etc
             }
 
-            //Edit: Save game data
+            //TODO: Save game data
         }
 
         /// <summary>
@@ -102,7 +103,7 @@ namespace RPGPractice.Engine
         /// <exception cref="NotImplementedException"></exception>
         public void NewBattle()
         {
-            //edit: Revive all party members to full hp
+            //TODO: Revive all heroes
 
             //Initialize a new Battle object
             Battle battle = new Battle(heroes, numWins, random);
@@ -123,14 +124,14 @@ namespace RPGPractice.Engine
         #region Event Manager
         /// <summary>
         /// Publishes MobData and subscribes to all events
-        /// Refactor: Remove if not in use
+        /// TODO: refactor: Remove if not in use
         /// </summary>
         /// <param name="eventManager"></param>
         public void ManageEvents()
         {
             //publish events to eventManager
 
-            //edit: Subscribe to any needed events
+            //TODO: Subscribe to any needed events
             eventManager.BattleEnd += OnBattleEnd_Handler;
             eventManager.NewGame += OnNewGame_Handler;
             eventManager.PlayerAction += OnPlayerAction_handler;

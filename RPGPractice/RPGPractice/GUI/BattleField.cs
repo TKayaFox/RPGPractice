@@ -44,7 +44,8 @@ namespace RPGPractice
             SpecialButt.Tag = ActionEnum.Special;
 
             // Assign PictureBoxes to arrays
-            //  Refactor: This should be doable with a loop, but for some reason it didnt work. Revisit later.
+            //  TODO: refactor PictureBox array assignment
+            //      This should be doable with a loop, but for some reason it didnt work. Revisit later.
 
             //Add all mobs into battlefield display and assign to PictureBoxes
             UpdateMobs(mobDataList);
@@ -185,7 +186,7 @@ namespace RPGPractice
         /// <param name="e"></param>
         private void TargetButt_Click(object sender, EventArgs e)
         {
-            //edit: Add a "Cancel" button in case user changes mind.
+            //TODO: Add a "Cancel" button in case user changes mind.
             //Get Target from ComboBox. interestingly comboBox is populated with MobData objects
             MobData data;
             if (TargetCBox.SelectedItem is MobData)
@@ -305,11 +306,6 @@ namespace RPGPractice
 
             //Show Action Menu
             ShowActionMenu();
-        }
-
-        private void OnBattleEvent_Handler(object? sender, TurnEndEventArgs e)
-        {
-            //Edit: add new line to BattleEvent display
         }
         #endregion
     }
