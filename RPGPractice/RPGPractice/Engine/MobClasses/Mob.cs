@@ -299,7 +299,8 @@ namespace RPGPractice.Engine.MobClasses
         public void ManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
-            eventManager.Publish(this);
+            TurnEnd += eventManager.OnTurnEnd_Aggregator;
+            Death += eventManager.OnDeath_Aggregator;
         }
 
 
@@ -309,8 +310,9 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="eventManager"></param>
         public void UnManageEvents(EventManager eventManager)
         {
-            //unpublish events from eventManager
-            eventManager.Unpublish(this);
+            //publish events to eventManager
+            TurnEnd -= eventManager.OnTurnEnd_Aggregator;
+            Death -= eventManager.OnDeath_Aggregator;
         }
         #endregion
     }

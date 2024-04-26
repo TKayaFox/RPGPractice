@@ -118,7 +118,7 @@ namespace RPGPractice
         public void ManageEvents()
         {
             //publish events to eventManager
-            eventManager.Publish(this);
+            NewGame += eventManager.OnNewGame_Aggregator;
 
             //edit: Subscribe to any needed events
             eventManager.BattleStart += OnBattleStart_Handler;

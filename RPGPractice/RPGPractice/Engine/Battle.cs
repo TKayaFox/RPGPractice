@@ -130,7 +130,7 @@ namespace RPGPractice.Engine
         /// Checks for Battle end state every time a MobID dies 
         /// (If all villians or all heroes are dead)
         /// </summary>
-        private void EndGame()
+        private void IsEndGame()
         {
 
             //Check if all villians are dead
@@ -222,7 +222,9 @@ namespace RPGPractice.Engine
         public void ManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
-            eventManager.Publish(this);
+            BattleStart += eventManager.OnBattleStart_Aggregator;
+            BattleEnd += eventManager.OnBattleEnd_Aggregator;
+            PlayerTurn += eventManager.OnPlayerTurn_Aggregator;
 
             //Subscribe to events from eventManager
             eventManager.Death += OnDeath_Handler;
@@ -235,27 +237,22 @@ namespace RPGPractice.Engine
         public void UnManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
-            eventManager.Unpublish(this);
+            BattleStart -= eventManager.OnBattleStart_Aggregator;
+            BattleEnd -= eventManager.OnBattleEnd_Aggregator;
+            PlayerTurn -= eventManager.OnPlayerTurn_Aggregator;
 
-            //unSubscribe to any needed events
+            //Subscribe to events from eventManager
             eventManager.Death -= OnDeath_Handler;
-
-
-            //edit: Unpublish all villian Mobs
-            foreach (Mob villian in villians)
-            {
-                villian.UnManageEvents(eventManager);
-            }
         }
 
         /// <summary>
-        /// Check for EndGame when someone dies
+        /// Check for End Game when someone dies
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnDeath_Handler(object sender, EventArgs e)
         {
-            EndGame();
+            IsEndGame();
         }
     }
 }

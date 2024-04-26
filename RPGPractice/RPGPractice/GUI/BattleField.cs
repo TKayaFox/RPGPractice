@@ -234,7 +234,7 @@ namespace RPGPractice
         public void ManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
-            eventManager.Publish(this);
+            PlayerAction += eventManager.OnPlayerAction_Aggregator;
 
             //Subscribe to any needed events
             eventManager.BattleEvent += OnBattleEvent_Handler;
@@ -249,7 +249,7 @@ namespace RPGPractice
         public void UnManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
-            eventManager.Unpublish(this);
+            PlayerAction -= eventManager.OnPlayerAction_Aggregator;
 
             //unSubscribe to any needed events
             eventManager.BattleEvent -= OnBattleEvent_Handler;
