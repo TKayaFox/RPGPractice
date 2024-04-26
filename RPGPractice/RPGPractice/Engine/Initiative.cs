@@ -34,7 +34,7 @@ namespace RPGPractice.Engine
         /// <summary>
         /// Determine which Mob should be taking the next turn
         /// </summary>
-        public Mob NextTurn()
+        public int NextTurn()
         {
 
             //Cycle to next Node
@@ -59,47 +59,27 @@ namespace RPGPractice.Engine
             Node newNode = new Node(mob);
 
             // Check if newNode should become the new head
-            if (head == null || ReplaceCheck(head, newNode))
+            if (head == null || HasHigherInitiative(head, newNode))
             {
                 newNode.Next = head;
                 head = newNode;
-                currentNode = head;
             }
             else
             {
                 //Otherwise, compare to all items in list
-                Node tempNode = head;
-                Node prevNode = head;
-                bool placed = false;
+                Node current = head;
 
-                while (tempNode != null && !placed)
+                //Loop until end of list OR next node would be a lower initiative
+                while (current.Next != null && current.Next.Initiative > newNode.Initiative)
                 {
-                    //check if new mob should replace current mob in Initiative order
-                    if (ReplaceCheck(tempNode, newNode))
-                    {
-                        ReplaceNode(tempNode, newNode, prevNode);
-                        placed = true;
-                    }
-                    //If there is no next mob then put current mob next
-                    else if (tempNode.Next == null)
-                    {
-                        tempNode.Next = newNode;
-                        placed = true;
-                    }
-                    //else keep looping
-                    else
-                    {
-                        prevNode = tempNode;
-                        tempNode = tempNode.Next;
-                    }
+                    current = current.Next;
                 }
+                if (current.Next != null)
+                {
+                    newNode.Next = current.Next;
+                }
+                current.Next = newNode;
             }
-        }
-
-        private void ReplaceNode(Node oldNode, Node newNode, Node prevNode)
-        {
-            prevNode.Next = newNode;
-            newNode.Next = oldNode;
         }
 
         /// <summary>
@@ -108,25 +88,28 @@ namespace RPGPractice.Engine
         /// <param name="placedNode"></param>
         /// <param name="newNode"></param>
         /// <returns>Returns true determining if newNode should replace placedNode</returns>
-        private bool ReplaceCheck(Node placedNode, Node newNode)
+        private bool HasHigherInitiative(Node placedNode, Node newNode)
         {
             //get initiatives and determine if newNode has higher initiative
-            int initiative1 = placedNode.Data.RollInitiative();
-            int initiative2 = newNode.Data.RollInitiative();
+            int initiative1 = placedNode.Initiative;
+            int initiative2 = newNode.Initiative;
             return (initiative2 > initiative1);
         }
 
         internal class Node
         {
             Node next;
-            Mob data;
+            int data;
+            int priority;
 
             public Node(Mob mob)
             {
-                this.data = mob;
+                this.data = mob.UniqueID;
+                this.Initiative = mob.RollInitiative();
             }
 
-            public Mob Data { get => data; set => data = value; }
+            public int Data { get => data; set => data = value; }
+            public int Initiative { get => priority; set => priority = value; }
             internal Node Next { get => next; set => next = value; }
         }
     }

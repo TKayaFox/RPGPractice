@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.Events;
@@ -17,7 +18,7 @@ namespace RPGPractice.Engine
         private Initiative initiative; 
         private Random random;
         private int combatLevel;
-        List<int> mobIDs;
+        private Dictionary<int, Mob> mobDictionary;
 
         //=========================================
         //              Main Methods
@@ -33,33 +34,41 @@ namespace RPGPractice.Engine
             this.heroes = heroes;
             this.combatLevel = combatLevel;
             this.random = random;
-
-            //get all hero unique IDs
-            mobIDs= new List<int>();
-
-            foreach (Mob mob in heroes)
-            {
-                mobIDs.Add(mob.UniqueID);
-            }
         }
 
         public void Start(EventManager eventManager)
         {
-            //EDIT: Load sprites onto Battlefield 
-
-            //EDIT: Load background to battlefield
-
             //subscribe to Events
             ManageEvents(eventManager);
-
 
             //setup initiative order and villians
             villians = GenerateEncounter(eventManager);
             initiative = new Initiative(heroes, villians);
 
+            //setup Mob dictionary for easy reference
+            mobDictionary = new Dictionary<int, Mob>();
+
+            //add heroes and villains to dictionary
+            AddToDictionary(heroes, mobDictionary);
+            AddToDictionary(villians, mobDictionary);
+
             //Start Game
             OnBattleStart();
             NextTurn();
+        }
+
+        /// <summary>
+        /// Adds an array of mobs to dictionary using uniqueID 
+        /// </summary>
+        /// <param name="mobArr"></param>
+        /// <param name="dictionary"></param>
+        private static void AddToDictionary(Mob[] mobArr, Dictionary<int, Mob> dictionary)
+        {
+            //add each mob to dictionary using uniqueID for index
+            foreach (Mob mob in mobArr)
+            {
+                dictionary.Add(mob.UniqueID, mob);
+            }
         }
 
         /// <summary>
@@ -68,8 +77,9 @@ namespace RPGPractice.Engine
         /// <exception cref="NotImplementedException"></exception>
         public void NextTurn()
         {
-
-            currentTurn = initiative.NextTurn();
+            //get next Mob in initiative
+            int uniqueID= initiative.NextTurn();
+            currentTurn = mobDictionary[uniqueID];
 
             //If currentMob is Not player controlled tell it to take it's turn
             if (currentTurn is NPC npc)
