@@ -11,7 +11,7 @@ namespace RPGPractice.Engine.MobClasses
         public Bandit(string name, Random random) : base(name, random) { }
 
         /// <summary>
-        /// Sets All stats for Mob
+        /// Sets All stats for MobID
         /// </summary>
         protected override void Initialize()
         {

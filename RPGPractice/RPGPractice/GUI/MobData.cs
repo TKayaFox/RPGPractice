@@ -13,6 +13,8 @@ namespace RPGPractice.GUI
         private PictureBox pictureBox;
         private string name;
         private bool isNPC;
+        private bool isAlive;
+        private string special = "";
 
         public Bitmap Sprite { set => sprite = value; }
         public int UniqueID { get => uniqueID; set => uniqueID = value; }
@@ -32,5 +34,27 @@ namespace RPGPractice.GUI
             }
         }
 
+        /// <summary>
+        /// Override ToString so object is identified by name
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return name; // Or any other string format that includes more details about the mob
+        }
+
+        /// <summary>
+        /// Updates isAlive to false and changes PictureBox to show death
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        internal void OnDeath_Handler(object? sender, EventArgs e)
+        {
+            IsAlive = false;
+        }
+
+        public string Special { get => special; set => special = value; }
+        public bool IsAlive { get => isAlive; set => isAlive = value; }
     }
 }

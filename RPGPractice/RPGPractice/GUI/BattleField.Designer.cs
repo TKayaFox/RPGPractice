@@ -1,4 +1,5 @@
-﻿namespace RPGPractice
+﻿
+namespace RPGPractice
 {
     partial class BattleField
     {
@@ -28,10 +29,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            ActionButtonBox = new GroupBox();
-            button2 = new Button();
-            DefendButton = new Button();
-            attackButton = new Button();
+            ActionButtBox = new GroupBox();
+            SpecialButt = new Button();
+            DefendButt = new Button();
+            AttackButt = new Button();
             heroSprite5 = new PictureBox();
             battleSummaryTBox = new GroupBox();
             villianSprite4 = new PictureBox();
@@ -44,11 +45,12 @@
             villianSprite5 = new PictureBox();
             villianSprite1 = new PictureBox();
             ActionMenuGrou = new GroupBox();
+            TurnLabel = new Label();
             ActionTargetBox = new GroupBox();
             TargetCBox = new ComboBox();
             TargetButt = new Button();
             textBox1 = new TextBox();
-            ActionButtonBox.SuspendLayout();
+            ActionButtBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)heroSprite5).BeginInit();
             battleSummaryTBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)villianSprite4).BeginInit();
@@ -64,54 +66,55 @@
             ActionTargetBox.SuspendLayout();
             SuspendLayout();
             // 
-            // ActionButtonBox
+            // ActionButtBox
             // 
-            ActionButtonBox.Controls.Add(button2);
-            ActionButtonBox.Controls.Add(DefendButton);
-            ActionButtonBox.Controls.Add(attackButton);
-            ActionButtonBox.Location = new Point(182, 0);
-            ActionButtonBox.Name = "ActionButtonBox";
-            ActionButtonBox.Padding = new Padding(0);
-            ActionButtonBox.Size = new Size(404, 56);
-            ActionButtonBox.TabIndex = 1;
-            ActionButtonBox.TabStop = false;
+            ActionButtBox.Controls.Add(SpecialButt);
+            ActionButtBox.Controls.Add(DefendButt);
+            ActionButtBox.Controls.Add(AttackButt);
+            ActionButtBox.Location = new Point(182, 0);
+            ActionButtBox.Name = "ActionButtBox";
+            ActionButtBox.Padding = new Padding(0);
+            ActionButtBox.Size = new Size(404, 56);
+            ActionButtBox.TabIndex = 1;
+            ActionButtBox.TabStop = false;
             // 
-            // button2
+            // SpecialButt
             // 
-            button2.Font = new Font("Microsoft Sans Serif", 20.25F);
-            button2.Location = new Point(270, 13);
-            button2.Name = "button2";
-            button2.Size = new Size(129, 35);
-            button2.TabIndex = 2;
-            button2.Text = "Special";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += ActionButton_Click;
+            SpecialButt.Font = new Font("Microsoft Sans Serif", 15.75F);
+            SpecialButt.Location = new Point(137, 13);
+            SpecialButt.Name = "SpecialButt";
+            SpecialButt.Size = new Size(129, 35);
+            SpecialButt.TabIndex = 2;
+            SpecialButt.Text = "Special";
+            SpecialButt.UseVisualStyleBackColor = true;
+            SpecialButt.Click += ActionButton_Click;
             // 
-            // DefendButton
+            // DefendButt
             // 
-            DefendButton.Font = new Font("Microsoft Sans Serif", 20.25F);
-            DefendButton.Location = new Point(136, 13);
-            DefendButton.Name = "DefendButton";
-            DefendButton.Size = new Size(129, 35);
-            DefendButton.TabIndex = 1;
-            DefendButton.Text = "Defend";
-            DefendButton.UseVisualStyleBackColor = true;
-            DefendButton.Click += ActionButton_Click;
+            DefendButt.Font = new Font("Microsoft Sans Serif", 15.75F);
+            DefendButt.Location = new Point(270, 13);
+            DefendButt.Name = "DefendButt";
+            DefendButt.Size = new Size(129, 35);
+            DefendButt.TabIndex = 1;
+            DefendButt.Text = "Defend";
+            DefendButt.UseVisualStyleBackColor = true;
+            DefendButt.Click += ActionButton_Click;
             // 
-            // attackButton
+            // AttackButt
             // 
-            attackButton.Font = new Font("Microsoft Sans Serif", 20.25F);
-            attackButton.Location = new Point(5, 13);
-            attackButton.Name = "attackButton";
-            attackButton.Size = new Size(129, 35);
-            attackButton.TabIndex = 0;
-            attackButton.Text = "Attack";
-            attackButton.UseVisualStyleBackColor = true;
-            attackButton.Click += ActionButton_Click;
+            AttackButt.Font = new Font("Microsoft Sans Serif", 15.75F);
+            AttackButt.Location = new Point(5, 13);
+            AttackButt.Name = "AttackButt";
+            AttackButt.Size = new Size(129, 35);
+            AttackButt.TabIndex = 0;
+            AttackButt.Text = "Attack";
+            AttackButt.UseVisualStyleBackColor = true;
+            AttackButt.Click += ActionButton_Click;
             // 
             // heroSprite5
             // 
             heroSprite5.BackColor = Color.Transparent;
+            heroSprite5.BackgroundImageLayout = ImageLayout.Stretch;
             heroSprite5.Location = new Point(38, 71);
             heroSprite5.Name = "heroSprite5";
             heroSprite5.Size = new Size(100, 100);
@@ -121,6 +124,7 @@
             // 
             // battleSummaryTBox
             // 
+            battleSummaryTBox.BackgroundImage = Properties.Resources.game_background_1;
             battleSummaryTBox.BackgroundImageLayout = ImageLayout.Stretch;
             battleSummaryTBox.Controls.Add(villianSprite4);
             battleSummaryTBox.Controls.Add(heroSprite4);
@@ -142,6 +146,7 @@
             // villianSprite4
             // 
             villianSprite4.BackColor = Color.Transparent;
+            villianSprite4.BackgroundImageLayout = ImageLayout.Stretch;
             villianSprite4.Location = new Point(617, 282);
             villianSprite4.Name = "villianSprite4";
             villianSprite4.Size = new Size(100, 100);
@@ -152,6 +157,7 @@
             // heroSprite4
             // 
             heroSprite4.BackColor = Color.Transparent;
+            heroSprite4.BackgroundImageLayout = ImageLayout.Stretch;
             heroSprite4.Location = new Point(78, 282);
             heroSprite4.Name = "heroSprite4";
             heroSprite4.Size = new Size(100, 100);
@@ -162,6 +168,7 @@
             // heroSprite2
             // 
             heroSprite2.BackColor = Color.Transparent;
+            heroSprite2.BackgroundImageLayout = ImageLayout.Stretch;
             heroSprite2.Location = new Point(54, 177);
             heroSprite2.Name = "heroSprite2";
             heroSprite2.Size = new Size(100, 100);
@@ -172,6 +179,7 @@
             // villianSprite2
             // 
             villianSprite2.BackColor = Color.Transparent;
+            villianSprite2.BackgroundImageLayout = ImageLayout.Stretch;
             villianSprite2.Location = new Point(592, 177);
             villianSprite2.Name = "villianSprite2";
             villianSprite2.Size = new Size(100, 100);
@@ -182,6 +190,7 @@
             // heroSprite3
             // 
             heroSprite3.BackColor = Color.Transparent;
+            heroSprite3.BackgroundImageLayout = ImageLayout.Stretch;
             heroSprite3.Location = new Point(160, 127);
             heroSprite3.Name = "heroSprite3";
             heroSprite3.Size = new Size(100, 100);
@@ -192,6 +201,7 @@
             // villianSprite3
             // 
             villianSprite3.BackColor = Color.Transparent;
+            villianSprite3.BackgroundImageLayout = ImageLayout.Stretch;
             villianSprite3.Location = new Point(465, 127);
             villianSprite3.Name = "villianSprite3";
             villianSprite3.Size = new Size(100, 100);
@@ -202,6 +212,7 @@
             // heroSprite1
             // 
             heroSprite1.BackColor = Color.Transparent;
+            heroSprite1.BackgroundImageLayout = ImageLayout.Stretch;
             heroSprite1.Location = new Point(182, 236);
             heroSprite1.Name = "heroSprite1";
             heroSprite1.Size = new Size(100, 100);
@@ -212,6 +223,7 @@
             // villianSprite5
             // 
             villianSprite5.BackColor = Color.Transparent;
+            villianSprite5.BackgroundImageLayout = ImageLayout.Stretch;
             villianSprite5.Location = new Point(577, 71);
             villianSprite5.Name = "villianSprite5";
             villianSprite5.Size = new Size(100, 100);
@@ -222,17 +234,18 @@
             // villianSprite1
             // 
             villianSprite1.BackColor = Color.Transparent;
+            villianSprite1.BackgroundImageLayout = ImageLayout.Stretch;
             villianSprite1.Location = new Point(486, 236);
             villianSprite1.Name = "villianSprite1";
             villianSprite1.Size = new Size(100, 100);
             villianSprite1.SizeMode = PictureBoxSizeMode.StretchImage;
             villianSprite1.TabIndex = 3;
             villianSprite1.TabStop = false;
-            villianSprite1.Visible = false;
             // 
             // ActionMenuGrou
             // 
-            ActionMenuGrou.Controls.Add(ActionButtonBox);
+            ActionMenuGrou.Controls.Add(TurnLabel);
+            ActionMenuGrou.Controls.Add(ActionButtBox);
             ActionMenuGrou.Controls.Add(ActionTargetBox);
             ActionMenuGrou.Location = new Point(0, 563);
             ActionMenuGrou.Margin = new Padding(3, 2, 3, 2);
@@ -241,6 +254,15 @@
             ActionMenuGrou.Size = new Size(730, 56);
             ActionMenuGrou.TabIndex = 4;
             ActionMenuGrou.TabStop = false;
+            // 
+            // TurnLabel
+            // 
+            TurnLabel.Font = new Font("Microsoft Sans Serif", 15.75F);
+            TurnLabel.Location = new Point(6, 14);
+            TurnLabel.Name = "TurnLabel";
+            TurnLabel.Size = new Size(175, 34);
+            TurnLabel.TabIndex = 8;
+            TurnLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
             // ActionTargetBox
             // 
@@ -297,8 +319,8 @@
             Controls.Add(ActionMenuGrou);
             Controls.Add(battleSummaryTBox);
             Name = "BattleField";
-            Size = new Size(737, 680);
-            ActionButtonBox.ResumeLayout(false);
+            Size = new Size(737, 625);
+            ActionButtBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)heroSprite5).EndInit();
             battleSummaryTBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)villianSprite4).EndInit();
@@ -319,10 +341,10 @@
         #endregion
 
         private PictureBox ArenaPictureBox;
-        private GroupBox ActionButtonBox;
-        private Button button2;
-        private Button DefendButton;
-        private Button attackButton;
+        private GroupBox ActionButtBox;
+        private Button SpecialButt;
+        private Button DefendButt;
+        private Button AttackButt;
         private PictureBox heroSprite5;
         private GroupBox battleSummaryTBox;
         private PictureBox heroSprite1;
@@ -339,5 +361,6 @@
         private ComboBox TargetCBox;
         private Button TargetButt;
         private TextBox textBox1;
+        private Label TurnLabel;
     }
 }

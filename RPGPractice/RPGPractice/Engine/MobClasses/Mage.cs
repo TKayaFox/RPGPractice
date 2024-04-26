@@ -12,7 +12,7 @@ namespace RPGPractice.Engine.MobClasses
         public Mage(string name, Random random) : base(name, random) { }
 
         /// <summary>
-        /// Sets All stats for Mob
+        /// Sets All stats for MobID
         /// Meant to be overridden
         /// </summary>
         protected override void Initialize()

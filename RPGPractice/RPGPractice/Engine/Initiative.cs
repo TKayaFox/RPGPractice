@@ -32,7 +32,7 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// Determine which Mob should be taking the next turn
+        /// Determine which MobID should be taking the next turn
         /// </summary>
         public int NextTurn()
         {
@@ -49,7 +49,7 @@ namespace RPGPractice.Engine
                 currentNode = currentNode.Next;
             }
 
-            //get the next Mob for return
+            //get the next MobID for return
             return currentNode.Data;
         }
 

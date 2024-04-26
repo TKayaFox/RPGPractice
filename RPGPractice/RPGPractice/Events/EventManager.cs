@@ -22,7 +22,7 @@ namespace RPGPractice.Events
         //=========================================
         //  Remember to add an aggregator below as well to relay the event, and subscriber in appropriate method
 
-        //Mob Events
+        //MobID Events
         public event EventHandler<TurnEndEventArgs>? BattleEvent;
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler? Death;
@@ -162,7 +162,6 @@ namespace RPGPractice.Events
         private void Subscribe(Mob mob)
         {
             //Events
-            mob.BattleEvent += OnBattleEvent_Aggregator;
             mob.TurnEnd += OnTurnEnd_Aggregator;
             mob.Death += OnDeath_Aggregator;
         }

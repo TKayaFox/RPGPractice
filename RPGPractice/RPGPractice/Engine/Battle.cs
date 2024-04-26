@@ -46,7 +46,7 @@ namespace RPGPractice.Engine
             villians = GenerateEncounter(eventManager);
             initiative = new Initiative(heroes, villians);
 
-            //setup Mob dictionary for easy reference
+            //setup MobID dictionary for easy reference
             mobDictionary = new Dictionary<int, Mob>();
 
             //add heroes and villains to dictionary
@@ -65,7 +65,7 @@ namespace RPGPractice.Engine
         /// <param name="dictionary"></param>
         private static void AddToDictionary(Mob[] mobArr, Dictionary<int, Mob> dictionary)
         {
-            //add each mob to dictionary using uniqueID for index
+            //add each mobID to dictionary using uniqueID for index
             foreach (Mob mob in mobArr)
             {
                 dictionary.Add(mob.UniqueID, mob);
@@ -78,7 +78,7 @@ namespace RPGPractice.Engine
         /// <exception cref="NotImplementedException"></exception>
         public void NextTurn()
         {
-            //get next Mob in initiative
+            //get next MobID in initiative
             int uniqueID= initiative.NextTurn();
             currentTurn = mobDictionary[uniqueID];
 
@@ -110,7 +110,7 @@ namespace RPGPractice.Engine
         /// <summary>
         /// Initializes an array of Mobs for a combat encounter
         /// </summary>
-        /// <returns>Mob[] array of villians/NPCs</returns>
+        /// <returns>MobID[] array of villians/NPCs</returns>
         public Mob[] GenerateEncounter(EventManager eventManager)
         {
             //EDIT: Implement actuall encounter variation depending on Combat Level
@@ -118,7 +118,7 @@ namespace RPGPractice.Engine
 
             for (int i = 0; i < villians.Length; i++)
             {
-                Mob villain = new Warrior($"Warrior {i}", random);
+                Mob villain = new Bandit($"Bandit {i}", random);
                 villain.ManageEvents(eventManager);
                 villain.UniqueID = i + 100;
                 villians[i] = villain;
@@ -127,7 +127,7 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// Checks for Battle end state every time a Mob dies 
+        /// Checks for Battle end state every time a MobID dies 
         /// (If all villians or all heroes are dead)
         /// </summary>
         private void EndGame()
@@ -149,7 +149,7 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// Tell attacker Mob to attack target
+        /// Tell attacker MobID to attack target
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="target"></param>
@@ -176,7 +176,7 @@ namespace RPGPractice.Engine
         {
             BattleStartEventArgs args = new BattleStartEventArgs();
 
-            //Package only needed Mob data into MobData object for sending to Gui
+            //Package only needed MobID data into MobData object for sending to Gui
             Mob[] mobs;
             List<MobData> mobDataList = new List<MobData>();
             CompileMobData(heroes, mobDataList);
@@ -198,7 +198,7 @@ namespace RPGPractice.Engine
 
         public void OnBattleEnd(bool victory)
         {
-            //EDIT: Unsubscribe from all Mob events
+            //EDIT: Unsubscribe from all MobID events
 
             //EDIT:Raise event telling GUI and Game that battle ended and win or loss
         }
@@ -206,7 +206,7 @@ namespace RPGPractice.Engine
         public void OnPlayerTurn()
         {
             PlayerTurnEventArgs args = new PlayerTurnEventArgs();
-            args.Mob = currentTurn;
+            args.MobID = currentTurn.UniqueID;
 
             PlayerTurn?.Invoke(this, args);
         }

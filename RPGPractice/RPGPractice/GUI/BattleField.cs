@@ -23,6 +23,8 @@ namespace RPGPractice
         PictureBox[] heroSprites;
         PictureBox[] villianSprites;
         Dictionary<int, MobData> mobDictionary;
+        ActionEnum action;
+        int currentTurnID;
 
         //=========================================
         //              Main Methods
@@ -34,18 +36,38 @@ namespace RPGPractice
             mobDictionary = new Dictionary<int, MobData>();
 
             //Make arrays for PictureBoxes for easier Sprite Handling
-            PictureBox[] heroSprites = new PictureBox[Max_Sprites];
-            PictureBox[] villianSprites = new PictureBox[Max_Sprites];
+            BuildPictureArrays();
 
-            // Assign PictureBoxes to arrays using a loop
-            for (int i = 0; i < Max_Sprites; i++)
-            {
-                heroSprites[i] = Controls.Find($"heroSprite{i + 1}", true).FirstOrDefault() as PictureBox;
-                villianSprites[i] = Controls.Find($"villainSprite{i + 1}", true).FirstOrDefault() as PictureBox;
-            }
+            //Tag ActionButtons
+            AttackButt.Tag = ActionEnum.Attack;
+            DefendButt.Tag = ActionEnum.Defend;
+            SpecialButt.Tag = ActionEnum.Special;
+
+            // Assign PictureBoxes to arrays
+            //  Refactor: This should be doable with a loop, but for some reason it didnt work. Revisit later.
 
             //Add all mobs into battlefield display and assign to PictureBoxes
             UpdateMobs(mobDataList);
+
+            //Hide Action Menu until player has a turn
+            HideActionMenu();
+        }
+
+        private void BuildPictureArrays()
+        {
+            heroSprites = new PictureBox[Max_Sprites];
+            villianSprites = new PictureBox[Max_Sprites];
+
+            heroSprites[0] = heroSprite1;
+            heroSprites[1] = heroSprite2;
+            heroSprites[2] = heroSprite3;
+            heroSprites[3] = heroSprite4;
+            heroSprites[4] = heroSprite5;
+            villianSprites[0] = villianSprite1;
+            villianSprites[1] = villianSprite2;
+            villianSprites[2] = villianSprite3;
+            villianSprites[3] = villianSprite4;
+            villianSprites[4] = villianSprite5;
         }
 
         #endregion
@@ -53,15 +75,15 @@ namespace RPGPractice
         #region Private Methods
 
         /// <summary>
-        /// gets all initial data needed from mob array
+        /// gets all initial args needed from mobID array
         /// </summary>
         /// <param name="mobs"></param>
         private void UpdateMobs(List<MobData> mobDataList)
         {
             foreach (MobData data in mobDataList)
             {
-                //Assign a PictureBox for the pixtureBox
-                //determine if mob is a Hero or Villain(NPC) and assign to Sprite
+                //Assign a PictureBox for the pictureBox
+                //determine if mobID is a Hero or Villain(NPC) and assign to Sprite
                 if (data.IsNPC)
                 {
                     AssignSprite(data, villianSprites);
@@ -71,14 +93,14 @@ namespace RPGPractice
                     AssignSprite(data, heroSprites);
                 }
 
-                //Add mob data to dictionary
+                //Add mobID args to dictionary
                 mobDictionary.Add(data.UniqueID, data);
             }
         }
 
 
         /// <summary>
-        /// Assigns a pixtureBox to a picturebox in the picturebox array (Only if there is room)
+        /// Assigns a pictureBox to a picturebox in the picturebox array (Only if there is room)
         /// </summary>
         /// <param name="mob"></param>
         /// <param name="sprites"></param>
@@ -88,13 +110,13 @@ namespace RPGPractice
             bool identified = false;
             while (!identified && i < sprites.Length)
             {
-                PictureBox pixtureBox = sprites[i];
-                if (pixtureBox.Tag == null)
+                PictureBox pictureBox = sprites[i];
+                if (pictureBox.Image == null)
                 {
                     identified = true;
 
                     //add PictureBox to MobData (automatically changes Sprite)
-                    data.PictureBox = pixtureBox;
+                    data.PictureBox = pictureBox;
                 }
                 i++;
             }
@@ -103,15 +125,15 @@ namespace RPGPractice
         private void ShowActionMenu()
         {
             //Show and enable ActionGroupBox
-            ActionButtonBox.Enabled = true;
-            ActionButtonBox.Visible = true;
+            ActionMenuGrou.Visible = true;
+            ActionButtBox.Enabled = true;
+            ActionButtBox.Visible = true;
         }
 
         //Hides action menu so player doesnt try to make a move when not their turn
         private void HideActionMenu()
         {
-            ActionButtonBox.Enabled = false;
-            ActionButtonBox.Visible = false;
+            ActionMenuGrou.Visible = false;
         }
 
         #endregion
@@ -133,10 +155,27 @@ namespace RPGPractice
         /// <param name="e"></param>
         private void ActionButton_Click(object sender, EventArgs e)
         {
-            //Edit: Determine action taken depending on sender and ActionEnum
-            //edit: if targeted action, display ActionTargetBox 
-            //      (Just hide ActionButtonBox)
-            //  else invoke event
+            //Determine action taken depending on sender and ActionEnum
+            if (sender is Button && ((Button)sender).Tag != null)
+            {
+                var tag = ((Button)sender).Tag;
+                action = (ActionEnum)tag;
+            }
+
+            //If defending, skip target selection
+            if (action == ActionEnum.Defend)
+            {
+                OnPlayerAction(0, action);
+            }
+            //else show ActionTargetBox for target selection
+            else
+            {
+                //TargetBox is behind ActionButtBox so hide ActionButtBox
+                ActionButtBox.Visible = false;
+
+                //change TurnLabel to reflect current Action
+                TurnLabel.Text = action.ToString();
+            }
         }
 
         /// <summary>
@@ -146,16 +185,40 @@ namespace RPGPractice
         /// <param name="e"></param>
         private void TargetButt_Click(object sender, EventArgs e)
         {
-            //edit: Get Target
-            //edit: If target is NOT selected, provide error telling user to select a target
+            //edit: Add a "Cancel" button in case user changes mind.
+            //Get Target from ComboBox. interestingly comboBox is populated with MobData objects
+            MobData data;
+            if (TargetCBox.SelectedItem is MobData)
+            {
+                //get Data
+                data = (MobData)TargetCBox.SelectedItem;
+
+                //send PlayerAction event
+                OnPlayerAction(data.UniqueID, action);
+            }
+            else
+            {
+                //edit: If target is NOT selected, provide error telling user to select a target
+            }
+
+            //re-show ActionButtBox
+            ActionButtBox.Visible = true;
         }
 
-        private void OnPlayerAction(Mob target, ActionEnum action)
+        /// <summary>
+        /// raise the PlayerAction event
+        /// </summary>
+        /// <param name="targetID"></param>
+        /// <param name="action"></param>
+        private void OnPlayerAction(int targetID, ActionEnum action)
         {
-            //Edit: Actually Store PlayerActionEventArgs so it can be modified
-            //edit: Package PlayerAction event with target and action
-            //edit: Raise PlayerAction event
-            //edit: reset PlayerActionEventArgs
+            //Package PlayerAction event with target and action
+            PlayerActionEventArgs actionData = new PlayerActionEventArgs();
+            actionData.TargetID = targetID;
+            actionData.Action = action;
+
+            //Raise PlayerAction event
+            PlayerAction?.Invoke(this, actionData);
         }
 
         #endregion
@@ -203,33 +266,50 @@ namespace RPGPractice
                 $"----------------------------";
         }
 
-        private void OnPlayerTurn_Handler(object? sender, PlayerTurnEventArgs e)
+        private void OnPlayerTurn_Handler(object? sender, PlayerTurnEventArgs args)
         {
-            //Edit: Highlight the Hero whose turn it is
-            //Edit: Show Hero name
-            //Edit: Either modify Special Attack button (heal, spell etc) or 
-            //Edit: Populate target selection with all viable targets
-            //Show Action Menut
+            //find mobData using MobID
+            currentTurnID = args.MobID;
+            MobData mobData = mobDictionary[currentTurnID];
+
+            //Highlight the Hero whose turn it is
+            mobData.PictureBox.BorderStyle = BorderStyle.FixedSingle;
+
+            //Show Hero name in Action Menu
+            TurnLabel.Text = mobData.Name;
+
+            //Setup SpecialAttack Button to show what Special ability current mob has.
+            if (!mobData.Special.Equals(""))
+            {
+                SpecialButt.Visible = true;
+                SpecialButt.Text = mobData.Special;
+            }
+            //Else hide Special Button because no special ability
+            else
+            {
+                SpecialButt.Visible = false;
+            }
+
+            //Populate TargetCBox with all potential targets
+            foreach (MobData data in mobDictionary.Values)
+            {
+                //Make sure Mob is alive before adding.
+                if (data.IsAlive)
+                {
+                    //add MobData to ComboBox.
+                    //  Note: non-Strings added to Combobox will be default display their toString()
+                    //  This makes it easy to know what target the user selects.
+                    TargetCBox.Items.Add(data);
+                }
+            }
+
+            //Show Action Menu
             ShowActionMenu();
         }
 
         private void OnBattleEvent_Handler(object? sender, TurnEndEventArgs e)
         {
             //Edit: add new line to BattleEvent display
-        }
-
-        public void OnPlayerTurn_Handler()
-        {
-            ShowActionMenu();
-        }
-
-        public void OnDeath_Handler()
-        {
-            //Edit: Decipher which Mob died
-            //Edit: Find Mobs pixtureBox
-
-            //Edit: change pixtureBox to show Mob as dead
-            heroSprite1.Visible = false;
         }
         #endregion
     }

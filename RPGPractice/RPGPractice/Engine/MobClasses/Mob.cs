@@ -8,7 +8,7 @@ using RPGPractice.GUI;
 namespace RPGPractice.Engine.MobClasses
 {
     /// <summary>
-    /// Mob represents any creature (Player Character or Non Player Character)
+    /// MobID represents any creature (Player Character or Non Player Character)
     /// All mobs should have the same basic functioning and Attributes, these attributes should be limited to 
     /// </summary>
     public abstract class Mob
@@ -17,7 +17,7 @@ namespace RPGPractice.Engine.MobClasses
         //                Variables
         //=========================================
         #region Variables
-        //Mob identifying data
+        //MobID identifying data
         protected Random random;
         private string name;
         private System.Drawing.Bitmap sprite;
@@ -61,7 +61,7 @@ namespace RPGPractice.Engine.MobClasses
 
         /// <summary>
         /// Builds a GUI specific MobData object which holds only the information needed for MobData
-        /// Refactor: Can eventually subscribe it to a MobUpdate event which allows the Mob object to update it's GUI counterpart directly
+        /// Refactor: Can eventually subscribe it to a MobUpdate event which allows the MobID object to update it's GUI counterpart directly
         /// </summary>
         public MobData GetMobData()
         {
@@ -69,7 +69,11 @@ namespace RPGPractice.Engine.MobClasses
             data.Sprite = sprite;
             data.Name = name;
             data.UniqueID = uniqueID;
-            data.IsNPC = (this is NPC); //if this object falls under NPC (Mob subclass)
+            data.IsNPC = (this is NPC); //if this object falls under NPC (MobID subclass)
+
+            //subscibe Mob to Death events
+            Death += data.OnDeath_Handler;
+
             return data;
         }
 
@@ -84,7 +88,42 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
-        /// Called when an attack (or heal) hits Mob
+        /// Called from Game when a MobID attacks another mobID.
+        /// Returns an initial Attack Roll to see if hits
+        /// </summary>
+        /// <returns></returns>
+        public virtual void Attack(Mob target)
+        {
+            //Determine Attack Roll (attackMod + 1d20)
+            int attackRoll = random.Next(21);
+
+            //Determine damage Roll (attackMod + 1d8)
+            int damage = random.Next(9);
+
+            //Critical Hit: If attack roll was a 20, then slightly boost hit chance (attackRoll) and boost damage
+            if (attackRoll >= 20)
+            {
+                attackRoll += 5;
+                damage += random.Next(9); //add another d8
+            }
+
+            //Add modifiers
+            attackRoll += attackMod;
+            damage += strength;
+
+
+            //Tell target they are being attacked
+            //  Be polite though and tell them who you are
+            //  Give them turnData so they can update it
+            string targetTurnSummary = target.Hit(attackRoll, damage, name);
+            AppendTurnSummary(targetTurnSummary);
+
+            //Raise TurnEnd event
+            OnTurnEnd();
+        }
+
+        /// <summary>
+        /// Called when an attack (or heal) hits MobID
         /// Modifies HP as needed
         /// </summary>
         public virtual string Hit(int attackRoll, int damage, string attacker)
@@ -119,7 +158,7 @@ namespace RPGPractice.Engine.MobClasses
                 turnSummary = ($"{name} dodged {attacker}'s attack.");
             }
 
-            //raise appropriate events in case of Mob death
+            //raise appropriate events in case of MobID death
             if (!IsAlive)
             {
                 turnSummary = ($"{name} has died");
@@ -155,44 +194,9 @@ namespace RPGPractice.Engine.MobClasses
         #region Private Methods
 
         /// <summary>
-        /// Sets All stats for Mob
+        /// Sets All stats for MobID
         /// </summary>
         protected abstract void Initialize();
-
-        /// <summary>
-        /// Called from Game when a Mob attacks another mob.
-        /// Returns an initial Attack Roll to see if hits
-        /// </summary>
-        /// <returns></returns>
-        protected virtual void Attack(Mob target)
-        {
-            //Determine Attack Roll (attackMod + 1d20)
-            int attackRoll = random.Next(21);
-
-            //Determine damage Roll (attackMod + 1d8)
-            int damage = random.Next(9);
-
-            //Critical Hit: If attack roll was a 20, then slightly boost hit chance (attackRoll) and boost damage
-            if (attackRoll >= 20)
-            {
-                attackRoll += 5;
-                damage += random.Next(9); //add another d8
-            }
-
-            //Add modifiers
-            attackRoll += attackMod;
-            damage += strength;
-
-
-            //Tell target they are being attacked
-            //  Be polite though and tell them who you are
-            //  Give them turnData so they can update it
-            string targetTurnSummary = target.Hit(attackRoll, damage, name);
-            AppendTurnSummary(targetTurnSummary);
-
-            //Raise TurnEnd event
-            OnTurnEnd();
-        }
 
         private void AppendTurnSummary(string eventMessage)
         {
@@ -273,11 +277,11 @@ namespace RPGPractice.Engine.MobClasses
         }
         
         /// <summary>
-        /// When Mob HP is reduced below 0HP they are dead.
+        /// When MobID HP is reduced below 0HP they are dead.
         /// </summary>
         private void OnDeath()
         {
-            //Raise a death event stating that Mob has died
+            //Raise a death event stating that MobID has died
             Death?.Invoke(this, EventArgs.Empty);
         }
 

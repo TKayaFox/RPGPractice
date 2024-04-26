@@ -9,8 +9,8 @@ namespace RPGPractice.Events
 {
     public class PlayerTurnEventArgs
     {
-        Mob mob;
+        int mobID;
 
-        public Mob Mob { get => mob; set => mob = value; }
+        public int MobID { get => mobID; set => mobID = value; }
     }
 }

@@ -167,7 +167,7 @@ namespace RPGPractice.Engine
 
         public void OnPlayerAction_handler(object sender, PlayerActionEventArgs playerAction)
         {
-            //edit:Unpack Event
+            //Unpack Args
             //playerAction.Attacker
             //playerAction.Target
             ActionEnum action = playerAction.Action;
