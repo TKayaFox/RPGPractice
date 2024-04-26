@@ -17,6 +17,7 @@ namespace RPGPractice.Engine
         private Initiative initiative; 
         private Random random;
         private int combatLevel;
+        List<int> mobIDs;
 
         //=========================================
         //              Main Methods
@@ -32,6 +33,14 @@ namespace RPGPractice.Engine
             this.heroes = heroes;
             this.combatLevel = combatLevel;
             this.random = random;
+
+            //get all hero unique IDs
+            mobIDs= new List<int>();
+
+            foreach (Mob mob in heroes)
+            {
+                mobIDs.Add(mob.UniqueID);
+            }
         }
 
         public void Start(EventManager eventManager)
@@ -95,7 +104,7 @@ namespace RPGPractice.Engine
         {
             //EDIT: Implement actuall encounter variation depending on Combat Level
             Mob[] villians = new Mob[3];
-            
+
             for (int i = 0; i < villians.Length; i++)
             {
                 Mob villain = new Warrior($"Warrior {i}", random);

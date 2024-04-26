@@ -53,7 +53,11 @@ namespace RPGPractice.Engine
             // Build heroes EDIT: Modify with actual hero layout
             for (int i = 0; i < heroes.Length; i++)
             {
+                //Initialize Hero and give a uniqueID
                 Mob newHero= new Warrior($"Warrior {i}", random);
+                newHero.UniqueID = i;
+
+                //Subscribe and add to array
                 newHero.ManageEvents(eventManager);
                 heroes[i] = newHero;
             }
@@ -138,6 +142,7 @@ namespace RPGPractice.Engine
             //edit: Subscribe to any needed events
             eventManager.BattleEnd += OnBattleEnd_Handler;
             eventManager.NewGame += OnNewGame_Handler;
+            eventManager.PlayerAction += OnPlayerAction_Aggregator;
         }
 
         /// <summary>
@@ -158,6 +163,14 @@ namespace RPGPractice.Engine
         public void OnNewGame_Handler(object sender, EventArgs args)
         {
             NewGame();
+        }
+
+        public void OnPlayerAction_Aggregator(object sender, PlayerActionEventArgs playerAction)
+        {
+            //edit:Unpack Event
+            //playerAction.Attacker
+            //playerAction.Target
+            ActionEnum action = playerAction.Action;
         }
 
         #endregion

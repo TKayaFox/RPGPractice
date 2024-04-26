@@ -16,7 +16,14 @@ namespace RPGPractice.Engine.MobClasses
         //                Variables
         //=========================================
         #region Variables
-        private bool userControlled;
+        //Mob identifying data
+        private int uniqueID;
+        private string name;
+        private string sprite;
+        private string turnSummary;
+        protected Random random;
+
+        //Game specific stats
         private int maxHitPoints;
         private int hitPoints;
         private int maxMana; //Only casters get Mana
@@ -27,10 +34,6 @@ namespace RPGPractice.Engine.MobClasses
         private int attackMod;
         private int defense;
         private int magicDefense;
-        private string name;
-        private string sprite;
-        private string turnSummary;
-        protected Random random;
         #endregion
 
         //=========================================
@@ -202,8 +205,8 @@ namespace RPGPractice.Engine.MobClasses
                 return (hitPoints > 0);
             }
         }
-        public bool UserControlled { get => userControlled; set => userControlled = value; }
         public string Sprite { get => sprite; set => sprite = value; }
+        public int UniqueID { get => uniqueID; set => uniqueID = value; }
         #endregion
 
         //=========================================
@@ -230,7 +233,6 @@ namespace RPGPractice.Engine.MobClasses
         //=========================================
         public event EventHandler<TurnEndEventArgs>? BattleEvent;
         public event EventHandler<TurnEndEventArgs> TurnEnd;
-        public event EventHandler<MobUpdateArgs>? MobUpdate;
         public event EventHandler? Death;
 
         #region Events
@@ -292,7 +294,6 @@ namespace RPGPractice.Engine.MobClasses
 
             //unSubscribe to any needed events
         }
-
         #endregion
     }
 }

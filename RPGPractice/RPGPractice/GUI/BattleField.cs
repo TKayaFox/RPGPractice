@@ -21,6 +21,7 @@ namespace RPGPractice
 
         PictureBox[] heroSprites;
         PictureBox[] villianSprites;
+        List<int> mobIDs;
 
         //=========================================
         //              Main Methods
@@ -30,11 +31,11 @@ namespace RPGPractice
         {
             InitializeComponent();
 
-            //Add all mobs into battlefield display
-            UpdateMob(heroes);
-            UpdateMob(villians);
+            mobIDs = new List<int>();
 
-            //edit:Add all mob names to TargetComboBox
+            //Add all mobs into battlefield display
+            ParseMobs(heroes);
+            ParseMobs(villians);
 
             //Make arrays for PictureBoxes for easier Sprite Handling
             PictureBox[] heroSprites = new PictureBox[Max_Sprites];
@@ -49,22 +50,23 @@ namespace RPGPractice
         }
 
         /// <summary>
-        /// Updates a Mob's status on display
+        /// gets all initial data needed from mob array
         /// </summary>
-        /// <param name="mob"></param>
-        public void UpdateMob(Mob mob)
-        {
-            //edit: Display hero and villian information/sprites
-        }
-        public void UpdateMob(Mob[] mobs)
+        /// <param name="mobs"></param>
+        public void ParseMobs(Mob[] mobs)
         {
             foreach (Mob mob in mobs)
             {
-                UpdateMob(mob);
+                //get unique ID
+                mobIDs.Add(mob.UniqueID);
+
+                //edit: Assign a PictireBox for the sprite
+                //edit: Store uniqueID in sprites tag
+                //edit: Store mob name in sprites text
             }
         }
 
-        public void ShowActionMenu()
+            public void ShowActionMenu()
         {
             //Show and enable ActionGroupBox
             ActionButtonBox.Enabled = true;
@@ -189,6 +191,7 @@ namespace RPGPractice
 
         public void OnDeath_Handler()
         {
+            //Edit: Decipher which Mob died
             //Edit: Find Mobs sprite
 
             //Edit: change sprite to show Mob as dead
