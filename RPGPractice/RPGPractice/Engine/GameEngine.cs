@@ -142,7 +142,7 @@ namespace RPGPractice.Engine
             //edit: Subscribe to any needed events
             eventManager.BattleEnd += OnBattleEnd_Handler;
             eventManager.NewGame += OnNewGame_Handler;
-            eventManager.PlayerAction += OnPlayerAction_Aggregator;
+            eventManager.PlayerAction += OnPlayerAction_handler;
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace RPGPractice.Engine
             NewGame();
         }
 
-        public void OnPlayerAction_Aggregator(object sender, PlayerActionEventArgs playerAction)
+        public void OnPlayerAction_handler(object sender, PlayerActionEventArgs playerAction)
         {
             //edit:Unpack Event
             //playerAction.Attacker

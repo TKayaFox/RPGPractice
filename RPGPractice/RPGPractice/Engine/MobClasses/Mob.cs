@@ -17,11 +17,11 @@ namespace RPGPractice.Engine.MobClasses
         //=========================================
         #region Variables
         //Mob identifying data
-        private int uniqueID;
-        private string name;
-        private string sprite;
-        private string turnSummary;
         protected Random random;
+        private string name;
+        private System.Drawing.Bitmap sprite;
+        private string turnSummary;
+        private int uniqueID;
 
         //Game specific stats
         private int maxHitPoints;
@@ -205,7 +205,7 @@ namespace RPGPractice.Engine.MobClasses
                 return (hitPoints > 0);
             }
         }
-        public string Sprite { get => sprite; set => sprite = value; }
+        public System.Drawing.Bitmap Sprite { get => sprite; set => sprite = value; }
         public int UniqueID { get => uniqueID; set => uniqueID = value; }
         #endregion
 
@@ -278,8 +278,6 @@ namespace RPGPractice.Engine.MobClasses
         {
             //publish events to eventManager
             eventManager.Publish(this);
-
-            //Subscribe to any needed events
         }
 
 
@@ -289,10 +287,8 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="eventManager"></param>
         public void UnManageEvents(EventManager eventManager)
         {
-            //publish events to eventManager
+            //unpublish events from eventManager
             eventManager.Unpublish(this);
-
-            //unSubscribe to any needed events
         }
         #endregion
     }

@@ -34,8 +34,8 @@ namespace RPGPractice
             mobIDs = new List<int>();
 
             //Add all mobs into battlefield display
-            ParseMobs(heroes);
-            ParseMobs(villians);
+            UpdateMobs(heroes);
+            UpdateMobs(villians);
 
             //Make arrays for PictureBoxes for easier Sprite Handling
             PictureBox[] heroSprites = new PictureBox[Max_Sprites];
@@ -53,20 +53,54 @@ namespace RPGPractice
         /// gets all initial data needed from mob array
         /// </summary>
         /// <param name="mobs"></param>
-        public void ParseMobs(Mob[] mobs)
+        private void UpdateMobs(Mob[] mobs)
         {
             foreach (Mob mob in mobs)
             {
                 //get unique ID
-                mobIDs.Add(mob.UniqueID);
+                int uniqueID = mob.UniqueID;
+                mobIDs.Add(uniqueID);
 
-                //edit: Assign a PictireBox for the sprite
-                //edit: Store uniqueID in sprites tag
-                //edit: Store mob name in sprites text
+                //Assign a PictureBox for the sprite
+
+                //determine if mob is a Hero or Villain(NPC) and assign to Sprite
+                if (mob is NPC)
+                {
+                    AssignSprite(mob, villianSprites);
+                }
+                else
+                {
+                    AssignSprite(mob, heroSprites);
+                }
             }
         }
 
-            public void ShowActionMenu()
+
+        /// <summary>
+        /// Assigns a sprite to a picturebox in the picturebox array (Only if there is room)
+        /// </summary>
+        /// <param name="mob"></param>
+        /// <param name="sprites"></param>
+        private void AssignSprite(Mob mob, PictureBox[] sprites)
+        {
+            int i = 0;
+            bool identified = false;
+            while (!identified && i < sprites.Length)
+            {
+                PictureBox sprite = sprites[i];
+                if (sprite.Tag == null)
+                {
+                    identified = true;
+                    sprite.Tag = mob.UniqueID;
+
+                    //change PictureBox to the mob's sprite
+                    sprite.Image = mob.Sprite;
+                }
+                i++;
+            }
+        }
+
+        public void ShowActionMenu()
         {
             //Show and enable ActionGroupBox
             ActionButtonBox.Enabled = true;
