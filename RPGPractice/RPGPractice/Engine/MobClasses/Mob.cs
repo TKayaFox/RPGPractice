@@ -29,6 +29,7 @@ namespace RPGPractice.Engine.MobClasses
         private int magicDefense;
         private string name;
         private string sprite;
+        private string turnSummary;
         protected Random random;
         #endregion
 
@@ -51,6 +52,7 @@ namespace RPGPractice.Engine.MobClasses
             //Set mana and hitpoints to max
             mana = MaxMana;
             HitPoints = MaxHitPoints;
+            turnSummary = "";
         }
 
         /// <summary>
@@ -93,23 +95,31 @@ namespace RPGPractice.Engine.MobClasses
             attackRoll += attackMod;
             damage += strength;
 
+
             //Tell target they are being attacked
             //  Be polite though and tell them who you are
-            target.Hit(attackRoll, damage, name);
+            //  Give them turnData so they can update it
+            string targetTurnSummary = target.Hit(attackRoll, damage, name);
+            AppendTurnSummary(targetTurnSummary);
+
+            //Raise TurnEnd event
+            OnTurnEnd();
         }
 
         /// <summary>
         /// Called when an attack (or heal) hits Mob
         /// Modifies HP as needed
         /// </summary>
-        public virtual void Hit(int attackRoll, int damage, string attacker)
+        public virtual string Hit(int attackRoll, int damage, string attacker)
         {
-            string eventMessage = "";
+            //turnSummary is returned to attacker so it knows what happened
+            string turnSummary = "";
+
 
             //If attack is for negative damage, dont attempt to defend just take the heal
             if (attackRoll < 0)
             {
-                Heal(damage, attacker);
+                turnSummary = Heal(-damage, attacker);
             }
 
             //If attack hits reduce hitpoints as needed
@@ -117,29 +127,40 @@ namespace RPGPractice.Engine.MobClasses
             else if (attackRoll > defense)
             {
                 hitPoints -= damage;
-                eventMessage = $"{attacker} hit {name} for {damage} Damage!\n\t{hitPoints} health remaining.";
+                turnSummary = ($"{attacker} hit {name} for {damage} Damage!\n\t{hitPoints} health remaining.");
             }
 
             //if attack just barely met defense, then tell user it was a "close" attack
             else if (attackRoll == defense)
             {
-                eventMessage = $"{name} barely dodged {attacker}'s attack.";
+                turnSummary = ($"{name} barely dodged {attacker}'s attack.");
             }
 
             //Else it was just a miss
             else
             {
-                eventMessage = $"{name} dodged {attacker}'s attack.";
+                turnSummary = ($"{name} dodged {attacker}'s attack.");
             }
-
-            //Raise BattleEvent to declare what happened
-            OnBattleEvent(eventMessage);
 
             //raise appropriate events in case of Mob death
             if (!IsAlive)
             {
-                OnBattleEvent($"{name} has died");
-                OnDeath();
+                turnSummary = ($"{name} has died");
+            }
+
+            return turnSummary;
+        }
+
+        private void AppendTurnSummary(string eventMessage)
+        {
+            //if String is empty just replace it
+            if (turnSummary == "")
+            {
+                turnSummary = eventMessage;
+            }
+            else //append
+            {
+                turnSummary += $"\n{eventMessage}";
             }
         }
 
@@ -148,7 +169,7 @@ namespace RPGPractice.Engine.MobClasses
         /// </summary>
         /// <param name="damage"></param>
         /// <param name="healer"></param>
-        public void Heal(int damage, string healer)
+        public string Heal(int damage, string healer)
         {
             hitPoints += damage;
 
@@ -157,11 +178,13 @@ namespace RPGPractice.Engine.MobClasses
             {
                 hitPoints = MaxHitPoints;
             }
-            OnBattleEvent($"{healer} healed {name} back to {hitPoints} health!");
+
+            //return string stating result
+            return ($"{healer} healed {name} back to {hitPoints} health!");
         }
 
         //EDIT: Add magicAttack
-        //EDIT: Add magicDefense
+        //EDIT: Add magicHit
 
         #endregion
 
@@ -205,10 +228,10 @@ namespace RPGPractice.Engine.MobClasses
         //=========================================
         //                  Events
         //=========================================
-        public event EventHandler<BattleEventArgs>? BattleEvent;
+        public event EventHandler<TurnEndEventArgs>? BattleEvent;
+        public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler<MobUpdateArgs>? MobUpdate;
-        public event EventHandler Death;
-        public event EventHandler TurnEnd;
+        public event EventHandler? Death;
 
         #region Events
 
@@ -216,13 +239,19 @@ namespace RPGPractice.Engine.MobClasses
         /// Packages and raisesBattle Events (Which display for user a readout of what has happened in the battle so far)
         /// </summary>
         /// <param name="output"></param>
-        private void OnBattleEvent(string output)
+        private void OnTurnEnd()
         {
             //Package and send battle message
-            BattleEventArgs e = new BattleEventArgs();
-            e.EventMessage = output;
-            BattleEvent?.Invoke(this, e);
+            TurnEndEventArgs args = new TurnEndEventArgs();
+            args.TurnSummary = turnSummary;
+
+            //reset turnSummary for next turn
+            turnSummary = "";
+
+            //invoke method
+            BattleEvent?.Invoke(this, args);
         }
+        
         /// <summary>
         /// When Mob HP is reduced below 0HP they are dead.
         /// </summary>
@@ -232,10 +261,6 @@ namespace RPGPractice.Engine.MobClasses
             Death?.Invoke(this, EventArgs.Empty);
         }
 
-        private void OnTurnEnd()
-        {
-            TurnEnd?.Invoke(this, EventArgs.Empty);
-        }
 
         #endregion
 

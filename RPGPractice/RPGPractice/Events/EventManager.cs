@@ -21,13 +21,23 @@ namespace RPGPractice.Events
         //      Events that can be published
         //=========================================
         //  Remember to add an aggregator below as well to relay the event, and subscriber in appropriate method
-        public event EventHandler<BattleStartEventArgs>? BattleStart;
-        public event EventHandler<PlayerTurnEventArgs>? PlayerTurn;
-        public event EventHandler<BattleEndEventArgs>? BattleEnd;
-        public event EventHandler<BattleEventArgs>? BattleEvent;
-        public event EventHandler Death;
-        public event EventHandler NewGame;
-        public event EventHandler TurnEnd;
+
+        //Mob Events
+        public event EventHandler<TurnEndEventArgs>? BattleEvent;
+        public event EventHandler<TurnEndEventArgs> TurnEnd;
+        public event EventHandler? Death;
+
+        //Battle Events
+        public event EventHandler<BattleStartEventArgs> BattleStart;
+        public event EventHandler<BattleEndEventArgs> BattleEnd;
+        public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
+
+        //BattleField Events
+        public event EventHandler<PlayerActionEventArgs> PlayerAction;
+
+        //GameForm Events
+        public event System.EventHandler NewGame;
+
 
         //=========================================
         //             Public Methods
@@ -144,8 +154,7 @@ namespace RPGPractice.Events
         //  Object specific Subscribers/Unsubscribers
         //  Once Object type is determined, it can
         //=========================================
-        #region Private Methods
-
+        #region Subscribe Method Overloads
         /// <summary>
         /// Subscribes publisher so that it relays events for specified type
         /// overloaded for all allowed types
@@ -154,25 +163,29 @@ namespace RPGPractice.Events
         {
             //Events
             mob.BattleEvent += OnBattleEvent_Aggregator;
-            mob.Death += OnDeath_Aggregator;
             mob.TurnEnd += OnTurnEnd_Aggregator;
+            mob.Death += OnDeath_Aggregator;
         }
         private void Subscribe(Battle battle)
         {
             //Events
-            battle.BattleEnd += OnBattleEnd_Aggregator;
-            battle.BattleEvent += OnBattleEvent_Aggregator;
             battle.BattleStart += OnBattleStart_Aggregator;
+            battle.BattleEnd += OnBattleEnd_Aggregator;
+            battle.PlayerTurn += OnPlayerTurn_Aggregator;
         }
         private void Subscribe(GameForm gameForm)
         {
+            //Events
             gameForm.NewGame += OnNewGame_Aggregator;
         }
         private void Subscribe(BattleField battlefield)
         {
-            //
+            //Events
+            battlefield.PlayerAction += OnPlayerAction_Aggregator;
         }
+        #endregion
 
+        #region Unsubscribe Overloads
         /// <summary>
         /// UnSubscribes publisher so that it stops relayings events for specified type
         /// overloaded for all allowed types
@@ -181,23 +194,25 @@ namespace RPGPractice.Events
         {
             //Events
             mob.BattleEvent -= OnBattleEvent_Aggregator;
-            mob.Death -= OnDeath_Aggregator;
             mob.TurnEnd -= OnTurnEnd_Aggregator;
+            mob.Death -= OnDeath_Aggregator;
         }
         private void UnSubscribe(Battle battle)
         {
             //Events
-            battle.BattleEnd -= OnBattleEnd_Aggregator;
-            battle.BattleEvent -= OnBattleEvent_Aggregator;
             battle.BattleStart -= OnBattleStart_Aggregator;
+            battle.BattleEnd -= OnBattleEnd_Aggregator;
+            battle.PlayerTurn -= OnPlayerTurn_Aggregator;
         }
         private void UnSubscribe(GameForm gameForm)
         {
+            //Events
             gameForm.NewGame -= OnNewGame_Aggregator;
         }
         private void UnSubscribe(BattleField battlefield)
         {
-            //
+            //Events
+            battlefield.PlayerAction += OnPlayerAction_Aggregator;
         }
 
         #endregion
@@ -207,7 +222,12 @@ namespace RPGPractice.Events
         //  Simple re-raise events to subscribers
         //=========================================
         #region Event Relays
-        private void OnBattleEvent_Aggregator(object sender, BattleEventArgs e)
+
+        private void OnPlayerAction_Aggregator(object? sender, PlayerActionEventArgs e)
+        {
+            PlayerAction?.Invoke(sender, e);
+        }
+        private void OnBattleEvent_Aggregator(object sender, TurnEndEventArgs e)
         {
             //Relay the event
             BattleEvent?.Invoke(sender, e);
@@ -235,7 +255,7 @@ namespace RPGPractice.Events
         {
             PlayerTurn?.Invoke(sender, e);
         }
-        private void OnTurnEnd_Aggregator(object? sender, EventArgs e)
+        private void OnTurnEnd_Aggregator(object? sender, TurnEndEventArgs e)
         {
             TurnEnd?.Invoke(sender, e);
         }

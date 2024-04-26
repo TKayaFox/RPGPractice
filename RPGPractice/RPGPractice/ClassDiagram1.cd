@@ -110,28 +110,10 @@
   </Class>
   <Class Name="RPGPractice.Program">
     <Position X="7.25" Y="0.5" Width="1.5" />
-    <AssociationLine Name="Game" Type="RPGPractice.Game" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="7.625" Y="1.603" />
-        <Point X="7.625" Y="2.122" />
-        <Point X="6.5" Y="2.122" />
-      </Path>
-    </AssociationLine>
-    <AssociationLine Name="GUI" Type="RPGPractice.GUI" FixedFromPoint="true" FixedToPoint="true">
-      <Path>
-        <Point X="8.391" Y="1.603" />
-        <Point X="8.391" Y="2.132" />
-        <Point X="11" Y="2.132" />
-      </Path>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAABAgAAAAAAAAABAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="Game" />
-      <Property Name="GUI" />
-    </ShowAsAssociation>
   </Class>
   <Class Name="RPGPractice.GUI">
     <Position X="11" Y="2" Width="1.5" />
@@ -172,8 +154,8 @@
   <Class Name="RPGPractice.BattleField">
     <Position X="9.25" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAACAABAACAAAAAAAAAAIAAAABEAAAAAAAAAAA=</HashCode>
-      <FileName>BattleField.cs</FileName>
+      <HashCode>AAAAAAAZADIBAAiIIAGABAACAEAVgADEpCAAICAAUGA=</HashCode>
+      <FileName>GUI\BattleField.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RPGPractice.Battle">
@@ -186,5 +168,12 @@
       <Property Name="villians" />
     </ShowAsAssociation>
   </Class>
+  <Enum Name="RPGPractice.ActionEnum">
+    <Position X="5.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>ActionEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

@@ -9,10 +9,10 @@ namespace RPGPractice.Events
     /// <summary>
     /// Handles all Battle Messages to be displayed for user
     /// </summary>
-    public class BattleEventArgs : EventArgs
+    public class TurnEndEventArgs : EventArgs
     {
-        private string eventMessage;
+        private string turnSummary;
 
-        public string EventMessage { get => eventMessage; set => eventMessage = value; }
+        public string TurnSummary { get => turnSummary; set => turnSummary = value; }
     }
 }

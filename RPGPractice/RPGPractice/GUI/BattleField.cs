@@ -67,15 +67,15 @@ namespace RPGPractice
         public void ShowActionMenu()
         {
             //Show and enable ActionGroupBox
-            ActionGroupBox.Enabled = true;
-            ActionGroupBox.Visible = true;
+            ActionButtonBox.Enabled = true;
+            ActionButtonBox.Visible = true;
         }
 
         //Hides action menu so player doesnt try to make a move when not their turn
         public void HideActionMenu()
         {
-            ActionGroupBox.Enabled = false;
-            ActionGroupBox.Visible = false;
+            ActionButtonBox.Enabled = false;
+            ActionButtonBox.Visible = false;
         }
 
         #endregion
@@ -83,9 +83,44 @@ namespace RPGPractice
         //=========================================
         //                Events
         //=========================================
-        //public event System.EventHandler Attack;
+        public event EventHandler<PlayerActionEventArgs> PlayerAction;
 
         #region Events
+
+
+        /// <summary>
+        /// Any time user selects an Action Button
+        ///     if targeted action, show Target selection
+        ///     else Invoke PlayerAction event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ActionButton_Click(object sender, EventArgs e)
+        {
+            //Edit: Determine action taken depending on sender and ActionEnum
+            //edit: if targeted action, display ActionTargetBox 
+            //      (Just hide ActionButtonBox)
+            //  else invoke event
+        }
+
+        /// <summary>
+        /// Handles Target Selection
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TargetButt_Click(object sender, EventArgs e)
+        {
+            //edit: Get Target
+            //edit: If target is NOT selected, provide error telling user to select a target
+        }
+
+        private void OnPlayerAction(Mob target, ActionEnum action)
+        {
+            //Edit: Actually Store PlayerActionEventArgs so it can be modified
+            //edit: Package PlayerAction event with target and action
+            //edit: Raise PlayerAction event
+            //edit: reset PlayerActionEventArgs
+        }
 
         #endregion
 
@@ -123,17 +158,26 @@ namespace RPGPractice
             eventManager.TurnEnd -= OnTurnEnd_Handler;
         }
 
-        private void OnTurnEnd_Handler(object? sender, EventArgs e)
+        private void OnTurnEnd_Handler(object? sender, TurnEndEventArgs turnData)
         {
             HideActionMenu();
+            //Unpack turnSummary and append to battleSummaryTBox
+            battleSummaryTBox.Text += $"\n" +
+                $"{ turnData.TurnSummary}\n" +
+                $"----------------------------";
         }
 
         private void OnPlayerTurn_Handler(object? sender, PlayerTurnEventArgs e)
         {
+            //Edit: Highlight the Hero whose turn it is
+            //Edit: Show Hero name
+            //Edit: Either modify Special Attack button (heal, spell etc) or 
+            //Edit: Populate target selection with all viable targets
+            //Show Action Menut
             ShowActionMenu();
         }
 
-        private void OnBattleEvent_Handler(object? sender, BattleEventArgs e)
+        private void OnBattleEvent_Handler(object? sender, TurnEndEventArgs e)
         {
             //Edit: add new line to BattleEvent display
         }
@@ -151,6 +195,5 @@ namespace RPGPractice
             heroSprite1.Visible = false;
         }
         #endregion
-
     }
 }

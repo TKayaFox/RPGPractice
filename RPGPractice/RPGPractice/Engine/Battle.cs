@@ -147,10 +147,9 @@ namespace RPGPractice.Engine
         //=========================================
         //                Events
         //=========================================
-        public event EventHandler<BattleEventArgs>? BattleEvent;
         public event EventHandler<BattleStartEventArgs> BattleStart;
-        public event EventHandler<BattleEndEventArgs> BattleEnd;
         public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
+        public event EventHandler<BattleEndEventArgs> BattleEnd;
 
         public void OnBattleStart()
         {
