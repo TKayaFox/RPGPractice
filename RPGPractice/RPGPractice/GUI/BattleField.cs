@@ -30,23 +30,22 @@ namespace RPGPractice
         //              Main Methods
         //=========================================
         #region Public Methods
-        public BattleField(List<MobData> mobDataList)
+        public BattleField()
         {
             InitializeComponent();
+        }
+            
+        public void Populate(List<MobData> mobDataList)
+        {
             mobDictionary = new Dictionary<int, MobData>();
 
-            //Make arrays for PictureBoxes for easier Sprite Handling
+            //Assign PictureBoxes to arrays for easier Sprite Handling
             BuildPictureArrays();
 
             //Tag ActionButtons
             AttackButt.Tag = ActionEnum.Attack;
             DefendButt.Tag = ActionEnum.Defend;
             SpecialButt.Tag = ActionEnum.Special;
-
-            // Assign PictureBoxes to arrays
-            //  TODO: refactor PictureBox array assignment
-            //      This should be doable with a loop, but for some reason it didnt work. Revisit later.
-
             //Add all mobs into battlefield display and assign to PictureBoxes
             SetupMobs(mobDataList);
 
@@ -120,6 +119,10 @@ namespace RPGPractice
                     data.PictureBox = pictureBox;
                 }
                 i++;
+            }
+            if (!identified)
+            {
+                throw new Exception("Unable to assign Mob a PictureBox!");
             }
         }
 

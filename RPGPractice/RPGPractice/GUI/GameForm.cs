@@ -30,6 +30,8 @@ namespace RPGPractice
         {
             InitializeComponent();
             this.eventManager = eventManager;
+            battlefield = new BattleField();
+            battlefield.ManageEvents(eventManager);
 
             ManageEvents();
 
@@ -44,8 +46,7 @@ namespace RPGPractice
         private void NewBattle(List<MobData> mobDataList)
         {
             //Initialize battleField then add it to eventManager
-            battlefield = new BattleField(mobDataList);
-            battlefield.ManageEvents(eventManager);
+            battlefield.Populate(mobDataList);
             Controls.Add(battlefield);
         }
 

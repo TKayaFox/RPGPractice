@@ -31,6 +31,7 @@ namespace RPGPractice.GUI
             {
                 pictureBox = value;
                 pictureBox.Image = sprite;
+                PictureBox.Visible = true;
             }
         }
 
