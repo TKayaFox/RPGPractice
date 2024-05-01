@@ -13,7 +13,7 @@ namespace RPGPractice.Engine.MobClasses
         /// </summary>
         /// <param name="name"></param>
         /// <param name="random"></param>
-        protected NPC(string name, Random random) : base(name, random) { }
+        protected NPC(string name, Random random) :base(name, random) { }
 
         /// <summary>
         /// Attack a random target

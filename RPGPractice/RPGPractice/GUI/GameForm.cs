@@ -47,7 +47,7 @@ namespace RPGPractice
         {
             //Initialize battleField then add it to eventManager
             battlefield.Populate(mobDataList);
-            Controls.Add(battlefield);
+            Controls.Add(battlefield); battlefield.Visible = true;
         }
 
         /// <summary>
