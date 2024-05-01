@@ -16,7 +16,7 @@ namespace RPGPractice.Engine
         private Mob[] villians;
         private Mob[] heroes;
         private Mob currentTurn;
-        private Initiative initiative; 
+        private Initiative initiative;
         private Random random;
         private int combatLevel;
         private Dictionary<int, Mob> mobDictionary;
@@ -78,9 +78,15 @@ namespace RPGPractice.Engine
         /// <exception cref="NotImplementedException"></exception>
         public void NextTurn()
         {
-            //get next MobID in initiative
-            int uniqueID= initiative.NextTurn();
-            currentTurn = mobDictionary[uniqueID];
+            //Determine who is next in initiative, but skip dead mobs.
+            bool isAlive = false;
+            while (!isAlive)
+            {
+                //get next MobID in initiative
+                int uniqueID = initiative.NextTurn();
+                currentTurn = mobDictionary[uniqueID];
+                isAlive = currentTurn.IsAlive;
+            }
 
             //If currentMob is Not player controlled tell it to take it's turn
             if (currentTurn is NPC npc)

@@ -48,7 +48,7 @@ namespace RPGPractice
             //      This should be doable with a loop, but for some reason it didnt work. Revisit later.
 
             //Add all mobs into battlefield display and assign to PictureBoxes
-            UpdateMobs(mobDataList);
+            SetupMobs(mobDataList);
 
             //Hide Action Menu until player has a turn
             HideActionMenu();
@@ -79,7 +79,7 @@ namespace RPGPractice
         /// gets all initial args needed from mobID array
         /// </summary>
         /// <param name="mobs"></param>
-        private void UpdateMobs(List<MobData> mobDataList)
+        private void SetupMobs(List<MobData> mobDataList)
         {
             foreach (MobData data in mobDataList)
             {
@@ -293,16 +293,21 @@ namespace RPGPractice
                 SpecialButt.Visible = false;
             }
 
+
+            //Empty Targets to prevent redundant items
+            targetCBox.Items.Clear();
+            targetCBox.SelectedValue = null;
+
             //Populate targetCBox with all potential targets
             foreach (MobData data in mobDictionary.Values)
             {
+
                 //Make sure Mob is alive before adding.
                 if (data.IsAlive)
                 {
                     //add MobData to ComboBox.
                     //  Note: non-Strings added to Combobox will be default display their toString()
                     //  This makes it easy to know what target the user selects.
-                    targetCBox.Items.Clear();
                     targetCBox.Items.Add(data);
                 }
             }

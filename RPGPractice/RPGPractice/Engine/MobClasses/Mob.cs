@@ -113,7 +113,7 @@ namespace RPGPractice.Engine.MobClasses
             damage += strength;
 
             //add attack roll to turn summary
-            AppendTurnSummary($"{name} Attacks {target.name}. \r\n\t[Attack roll: {attackRoll} Damage {damage}]");
+            AppendTurnSummary($"{name} Attacks {target.name}. \t[Attack roll: {attackRoll} Damage {damage}]");
 
             //Tell target they are being attacked
             //  Be polite though and tell them who you are
@@ -146,19 +146,19 @@ namespace RPGPractice.Engine.MobClasses
             else if (attackRoll > defense)
             {
                 hitPoints -= damage;
-                turnSummary = ($"{attacker} hit {name} for {damage} Damage!\r\n\t[{hitPoints} health remaining]");
+                turnSummary = ($"{attacker} hit {name} for {damage} Damage!\t[{hitPoints} health remaining]");
             }
 
             //if attack just barely met defense, then tell user it was a "close" attack
             else if (attackRoll == defense)
             {
-                turnSummary = ($"{name} barely dodged {attacker}'s attack. \r\n\t[{attackRoll} meets {defense}]");
+                turnSummary = ($"{name} barely dodged {attacker}'s attack. \t[{attackRoll} meets {defense}]");
             }
 
             //Else it was just a miss
             else
             {
-                turnSummary = ($"{name} dodged {attacker}'s attack. \r\n\t[{attackRoll} < {defense}]");
+                turnSummary = ($"{name} dodged {attacker}'s attack. \t[{attackRoll} < {defense}]");
             }
 
             //raise appropriate events in case of MobID death

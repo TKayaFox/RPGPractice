@@ -52,6 +52,7 @@ namespace RPGPractice.GUI
         internal void OnDeath_Handler(object? sender, EventArgs e)
         {
             IsAlive = false;
+            PictureBox.Visible = false;
         }
 
         public string Special { get => special; set => special = value; }

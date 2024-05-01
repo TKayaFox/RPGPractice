@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RPGPractice")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5835ac8c9600c77d7f74b3790b9ebcd1d33e99a7")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+104df4b0a10aeb14a291b56631aefa592ecd35ec")]
 [assembly: System.Reflection.AssemblyProductAttribute("RPGPractice")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RPGPractice")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
