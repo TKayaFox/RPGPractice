@@ -50,19 +50,18 @@ namespace RPGPractice.Engine
         {
             Mob[] heroes = new Mob[NUM_HEROES];
 
-
-            // Create heroes
-            heroes[0] = new Warrior("Kazuma", random);
-            heroes[1] = new Cleric("Astrid", random);
-            heroes[2] = new Mage("Boop", random);
-
-            //for each hero update eventManager and set uniqueID 
-            for (int i = 0; i < 3; i++)
+            // Build heroes TODO: Modify with actual hero layout
+            for (int i = 0; i < heroes.Length; i++)
             {
+                //Initialize Hero and give a uniqueID
+                Mob newHero= new Warrior($"Warrior {i}", random);
+                newHero.UniqueID = i;
 
-                //publish and subscribe to event manager
-                heroes[i].ManageEvents(eventManager);
+                //Subscribe and add to array
+                newHero.ManageEvents(eventManager);
+                heroes[i] = newHero;
             }
+
             return heroes;
         }
 
