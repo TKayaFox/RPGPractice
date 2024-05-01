@@ -21,9 +21,9 @@ namespace RPGPractice.Engine.MobClasses
             MaxMana = 0; //Only casters get Mana
             Initiative = random.Next(20) - 5;  //roll 1d20+2
             Intelligence = 0;
-            Strength = 3;
-            AttackMod = 3;
-            Defense = 18;
+            Strength = 2;
+            AttackMod = 2;
+            Defense = 13;
             MagicDefense = 8;
         }
 

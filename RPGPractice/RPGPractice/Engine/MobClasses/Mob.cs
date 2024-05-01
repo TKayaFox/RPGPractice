@@ -96,10 +96,10 @@ namespace RPGPractice.Engine.MobClasses
         public virtual void Attack(Mob target)
         {
             //Determine Attack Roll (attackMod + 1d20)
-            int attackRoll = random.Next(21);
+            int attackRoll = random.Next(1,21) + attackMod;
 
-            //Determine damage Roll (attackMod + 1d8)
-            int damage = random.Next(9);
+            //Determine damage Roll (strength + 1d8)
+            int damage = random.Next(1,9) + strength;
 
             //Critical Hit: If attack roll was a 20, then slightly boost hit chance (attackRoll) and boost damage
             if (attackRoll >= 20)

@@ -87,6 +87,9 @@ namespace RPGPractice.Engine
             {
                 //Increment victory count
                 numWins++;
+
+                //Start a new battle
+                NewBattle();
             }
             else
             {
@@ -106,7 +109,7 @@ namespace RPGPractice.Engine
             //TODO: Revive all heroes
 
             //Initialize a new Battle object
-            Battle battle = new Battle(heroes, numWins, random);
+            battle = new Battle(heroes, numWins, random);
 
             //Actually Start Battle logic
             battle.Start(eventManager);
@@ -130,9 +133,7 @@ namespace RPGPractice.Engine
         /// <param name="eventManager"></param>
         public void ManageEvents()
         {
-            //publish events to eventManager
-
-            //TODO: Subscribe to any needed events
+            //Subscribe to any needed events
             eventManager.BattleEnd += OnBattleEnd_Handler;
             eventManager.NewGame += OnNewGame_Handler;
         }

@@ -189,10 +189,16 @@ namespace RPGPractice
             //TODO: Add a "Cancel" button in case user changes mind.
             //Get Target from ComboBox. interestingly comboBox is populated with MobData objects
             MobData data;
+
             if (targetCBox.SelectedItem is MobData)
             {
                 //get Data
                 data = (MobData)targetCBox.SelectedItem;
+
+                //Empty Targets to prevent redundant items
+                targetCBox.SelectedIndex = -1;
+                targetCBox.SelectedItem = null;
+                targetCBox.Items.Clear();
 
                 //send PlayerAction event
                 OnPlayerAction(data.UniqueID, action);
@@ -262,7 +268,7 @@ namespace RPGPractice
         private void OnTurnEnd_Handler(object? sender, TurnEndEventArgs turnData)
         {
             //Unpack turnSummary and append to battleSummaryTBox
-            battleSummaryTBox.Text += $"\r\n{ turnData.TurnSummary}\r\n";
+            battleSummaryTBox.Text += $"\r\n{turnData.TurnSummary}\r\n";
 
             // Scroll to the end of the textbox
             battleSummaryTBox.SelectionStart = battleSummaryTBox.Text.Length;
@@ -293,11 +299,6 @@ namespace RPGPractice
                 SpecialButt.Visible = false;
             }
 
-
-            //Empty Targets to prevent redundant items
-            targetCBox.Items.Clear();
-            targetCBox.SelectedValue = null;
-
             //Populate targetCBox with all potential targets
             foreach (MobData data in mobDictionary.Values)
             {
@@ -315,6 +316,7 @@ namespace RPGPractice
             //Show Action Menu
             ShowActionMenu();
         }
+
         #endregion
     }
 }

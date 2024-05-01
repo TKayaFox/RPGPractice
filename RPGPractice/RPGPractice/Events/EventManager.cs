@@ -68,7 +68,7 @@ namespace RPGPractice.Events
             PlayerTurn?.Invoke(sender, e);
         }
         public void OnTurnEnd_Aggregator(object? sender, TurnEndEventArgs e)
-        {
+            {
             TurnEnd?.Invoke(sender, e);
         }
         #endregion

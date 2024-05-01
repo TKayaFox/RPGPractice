@@ -48,8 +48,6 @@ namespace RPGPractice.Engine
             {
                 currentNode = currentNode.Next;
             }
-            System.Diagnostics.Debug.WriteLine($"Current Turn: {currentNode.Data}");
-
             //get the next MobID for return
             return currentNode.Data;
         }

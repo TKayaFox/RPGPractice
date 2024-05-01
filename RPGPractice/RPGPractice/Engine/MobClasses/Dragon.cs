@@ -21,11 +21,11 @@ namespace RPGPractice.Engine.MobClasses
             MaxHitPoints = 50;
             MaxMana = 0; //Breath Attacks dont use Mana
             Initiative = 0; //Always last in initiative
-            Intelligence = 4;
-            Strength = 4;
-            AttackMod = 4;
-            Defense = 17;
-            MagicDefense = 17;
+            Intelligence = 3;
+            Strength = 3;
+            AttackMod = 3;
+            Defense = 16;
+            MagicDefense = 16;
         }
 
         public void TakeTurn()

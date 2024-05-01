@@ -51,7 +51,7 @@ namespace RPGPractice.GUI
         /// <exception cref="NotImplementedException"></exception>
         internal void OnDeath_Handler(object? sender, EventArgs e)
         {
-            IsAlive = false;
+            isAlive = false;
             PictureBox.Visible = false;
         }
 

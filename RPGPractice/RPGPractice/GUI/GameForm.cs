@@ -11,6 +11,8 @@ namespace RPGPractice
         //              Variables
         //=========================================
         #region Variables
+        private const string ABOUT = "About.txt";
+
         private BattleField battlefield;
         private EventManager eventManager;
 
@@ -52,7 +54,7 @@ namespace RPGPractice
         /// </summary>
         /// <param name="fileName"></param>
         /// <returns></returns>
-        private void txtToMessageBox(string fileName, string header)
+        private void TxtToMessageBox(string fileName, string header)
         {
 
             String data = "";
@@ -68,7 +70,7 @@ namespace RPGPractice
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                System.Diagnostics.Debug.WriteLine("MessageBox error: "+ex.Message);
             }
 
             //Display information in messagebox
@@ -101,7 +103,7 @@ namespace RPGPractice
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //read data from about and display in message box
-            txtToMessageBox("About.txt", "About");
+            TxtToMessageBox(ABOUT, "About");
         }
         #endregion
 
@@ -122,6 +124,7 @@ namespace RPGPractice
 
             //edit: Subscribe to any needed events
             eventManager.BattleStart += OnBattleStart_Handler;
+            eventManager.BattleEnd += OnBattleEnd_Handler;
         }
 
         public void OnBattleStart_Handler(object sender, BattleStartEventArgs args)
@@ -140,12 +143,13 @@ namespace RPGPractice
         /// <param name="e"></param>
         public void OnBattleEnd_Handler(object sender, BattleEndEventArgs e)
         {
-            //edit: Unpublish and Unsubscribe from all subscribers for Battle
+            // Unpublish and Unsubscribe from all subscribers for Battle
             battlefield.UnManageEvents(eventManager);
 
-            //Edit: hide battlefield from form
+            //remove battlefield object.
+            battlefield.Visible = false;
+            Controls.Remove(battlefield);
         }
-
         #endregion
     }
 }

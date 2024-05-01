@@ -15,15 +15,15 @@ namespace RPGPractice.Engine.MobClasses
         /// </summary>
         protected override void Initialize()
         {
-            MaxHitPoints = random.Next(11); //roll 1d10 
+            MaxHitPoints = 10;
             MaxMana = 0; //Only casters get Mana
-            Initiative = random.Next(21) + 3; //roll 1d20 + 3
+            Initiative = random.Next(21) + 3;
             Sprite = Properties.Resources.Bandit;
             Intelligence = 0;
             Strength = 0;
             AttackMod = 0;
-            Defense = 10;
-            MagicDefense = 10;
+            Defense = 9;
+            MagicDefense = 9;
         }
     }
 }

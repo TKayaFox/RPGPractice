@@ -86,6 +86,7 @@ namespace RPGPractice.Engine
                 int uniqueID = initiative.NextTurn();
                 currentTurn = mobDictionary[uniqueID];
                 isAlive = currentTurn.IsAlive;
+                System.Diagnostics.Debug.WriteLine($"Current Turn: {currentTurn.Name} [{isAlive}]");
             }
 
             //If currentMob is Not player controlled tell it to take it's turn
@@ -139,19 +140,12 @@ namespace RPGPractice.Engine
         /// </summary>
         private void IsEndGame()
         {
-
-            //Check if all villians are dead
-            if (AreMobsDead(heroes))
+            //Check if all heroes or villains are dead.
+            //  Victory is only assured if at least one hero lives
+            bool loss = AreMobsDead(heroes);
+            if (loss || AreMobsDead(villians))
             {
-                bool victory = false;
-                OnBattleEnd(victory);
-            }
-
-            //Check if all heroes are dead
-            else if (AreMobsDead(villians))
-            {
-                bool victory = true;
-                OnBattleEnd(victory);
+                OnBattleEnd(!loss); //OnBattleEnd uses victory not loss, so reverse the boolean
             }
         }
 
@@ -211,9 +205,15 @@ namespace RPGPractice.Engine
             PlayerTurn?.Invoke(this, args);
         }
 
+        /// <summary>
+        /// Called when either all heroes, or all villains have died.
+        /// </summary>
+        /// <param name="victory"></param>
         public void OnBattleEnd(bool victory)
         {
-            //edit: implement
+            BattleEndEventArgs args = new BattleEndEventArgs();
+            args.Victory = victory;
+            BattleEnd?.Invoke(this, args);
         }
 
         //=========================================

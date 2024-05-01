@@ -23,8 +23,8 @@ namespace RPGPractice.Engine.MobClasses
             Intelligence = 2;
             Strength = -1;
             AttackMod = -1;
-            Defense = 15;
-            MagicDefense = 15;
+            Defense = 12;
+            MagicDefense = 12;
         }
 
         /// <summary>
