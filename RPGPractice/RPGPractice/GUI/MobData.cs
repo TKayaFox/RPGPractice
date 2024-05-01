@@ -53,10 +53,42 @@ namespace RPGPractice.GUI
         internal void OnDeath_Handler(object? sender, EventArgs e)
         {
             isAlive = false;
-            PictureBox.Visible = false;
+            pictureBox.Image = null;
         }
 
         public string Special { get => special; set => special = value; }
         public bool IsAlive { get => isAlive; set => isAlive = value; }
+
+        private bool selected;
+
+        /// <summary>
+        /// Turn on and off Picture Border depending on boolean
+        /// </summary>
+        public bool Selected
+        {
+            set
+            {
+                if (value)
+                {
+                    Select();
+                }
+                else
+                {
+                    DeSelect();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called by Selected to either turn on or off picturebox border
+        /// </summary>
+        private void Select()
+        {
+            pictureBox.BorderStyle = BorderStyle.FixedSingle;
+        }
+        private void DeSelect()
+        {
+            pictureBox.BorderStyle = BorderStyle.None;
+        }
     }
 }

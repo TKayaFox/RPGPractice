@@ -93,7 +93,7 @@ namespace RPGPractice.Engine.MobClasses
         /// Returns an initial Attack Roll to see if hits
         /// </summary>
         /// <returns></returns>
-        public virtual void Attack(Mob target)
+        public virtual async Task Attack(Mob target)
         {
             //Determine Attack Roll (attackMod + 1d20)
             int attackRoll = random.Next(1,21) + attackMod;
@@ -118,7 +118,7 @@ namespace RPGPractice.Engine.MobClasses
             //Tell target they are being attacked
             //  Be polite though and tell them who you are
             //  Give them turnData so they can update it
-            string targetTurnSummary = target.Hit(attackRoll, damage, name);
+            string targetTurnSummary = await target.Hit(attackRoll, damage, name);
             AppendTurnSummary(targetTurnSummary);
 
             //Raise TurnEnd event
@@ -128,9 +128,13 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Called when an attack (or heal) hits MobID
         /// Modifies HP as needed
+        /// Async is purely so that can delay the task slightly so things feel less instantaneous
         /// </summary>
-        public virtual string Hit(int attackRoll, int damage, string attacker)
+        public virtual async Task<string> Hit(int attackRoll, int damage, string attacker)
         {
+            // Delay for 2 seconds so it seems like NPC is actually making a choice
+            await Task.Delay(2000);
+
             //turnSummary is returned to attacker so it knows what happened
             string turnSummary = "";
 

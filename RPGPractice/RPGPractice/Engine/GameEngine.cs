@@ -104,7 +104,7 @@ namespace RPGPractice.Engine
         /// Starts a new Battle encounter
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public void NewBattle()
+        public async Task NewBattle()
         {
             //TODO: Revive all heroes
 
@@ -112,7 +112,12 @@ namespace RPGPractice.Engine
             battle = new Battle(heroes, numWins, random);
 
             //Actually Start Battle logic
-            battle.Start(eventManager);
+            await battle.Start(eventManager);
+
+            //let GUI catch up and dispaly
+            await Task.Delay(2000);
+
+            //Start turns
             battle.NextTurn();
         }
 

@@ -21,6 +21,7 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="heroes"></param>
         public void TakeTurn(Mob[] heroes)
         {
+
             Mob target = SetTarget(heroes);
 
             //BAndit only knows to attack

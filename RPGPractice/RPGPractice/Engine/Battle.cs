@@ -37,7 +37,7 @@ namespace RPGPractice.Engine
             this.random = random;
         }
 
-        public void Start(EventManager eventManager)
+        public async Task Start(EventManager eventManager)
         {
 
             //setup initiative order and villians
@@ -76,7 +76,7 @@ namespace RPGPractice.Engine
         /// Either tell NPCs to take their turn OR get Player input
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public void NextTurn()
+        public async Task NextTurn()
         {
             //Determine who is next in initiative, but skip dead mobs.
             bool isAlive = false;

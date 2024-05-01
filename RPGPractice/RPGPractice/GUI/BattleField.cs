@@ -33,6 +33,11 @@ namespace RPGPractice
         public BattleField()
         {
             InitializeComponent();
+
+            //Tag ActionButtons
+            AttackButt.Tag = ActionEnum.Attack;
+            DefendButt.Tag = ActionEnum.Defend;
+            SpecialButt.Tag = ActionEnum.Special;
         }
             
         public void Populate(List<MobData> mobDataList)
@@ -42,10 +47,6 @@ namespace RPGPractice
             //Assign PictureBoxes to arrays for easier Sprite Handling
             BuildPictureArrays();
 
-            //Tag ActionButtons
-            AttackButt.Tag = ActionEnum.Attack;
-            DefendButt.Tag = ActionEnum.Defend;
-            SpecialButt.Tag = ActionEnum.Special;
             //Add all mobs into battlefield display and assign to PictureBoxes
             SetupMobs(mobDataList);
 
@@ -58,16 +59,13 @@ namespace RPGPractice
             heroSprites = new PictureBox[Max_Sprites];
             villianSprites = new PictureBox[Max_Sprites];
 
-            heroSprites[0] = heroSprite1;
-            heroSprites[1] = heroSprite2;
-            heroSprites[2] = heroSprite3;
-            heroSprites[3] = heroSprite4;
-            heroSprites[4] = heroSprite5;
-            villianSprites[0] = villianSprite1;
-            villianSprites[1] = villianSprite2;
-            villianSprites[2] = villianSprite3;
-            villianSprites[3] = villianSprite4;
-            villianSprites[4] = villianSprite5;
+            for (int i = 0; i < Max_Sprites; i++)
+            {
+                heroSprites[i] = (PictureBox)Controls.Find($"heroSprite{i + 1}", true)[0];
+                villianSprites[i] = (PictureBox)Controls.Find($"villianSprite{i + 1}", true)[0];
+                heroSprites[i].Image = null;
+                villianSprites[i].Image = null;
+            }
         }
 
         #endregion
@@ -226,9 +224,14 @@ namespace RPGPractice
             PlayerActionEventArgs actionData = new PlayerActionEventArgs();
             actionData.TargetID = targetID;
             actionData.Action = action;
+            actionData.AttackerID = currentTurnID;
 
             //Hide action menu until next player turn
             HideActionMenu();
+
+            //Unhighlight player
+            MobData attacker = mobDictionary[currentTurnID];
+            attacker.Selected = false;
 
             //Raise PlayerAction event
             PlayerAction?.Invoke(this, actionData);
@@ -281,11 +284,12 @@ namespace RPGPractice
         private void OnPlayerTurn_Handler(object? sender, PlayerTurnEventArgs args)
         {
             //find mobData using MobID
-            currentTurnID = args.MobID;
+            int mobID = args.MobID;
+            currentTurnID = mobID;
             MobData mobData = mobDictionary[currentTurnID];
 
-            //Highlight the Hero whose turn it is
-            mobData.PictureBox.BorderStyle = BorderStyle.FixedSingle;
+            //highlight the Hero whose turn it is
+            mobDictionary[mobID].Selected = true;
 
             //Show Hero name in Action Menu
             TurnLabel.Text = mobData.Name;
