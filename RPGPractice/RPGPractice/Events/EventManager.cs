@@ -23,7 +23,6 @@ namespace RPGPractice.Events
         //  Remember to add an aggregator below as well to relay the event, and subscriber in appropriate method
 
         //MobID Events
-        public event EventHandler<TurnEndEventArgs>? BattleEvent;
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler? Death;
 
@@ -47,10 +46,6 @@ namespace RPGPractice.Events
         public void OnPlayerAction_Aggregator(object? sender, PlayerActionEventArgs e)
         {
             PlayerAction?.Invoke(sender, e);
-        }
-        public void OnBattleEvent_Aggregator(object sender, TurnEndEventArgs e)
-        {
-            BattleEvent?.Invoke(sender, e);
         }
         public void OnDeath_Aggregator(object sender, EventArgs e)
         {

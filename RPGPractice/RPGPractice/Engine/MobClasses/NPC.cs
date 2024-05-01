@@ -35,6 +35,7 @@ namespace RPGPractice.Engine.MobClasses
             do
             {
                 int targetIndex = random.Next(heroes.Length);
+                System.Diagnostics.Debug.WriteLine($"Rolling Random Target. Heroes Length = {heroes.Length}. Index = {targetIndex}");
                 target = heroes[targetIndex];
             } while (!target.IsAlive);
 

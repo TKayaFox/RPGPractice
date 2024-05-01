@@ -174,8 +174,8 @@ namespace RPGPractice
                 //TargetBox is behind ActionButtBox so hide ActionButtBox
                 ActionButtBox.Visible = false;
 
-                //change TurnLabel to reflect current Action
-                TurnLabel.Text = action.ToString();
+                //change button text to reflect current Action
+                TargetButt.Text = action.ToString();
             }
         }
 
@@ -189,10 +189,10 @@ namespace RPGPractice
             //TODO: Add a "Cancel" button in case user changes mind.
             //Get Target from ComboBox. interestingly comboBox is populated with MobData objects
             MobData data;
-            if (TargetCBox.SelectedItem is MobData)
+            if (targetCBox.SelectedItem is MobData)
             {
                 //get Data
-                data = (MobData)TargetCBox.SelectedItem;
+                data = (MobData)targetCBox.SelectedItem;
 
                 //send PlayerAction event
                 OnPlayerAction(data.UniqueID, action);
@@ -218,6 +218,9 @@ namespace RPGPractice
             actionData.TargetID = targetID;
             actionData.Action = action;
 
+            //Hide action menu until next player turn
+            HideActionMenu();
+
             //Raise PlayerAction event
             PlayerAction?.Invoke(this, actionData);
         }
@@ -238,7 +241,6 @@ namespace RPGPractice
             PlayerAction += eventManager.OnPlayerAction_Aggregator;
 
             //Subscribe to any needed events
-            eventManager.BattleEvent += OnBattleEvent_Handler;
             eventManager.PlayerTurn += OnPlayerTurn_Handler;
             eventManager.TurnEnd += OnTurnEnd_Handler;
         }
@@ -253,18 +255,18 @@ namespace RPGPractice
             PlayerAction -= eventManager.OnPlayerAction_Aggregator;
 
             //unSubscribe to any needed events
-            eventManager.BattleEvent -= OnBattleEvent_Handler;
             eventManager.PlayerTurn -= OnPlayerTurn_Handler;
             eventManager.TurnEnd -= OnTurnEnd_Handler;
         }
 
         private void OnTurnEnd_Handler(object? sender, TurnEndEventArgs turnData)
         {
-            HideActionMenu();
             //Unpack turnSummary and append to battleSummaryTBox
-            battleSummaryTBox.Text += $"\n" +
-                $"{ turnData.TurnSummary}\n" +
-                $"----------------------------";
+            battleSummaryTBox.Text += $"\r\n{ turnData.TurnSummary}\r\n";
+
+            // Scroll to the end of the textbox
+            battleSummaryTBox.SelectionStart = battleSummaryTBox.Text.Length;
+            battleSummaryTBox.ScrollToCaret();
         }
 
         private void OnPlayerTurn_Handler(object? sender, PlayerTurnEventArgs args)
@@ -291,7 +293,7 @@ namespace RPGPractice
                 SpecialButt.Visible = false;
             }
 
-            //Populate TargetCBox with all potential targets
+            //Populate targetCBox with all potential targets
             foreach (MobData data in mobDictionary.Values)
             {
                 //Make sure Mob is alive before adding.
@@ -300,7 +302,8 @@ namespace RPGPractice
                     //add MobData to ComboBox.
                     //  Note: non-Strings added to Combobox will be default display their toString()
                     //  This makes it easy to know what target the user selects.
-                    TargetCBox.Items.Add(data);
+                    targetCBox.Items.Clear();
+                    targetCBox.Items.Add(data);
                 }
             }
 

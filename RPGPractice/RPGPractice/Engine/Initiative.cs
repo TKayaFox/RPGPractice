@@ -39,7 +39,7 @@ namespace RPGPractice.Engine
 
             //Cycle to next Node
             //If at end of initiative, restart
-            if (currentNode == null)
+            if (currentNode == null || currentNode.Next == null)
             {
                 currentNode = head;
             }

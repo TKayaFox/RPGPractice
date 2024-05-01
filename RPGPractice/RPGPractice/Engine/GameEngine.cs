@@ -110,6 +110,7 @@ namespace RPGPractice.Engine
 
             //Actually Start Battle logic
             battle.Start(eventManager);
+            battle.NextTurn();
         }
 
         #endregion
@@ -134,7 +135,6 @@ namespace RPGPractice.Engine
             //TODO: Subscribe to any needed events
             eventManager.BattleEnd += OnBattleEnd_Handler;
             eventManager.NewGame += OnNewGame_Handler;
-            eventManager.PlayerAction += OnPlayerAction_handler;
         }
         #endregion
 
@@ -164,13 +164,6 @@ namespace RPGPractice.Engine
             NewGame();
         }
 
-        public void OnPlayerAction_handler(object sender, PlayerActionEventArgs playerAction)
-        {
-            //Unpack Args
-            //playerAction.Attacker
-            //playerAction.Target
-            ActionEnum action = playerAction.Action;
-        }
 
         #endregion
     }

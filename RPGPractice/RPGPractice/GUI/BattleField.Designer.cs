@@ -34,7 +34,7 @@ namespace RPGPractice
             DefendButt = new Button();
             AttackButt = new Button();
             heroSprite5 = new PictureBox();
-            battleSummaryTBox = new GroupBox();
+            BatleArenaGroupBox = new GroupBox();
             villianSprite4 = new PictureBox();
             heroSprite4 = new PictureBox();
             heroSprite2 = new PictureBox();
@@ -47,12 +47,12 @@ namespace RPGPractice
             ActionMenuGrou = new GroupBox();
             TurnLabel = new Label();
             ActionTargetBox = new GroupBox();
-            TargetCBox = new ComboBox();
+            targetCBox = new ComboBox();
             TargetButt = new Button();
-            textBox1 = new TextBox();
+            battleSummaryTBox = new TextBox();
             ActionButtBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)heroSprite5).BeginInit();
-            battleSummaryTBox.SuspendLayout();
+            BatleArenaGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)villianSprite4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite2).BeginInit();
@@ -122,26 +122,25 @@ namespace RPGPractice
             heroSprite5.TabIndex = 2;
             heroSprite5.TabStop = false;
             // 
-            // battleSummaryTBox
+            // BatleArenaGroupBox
             // 
-            battleSummaryTBox.BackgroundImage = Properties.Resources.game_background_1;
-            battleSummaryTBox.BackgroundImageLayout = ImageLayout.Stretch;
-            battleSummaryTBox.Controls.Add(villianSprite4);
-            battleSummaryTBox.Controls.Add(heroSprite4);
-            battleSummaryTBox.Controls.Add(heroSprite2);
-            battleSummaryTBox.Controls.Add(villianSprite2);
-            battleSummaryTBox.Controls.Add(heroSprite3);
-            battleSummaryTBox.Controls.Add(villianSprite3);
-            battleSummaryTBox.Controls.Add(heroSprite1);
-            battleSummaryTBox.Controls.Add(villianSprite5);
-            battleSummaryTBox.Controls.Add(heroSprite5);
-            battleSummaryTBox.Controls.Add(villianSprite1);
-            battleSummaryTBox.Location = new Point(0, 5);
-            battleSummaryTBox.Name = "battleSummaryTBox";
-            battleSummaryTBox.Size = new Size(730, 418);
-            battleSummaryTBox.TabIndex = 3;
-            battleSummaryTBox.TabStop = false;
-            battleSummaryTBox.Text = "groupBox1";
+            BatleArenaGroupBox.BackgroundImage = Properties.Resources.game_background_1;
+            BatleArenaGroupBox.BackgroundImageLayout = ImageLayout.Stretch;
+            BatleArenaGroupBox.Controls.Add(villianSprite4);
+            BatleArenaGroupBox.Controls.Add(heroSprite4);
+            BatleArenaGroupBox.Controls.Add(heroSprite2);
+            BatleArenaGroupBox.Controls.Add(villianSprite2);
+            BatleArenaGroupBox.Controls.Add(heroSprite3);
+            BatleArenaGroupBox.Controls.Add(villianSprite3);
+            BatleArenaGroupBox.Controls.Add(heroSprite1);
+            BatleArenaGroupBox.Controls.Add(villianSprite5);
+            BatleArenaGroupBox.Controls.Add(heroSprite5);
+            BatleArenaGroupBox.Controls.Add(villianSprite1);
+            BatleArenaGroupBox.Location = new Point(0, 5);
+            BatleArenaGroupBox.Name = "BatleArenaGroupBox";
+            BatleArenaGroupBox.Size = new Size(730, 418);
+            BatleArenaGroupBox.TabIndex = 3;
+            BatleArenaGroupBox.TabStop = false;
             // 
             // villianSprite4
             // 
@@ -266,7 +265,7 @@ namespace RPGPractice
             // 
             // ActionTargetBox
             // 
-            ActionTargetBox.Controls.Add(TargetCBox);
+            ActionTargetBox.Controls.Add(targetCBox);
             ActionTargetBox.Controls.Add(TargetButt);
             ActionTargetBox.Location = new Point(182, 0);
             ActionTargetBox.Name = "ActionTargetBox";
@@ -275,15 +274,15 @@ namespace RPGPractice
             ActionTargetBox.TabIndex = 7;
             ActionTargetBox.TabStop = false;
             // 
-            // TargetCBox
+            // targetCBox
             // 
-            TargetCBox.Font = new Font("Microsoft Sans Serif", 20.25F);
-            TargetCBox.FormattingEnabled = true;
-            TargetCBox.Items.AddRange(new object[] { "- Select Target -" });
-            TargetCBox.Location = new Point(5, 14);
-            TargetCBox.Name = "TargetCBox";
-            TargetCBox.Size = new Size(260, 39);
-            TargetCBox.TabIndex = 4;
+            targetCBox.Font = new Font("Microsoft Sans Serif", 20.25F);
+            targetCBox.FormattingEnabled = true;
+            targetCBox.Items.AddRange(new object[] { "- Select Target -" });
+            targetCBox.Location = new Point(5, 14);
+            targetCBox.Name = "TargetCBox";
+            targetCBox.Size = new Size(260, 39);
+            targetCBox.TabIndex = 4;
             // 
             // TargetButt
             // 
@@ -296,33 +295,33 @@ namespace RPGPractice
             TargetButt.UseVisualStyleBackColor = true;
             TargetButt.Click += TargetButt_Click;
             // 
-            // textBox1
+            // battleSummaryTBox
             // 
-            textBox1.BackColor = SystemColors.ActiveCaption;
-            textBox1.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            textBox1.Location = new Point(3, 428);
-            textBox1.Margin = new Padding(3, 2, 3, 2);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ReadOnly = true;
-            textBox1.ScrollBars = ScrollBars.Vertical;
-            textBox1.Size = new Size(722, 144);
-            textBox1.TabIndex = 5;
-            textBox1.Text = "Battle Start!";
-            textBox1.TextAlign = HorizontalAlignment.Center;
+            battleSummaryTBox.BackColor = SystemColors.ActiveCaption;
+            battleSummaryTBox.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            battleSummaryTBox.Location = new Point(3, 428);
+            battleSummaryTBox.Margin = new Padding(3, 2, 3, 2);
+            battleSummaryTBox.Multiline = true;
+            battleSummaryTBox.Name = "battleSummaryTBox";
+            battleSummaryTBox.ReadOnly = true;
+            battleSummaryTBox.ScrollBars = ScrollBars.Vertical;
+            battleSummaryTBox.Size = new Size(722, 144);
+            battleSummaryTBox.TabIndex = 5;
+            battleSummaryTBox.Text = "Battle Start!";
+            battleSummaryTBox.TextAlign = HorizontalAlignment.Center;
             // 
             // BattleField
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(textBox1);
-            Controls.Add(ActionMenuGrou);
             Controls.Add(battleSummaryTBox);
+            Controls.Add(ActionMenuGrou);
+            Controls.Add(BatleArenaGroupBox);
             Name = "BattleField";
             Size = new Size(737, 625);
             ActionButtBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)heroSprite5).EndInit();
-            battleSummaryTBox.ResumeLayout(false);
+            BatleArenaGroupBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)villianSprite4).EndInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite4).EndInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite2).EndInit();
@@ -346,7 +345,6 @@ namespace RPGPractice
         private Button DefendButt;
         private Button AttackButt;
         private PictureBox heroSprite5;
-        private GroupBox battleSummaryTBox;
         private PictureBox heroSprite1;
         private PictureBox heroSprite4;
         private PictureBox heroSprite2;
@@ -358,9 +356,11 @@ namespace RPGPractice
         private PictureBox villianSprite1;
         private GroupBox ActionMenuGrou;
         private GroupBox ActionTargetBox;
-        private ComboBox TargetCBox;
+        private ComboBox targetCBox;
         private Button TargetButt;
         private TextBox textBox1;
         private Label TurnLabel;
+        private GroupBox BatleArenaGroupBox;
+        private TextBox battleSummaryTBox;
     }
 }

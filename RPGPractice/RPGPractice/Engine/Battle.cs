@@ -39,8 +39,6 @@ namespace RPGPractice.Engine
 
         public void Start(EventManager eventManager)
         {
-            //subscribe to Events
-            ManageEvents(eventManager);
 
             //setup initiative order and villians
             villians = GenerateEncounter(eventManager);
@@ -53,9 +51,11 @@ namespace RPGPractice.Engine
             AddToDictionary(heroes, mobDictionary);
             AddToDictionary(villians, mobDictionary);
 
-            //Start Game
+            //subscribe to Events
+            ManageEvents(eventManager);
+
+            //Start Gui logic
             OnBattleStart();
-            NextTurn();
         }
 
         /// <summary>
@@ -205,6 +205,11 @@ namespace RPGPractice.Engine
             PlayerTurn?.Invoke(this, args);
         }
 
+        public void OnBattleEnd(bool victory)
+        {
+            //edit: implement
+        }
+
         //=========================================
         //                Event Handlers
         //=========================================
@@ -222,6 +227,8 @@ namespace RPGPractice.Engine
 
             //Subscribe to events from eventManager
             eventManager.Death += OnDeath_Handler;
+            eventManager.TurnEnd += OnTurnEnd_Handler;
+            eventManager.PlayerAction += OnPlayerAction_handler;
         }
 
         /// <summary>
@@ -237,6 +244,8 @@ namespace RPGPractice.Engine
 
             //Subscribe to events from eventManager
             eventManager.Death -= OnDeath_Handler;
+            eventManager.TurnEnd -= OnTurnEnd_Handler;
+            eventManager.PlayerAction -= OnPlayerAction_handler;
         }
 
         /// <summary>
@@ -247,6 +256,29 @@ namespace RPGPractice.Engine
         private void OnDeath_Handler(object sender, EventArgs e)
         {
             IsEndGame();
+        }
+
+        /// <summary>
+        /// At end of each turn, start the next turn
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnTurnEnd_Handler(object sender, TurnEndEventArgs e)
+        {
+            NextTurn();
+        }
+
+        /// <summary>
+        /// When a player chooses an action, implement it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="playerAction"></param>
+        public void OnPlayerAction_handler(object sender, PlayerActionEventArgs playerAction)
+        {
+            //Unpack Args
+            ActionEnum action = playerAction.Action;
+            Mob target = mobDictionary[playerAction.TargetID];
+            currentTurn.Attack(target);
         }
     }
 }
