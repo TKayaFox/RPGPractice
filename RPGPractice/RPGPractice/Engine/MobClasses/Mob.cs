@@ -133,7 +133,7 @@ namespace RPGPractice.Engine.MobClasses
         public virtual async Task<string> Hit(int attackRoll, int damage, string attacker)
         {
             // Delay for 2 seconds so it seems like NPC is actually making a choice
-            await Task.Delay(2000);
+            await Task.Delay(1000);
 
             //turnSummary is returned to attacker so it knows what happened
             string turnSummary = "";

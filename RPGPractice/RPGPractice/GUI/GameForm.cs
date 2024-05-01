@@ -48,7 +48,6 @@ namespace RPGPractice
             //Initialize battleField then add it to eventManager
             battlefield.Populate(mobDataList);
             Controls.Add(battlefield);
-            battlefield.Visible = true;
         }
 
         /// <summary>
@@ -126,7 +125,6 @@ namespace RPGPractice
 
             //edit: Subscribe to any needed events
             eventManager.BattleStart += OnBattleStart_Handler;
-            eventManager.BattleEnd += OnBattleEnd_Handler;
         }
 
         public void OnBattleStart_Handler(object sender, BattleStartEventArgs args)
@@ -136,21 +134,6 @@ namespace RPGPractice
 
             //Send to appropriate Method
             NewBattle(mobDataList);
-        }
-
-        /// <summary>
-        /// On battle end, unsubscribe and close the existing battlefield
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void OnBattleEnd_Handler(object sender, BattleEndEventArgs e)
-        {
-            // Unpublish and Unsubscribe from all subscribers for Battle
-            battlefield.UnManageEvents(eventManager);
-
-            //remove battlefield object.
-            battlefield.Visible = false;
-            Controls.Remove(battlefield);
         }
         #endregion
     }

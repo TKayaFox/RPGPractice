@@ -44,7 +44,7 @@ namespace RPGPractice
             heroSprite1 = new PictureBox();
             villianSprite5 = new PictureBox();
             villianSprite1 = new PictureBox();
-            ActionMenuGrou = new GroupBox();
+            ActionMenuGroup = new GroupBox();
             TurnLabel = new Label();
             ActionTargetBox = new GroupBox();
             targetCBox = new ComboBox();
@@ -62,7 +62,7 @@ namespace RPGPractice
             ((System.ComponentModel.ISupportInitialize)heroSprite1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)villianSprite5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)villianSprite1).BeginInit();
-            ActionMenuGrou.SuspendLayout();
+            ActionMenuGroup.SuspendLayout();
             ActionTargetBox.SuspendLayout();
             SuspendLayout();
             // 
@@ -241,18 +241,18 @@ namespace RPGPractice
             villianSprite1.TabIndex = 3;
             villianSprite1.TabStop = false;
             // 
-            // ActionMenuGrou
+            // ActionMenuGroup
             // 
-            ActionMenuGrou.Controls.Add(TurnLabel);
-            ActionMenuGrou.Controls.Add(ActionButtBox);
-            ActionMenuGrou.Controls.Add(ActionTargetBox);
-            ActionMenuGrou.Location = new Point(0, 563);
-            ActionMenuGrou.Margin = new Padding(3, 2, 3, 2);
-            ActionMenuGrou.Name = "ActionMenuGrou";
-            ActionMenuGrou.Padding = new Padding(3, 2, 3, 2);
-            ActionMenuGrou.Size = new Size(730, 56);
-            ActionMenuGrou.TabIndex = 4;
-            ActionMenuGrou.TabStop = false;
+            ActionMenuGroup.Controls.Add(TurnLabel);
+            ActionMenuGroup.Controls.Add(ActionButtBox);
+            ActionMenuGroup.Controls.Add(ActionTargetBox);
+            ActionMenuGroup.Location = new Point(0, 563);
+            ActionMenuGroup.Margin = new Padding(3, 2, 3, 2);
+            ActionMenuGroup.Name = "ActionMenuGrou";
+            ActionMenuGroup.Padding = new Padding(3, 2, 3, 2);
+            ActionMenuGroup.Size = new Size(730, 56);
+            ActionMenuGroup.TabIndex = 4;
+            ActionMenuGroup.TabStop = false;
             // 
             // TurnLabel
             // 
@@ -315,7 +315,7 @@ namespace RPGPractice
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(battleSummaryTBox);
-            Controls.Add(ActionMenuGrou);
+            Controls.Add(ActionMenuGroup);
             Controls.Add(BatleArenaGroupBox);
             Name = "BattleField";
             Size = new Size(737, 625);
@@ -331,7 +331,7 @@ namespace RPGPractice
             ((System.ComponentModel.ISupportInitialize)heroSprite1).EndInit();
             ((System.ComponentModel.ISupportInitialize)villianSprite5).EndInit();
             ((System.ComponentModel.ISupportInitialize)villianSprite1).EndInit();
-            ActionMenuGrou.ResumeLayout(false);
+            ActionMenuGroup.ResumeLayout(false);
             ActionTargetBox.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -354,7 +354,7 @@ namespace RPGPractice
         private PictureBox villianSprite3;
         private PictureBox villianSprite5;
         private PictureBox villianSprite1;
-        private GroupBox ActionMenuGrou;
+        private GroupBox ActionMenuGroup;
         private GroupBox ActionTargetBox;
         private ComboBox targetCBox;
         private Button TargetButt;

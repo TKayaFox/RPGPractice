@@ -122,7 +122,7 @@ namespace RPGPractice.Engine
         {
             //TODO: Implement actuall encounter scaling
             //      depending on Combat Level
-            Mob[] villians = new Mob[3];
+            Mob[] villians = new Mob[1];
 
             for (int i = 0; i < villians.Length; i++)
             {

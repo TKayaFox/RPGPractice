@@ -127,7 +127,7 @@ namespace RPGPractice
         private void ShowActionMenu()
         {
             //Show and enable ActionGroupBox
-            ActionMenuGrou.Visible = true;
+            ActionMenuGroup.Visible = true;
             ActionButtBox.Enabled = true;
             ActionButtBox.Visible = true;
         }
@@ -135,7 +135,7 @@ namespace RPGPractice
         //Hides action menu so player doesnt try to make a move when not their turn
         private void HideActionMenu()
         {
-            ActionMenuGrou.Visible = false;
+            ActionMenuGroup.Visible = false;
         }
 
         #endregion
