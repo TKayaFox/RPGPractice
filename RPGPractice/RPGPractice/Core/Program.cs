@@ -1,7 +1,7 @@
+using RPGPractice.Core.Events;
 using RPGPractice.Engine;
-using RPGPractice.Events;
 
-namespace RPGPractice
+namespace RPGPractice.Core
 {
     internal static class Program
     {

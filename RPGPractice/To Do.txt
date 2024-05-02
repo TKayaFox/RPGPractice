@@ -1,0 +1,79 @@
+RPG Project to do:
+	Create Dice Class again
+		instead of passing random to Mob pass Dice
+		potentially do the same for other classes
+	Add Defend functionality to Mob
+	Have the type of damage get relayed by Attack commands
+		Have HIT run different logic depending on type of damage
+			magic
+			physical
+	Add Special Attack functionality to Mob
+		throw exception
+		subMobs
+			mage magic spell
+			Orc damage multiplier for magic spells
+			Dragon special attacks
+	GameEngine
+		endgame
+			game over
+				Display results (rounds lasted)
+				Display leaderboard button
+			victory
+				save data to file
+					just update save data before each battle
+					new file for each game
+				start a new battle
+		after battle
+			heal all Heroes
+	Battle
+		Setup encounter generation to generate different encounters
+			first 1 bandit (tutorial)
+			then 3 bandits
+			then 2 Orcs
+			then 1 dragon
+			then 5 bandits
+			then 2 Orcs 3 Bandits
+			then 3 bandits 1 dragon
+			then randomized selection of:
+				Perhaps use combat level to determine maximums and num of villains
+				up to 1 dragon, if so generate max 3 other mobs
+				up to 5 bandits
+				up to 3 orcs
+			or something
+
+Future ideas:
+	In save data keep track of more data:
+		number of dead Heroes
+		number of dead enemies
+			count for each type of enemy
+		whether a Game over or not
+		Possibly XML format or something
+	Add Load data option
+		load an existing (but not lost) save.
+	Darkest Dungeon style, when a Mob dies dont revive it, create a new one.
+	Implement spell selection
+	GameEngine
+		Add character naming and selection
+		EndGame
+			if Victory
+				show new Battle results userControl instead of BattleForm
+					show results
+					tell user progress has been saved
+					tell user progress has been saved
+					button to start next battle
+					button to start new game
+	Implement tutorial for first round
+		make skippable
+	Add more hero types
+		Ranger
+		Barbarian
+	Add more damage types
+		blunt vs slashing
+		ranged
+	get new Mob sprites
+	
+ONLY AFTER SUBMITTING FINAL Project
+	Add story?
+	Add dungeon navigation
+	Add leveling system
+		

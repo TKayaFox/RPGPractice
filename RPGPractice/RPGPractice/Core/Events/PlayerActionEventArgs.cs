@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RPGPractice.Core.Enumerations;
 
-namespace RPGPractice.Events
+namespace RPGPractice.Core.Events
 {
     public class PlayerActionEventArgs
     {
         private int attackerID;
         private int targetID;
-        private ActionEnum action;
+        private MobActions action;
 
         public int AttackerID { get => attackerID; set => attackerID = value; }
         public int TargetID { get => targetID; set => targetID = value; }
-        public ActionEnum Action { get => action; set => action = value; }
+        public MobActions Action { get => action; set => action = value; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.GUI;
 
-namespace RPGPractice.Events
+namespace RPGPractice.Core.Events
 {
     public class BattleStartEventArgs : EventArgs
     {

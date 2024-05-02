@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPGPractice
+namespace RPGPractice.Core.Enumerations
 {
     /// <summary>
     /// Enumerates an action type for player turn
     /// </summary>
-    public enum ActionEnum
+    public enum MobActions
     {
         Attack,
         Defend,

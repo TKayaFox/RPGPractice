@@ -104,7 +104,7 @@ namespace RPGPractice.Engine
             public Node(Mob mob)
             {
                 this.data = mob.UniqueID;
-                this.Initiative = mob.RollInitiative();
+                this.Initiative = mob.Initiative();
             }
 
             public int Data { get => data; set => data = value; }

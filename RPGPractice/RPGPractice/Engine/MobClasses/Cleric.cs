@@ -19,7 +19,7 @@ namespace RPGPractice.Engine.MobClasses
             Sprite = Properties.Resources.Cleric;
             MaxHitPoints = 25;
             MaxMana = 5; //Only casters get Mana
-            Initiative = random.Next(20);  //roll 1d20
+            Initiative = 0;
             Intelligence = 2;
             Strength = -1;
             AttackMod = -1;
@@ -28,18 +28,28 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
-        /// Heals targeted creature
+        /// SpecialAttack is called when a Mob makes a special attack.
+        ///     Not all Mob types have a special attack
+        ///     In this case SpecialAttack is a heal spell
         /// </summary>
         /// <param name="target"></param>
-        public void Heal(Mob target)
+        protected override void UseSpecialAbility(Mob target)
         {
-            //Roll for heal
-            int healValue = random.Next(9) + Intelligence;
+            //Make sure theres enough Mana
+            if (Mana > 0)
+            {
+                //Reduce Mana
+                Mana--;
 
-            target.Heal(healValue, Name);
+                //Roll for heal
+                int healValue = random.Next(1, 9) + Intelligence;
 
-            //Reduce Mana
-            Mana--;
+                target.Heal(healValue, Name);
+            }
+            else
+            {
+                //TODO: Figure out what to do if no Mana
+            }
         }
     }
 }

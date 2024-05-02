@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGPractice.Events
+namespace RPGPractice.Core.Events
 {
     /// <summary>
     /// Handles all Battle Messages to be displayed for user

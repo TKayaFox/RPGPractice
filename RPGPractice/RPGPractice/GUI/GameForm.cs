@@ -1,6 +1,6 @@
+using RPGPractice.Core.Events;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.Events;
 using RPGPractice.GUI;
 
 namespace RPGPractice

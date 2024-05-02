@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using RPGPractice.Core.Enumerations;
+using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.Events;
 using RPGPractice.GUI;
 
 namespace RPGPractice.Engine
@@ -20,6 +21,9 @@ namespace RPGPractice.Engine
         private Random random;
         private int combatLevel;
         private Dictionary<int, Mob> mobDictionary;
+
+        //TODO: Implement Defend Logic
+        //TODO: Implement Special Attack Logic
 
         //=========================================
         //              Main Methods
@@ -199,8 +203,33 @@ namespace RPGPractice.Engine
 
         public void OnPlayerTurn()
         {
+            //setup event arguments
             PlayerTurnEventArgs args = new PlayerTurnEventArgs();
             args.MobID = currentTurn.UniqueID;
+
+            //Make lists of viable targets
+            List<MobData> attackTargetList = new List<MobData>();
+            List<MobData> healTargetList = new List<MobData>();
+            foreach (Mob mob in mobDictionary.Values)
+            {
+                //Make sure Mob is alive before adding.
+                if (mob.IsAlive)
+                {
+                    //Add to attackTargetList if an NPC
+                    //  Or if specialAction attack is offensive
+                    if (mob.mob is NPC)
+                    {
+                        attackTargetList.Add(mob.MobData);
+                    }
+                    //Otherwise add to specialTargetList
+                    else
+                    {
+                        healTargetList.Add(mob.MobData);
+                    }
+                }
+            }
+            args.AttackTargetList = attackTargetList;
+            args.HealTargetList = healTargetList;
 
             PlayerTurn?.Invoke(this, args);
         }
@@ -282,9 +311,23 @@ namespace RPGPractice.Engine
         public void OnPlayerAction_handler(object sender, PlayerActionEventArgs playerAction)
         {
             //Unpack Args
-            ActionEnum action = playerAction.Action;
+            MobActions action = playerAction.Action;
             Mob target = mobDictionary[playerAction.TargetID];
-            currentTurn.Attack(target);
+
+            //determine type of action was selected and send the appropriate command
+            switch (action)
+            {
+                case MobActions.Defend:
+                    currentTurn.Defend();
+                    break;
+                case MobActions.Attack:
+                    currentTurn.Attack(target);
+                    break;
+                case MobActions.Special:
+                    currentTurn.SpecialAction();
+                    break;
+            }
+
         }
     }
 }

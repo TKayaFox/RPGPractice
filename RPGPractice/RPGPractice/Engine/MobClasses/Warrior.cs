@@ -19,7 +19,7 @@ namespace RPGPractice.Engine.MobClasses
             Sprite = Properties.Resources.Fighter;
             MaxHitPoints = 30;
             MaxMana = 0; //Only casters get Mana
-            Initiative = random.Next(20) + 2;  //roll 1d20+2
+            Initiative = 2;  //roll 1d20+2
             Intelligence = -2;
             Strength = 2;
             AttackMod = 2;

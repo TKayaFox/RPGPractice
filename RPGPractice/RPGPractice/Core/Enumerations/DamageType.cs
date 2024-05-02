@@ -5,10 +5,9 @@ using System.Text;
 
 namespace RPGPractice
 {
-    public enum SpecialEnum
+    public enum DamageType
     {
-        NA,
-        Heal,
-        Spell
+        Physical,
+        Magic
     }
 }

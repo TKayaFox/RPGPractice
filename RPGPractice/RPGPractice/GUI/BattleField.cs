@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RPGPractice.Core.Enumerations;
+using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.Events;
 using RPGPractice.GUI;
 
 namespace RPGPractice
@@ -20,11 +21,16 @@ namespace RPGPractice
         //=========================================
         private const int Max_Sprites = 5;
 
-        PictureBox[] heroSprites;
-        PictureBox[] villianSprites;
-        Dictionary<int, MobData> mobDictionary;
-        ActionEnum action;
-        int currentTurnID;
+        private PictureBox[] heroSprites;
+        private PictureBox[] villianSprites;
+        private Dictionary<int, MobData> mobDictionary;
+        private List<MobData> attackTargetList;
+        private List<MobData> specialTargetList;
+        private MobActions action;
+        private int currentTurnID;
+
+
+        //TODO: Add a "Cancel" button in case user changes mind.
 
         //=========================================
         //              Main Methods
@@ -35,9 +41,9 @@ namespace RPGPractice
             InitializeComponent();
 
             //Tag ActionButtons
-            AttackButt.Tag = ActionEnum.Attack;
-            DefendButt.Tag = ActionEnum.Defend;
-            SpecialButt.Tag = ActionEnum.Special;
+            AttackButt.Tag = MobActions.Attack;
+            DefendButt.Tag = MobActions.Defend;
+            SpecialButt.Tag = MobActions.Special;
         }
             
         public void Populate(List<MobData> mobDataList)
@@ -138,6 +144,43 @@ namespace RPGPractice
             ActionMenuGroup.Visible = false;
         }
 
+
+        private void InitializeTargetSelectMenu()
+        {
+            //Populate targetCBox with all potential targets
+            //add MobData to ComboBox.
+            //  Note: non-Strings added to Combobox will display their toString()
+            //  This makes it easy to know what target the user selects.
+            switch (action)
+            {
+                //Attackable targets
+                case MobActions.Attack:
+                    targetCBox.DataSource = attackTargetList;
+                    break;
+
+                //Special Attack targets (may vary depending on type of Special Attack)
+                case MobActions.Special:
+                    targetCBox.DataSource = specialTargetList;
+                    break;
+            }
+            //TargetBox is behind ActionButtBox so hide ActionButtBox
+            ActionButtBox.Visible = false;
+
+            //change button text to reflect current Action
+            TargetButt.Text = action.ToString();
+        }
+        private MobData GetTargetData()
+        {
+            //get Data
+            MobData data = (MobData)targetCBox.SelectedItem;
+
+            //Empty Targets to prevent redundant items
+            targetCBox.SelectedIndex = -1;
+            targetCBox.SelectedItem = null;
+            targetCBox.Items.Clear();
+            return data;
+        }
+
         #endregion
 
         //=========================================
@@ -161,22 +204,18 @@ namespace RPGPractice
             if (sender is Button && ((Button)sender).Tag != null)
             {
                 var tag = ((Button)sender).Tag;
-                action = (ActionEnum)tag;
+                action = (MobActions)tag;
             }
 
             //If defending, skip target selection
-            if (action == ActionEnum.Defend)
+            if (action == MobActions.Defend)
             {
                 OnPlayerAction(0, action);
             }
             //else show ActionTargetBox for target selection
             else
             {
-                //TargetBox is behind ActionButtBox so hide ActionButtBox
-                ActionButtBox.Visible = false;
-
-                //change button text to reflect current Action
-                TargetButt.Text = action.ToString();
+                InitializeTargetSelectMenu();
             }
         }
 
@@ -187,21 +226,13 @@ namespace RPGPractice
         /// <param name="e"></param>
         private void TargetButt_Click(object sender, EventArgs e)
         {
-            //TODO: Add a "Cancel" button in case user changes mind.
             //Get Target from ComboBox. interestingly comboBox is populated with MobData objects
             MobData data;
 
             if (targetCBox.SelectedItem is MobData)
             {
-                //get Data
-                data = (MobData)targetCBox.SelectedItem;
-
-                //Empty Targets to prevent redundant items
-                targetCBox.SelectedIndex = -1;
-                targetCBox.SelectedItem = null;
-                targetCBox.Items.Clear();
-
-                //send PlayerAction event
+                //get selected target data then send PlayerAction event
+                data = GetTargetData();
                 OnPlayerAction(data.UniqueID, action);
             }
             else
@@ -213,12 +244,13 @@ namespace RPGPractice
             ActionButtBox.Visible = true;
         }
 
+
         /// <summary>
         /// raise the PlayerAction event
         /// </summary>
         /// <param name="targetID"></param>
         /// <param name="action"></param>
-        private void OnPlayerAction(int targetID, ActionEnum action)
+        private void OnPlayerAction(int targetID, MobActions action)
         {
             //Package PlayerAction event with target and action
             PlayerActionEventArgs actionData = new PlayerActionEventArgs();
@@ -294,34 +326,29 @@ namespace RPGPractice
             //Show Hero name in Action Menu
             TurnLabel.Text = mobData.Name;
 
-            //Setup SpecialAttack Button to show what Special ability current mob has.
-            if (!mobData.Special.Equals(""))
+            //Setup SpecialAttack Button to show what SpecialAction ability current mob has.
+            UpdateSpecialAttack(mobData);
+
+            //update target Lists
+            attackTargetList = args.AttackTargetList;
+            specialTargetList = args.SpecialTargetList;
+
+            //Show Action Menu
+            ShowActionMenu();
+        }
+
+        private void UpdateSpecialAttack(MobData mobData)
+        {
+            if (!mobData.SpecialAction.Equals(""))
             {
                 SpecialButt.Visible = true;
-                SpecialButt.Text = mobData.Special;
+                SpecialButt.Text = mobData.SpecialAction;
             }
-            //Else hide Special Button because no special ability
+            //Else hide SpecialAction Button because no specialAction ability
             else
             {
                 SpecialButt.Visible = false;
             }
-
-            //Populate targetCBox with all potential targets
-            foreach (MobData data in mobDictionary.Values)
-            {
-
-                //Make sure Mob is alive before adding.
-                if (data.IsAlive)
-                {
-                    //add MobData to ComboBox.
-                    //  Note: non-Strings added to Combobox will be default display their toString()
-                    //  This makes it easy to know what target the user selects.
-                    targetCBox.Items.Add(data);
-                }
-            }
-
-            //Show Action Menu
-            ShowActionMenu();
         }
 
         #endregion``QQ1`

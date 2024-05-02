@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.Events;
+using RPGPractice.GUI;
 
 namespace RPGPractice.Engine
 {
@@ -50,16 +51,17 @@ namespace RPGPractice.Engine
         {
             Mob[] heroes = new Mob[NUM_HEROES];
 
-            // Build heroes TODO: Modify with actual hero layout
-            for (int i = 0; i < heroes.Length; i++)
+            heroes[0] = new Warrior("Mabel", random);
+            heroes[1] = new Mage("Boop", random);
+            heroes[2] = new Cleric("Fred", random);
+
+            // give each hero a uniqueId and publish them to eventmanager
+            for (int i = 0; i < 3; i++)
             {
-                //Initialize Hero and give a uniqueID
-                Mob newHero= new Warrior($"Warrior {i}", random);
-                newHero.UniqueID = i;
+                heroes[i].UniqueID = i+1;
 
                 //Subscribe and add to array
-                newHero.ManageEvents(eventManager);
-                heroes[i] = newHero;
+                heroes[i].ManageEvents(eventManager);
             }
 
             return heroes;

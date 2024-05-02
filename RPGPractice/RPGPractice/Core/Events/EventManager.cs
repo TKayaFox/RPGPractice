@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
 
-namespace RPGPractice.Events
+namespace RPGPractice.Core.Events
 {
     /// <summary>
     /// Subscriber MobData tracks all Objects and what evens they may raise.
@@ -35,7 +35,7 @@ namespace RPGPractice.Events
         public event EventHandler<PlayerActionEventArgs> PlayerAction;
 
         //GameForm Events
-        public event System.EventHandler NewGame;
+        public event EventHandler NewGame;
 
         //===========================================
         //          Event Aggregators
@@ -68,7 +68,7 @@ namespace RPGPractice.Events
             PlayerTurn?.Invoke(sender, e);
         }
         public void OnTurnEnd_Aggregator(object? sender, TurnEndEventArgs e)
-            {
+        {
             TurnEnd?.Invoke(sender, e);
         }
         #endregion
