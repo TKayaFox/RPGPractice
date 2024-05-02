@@ -41,7 +41,6 @@ namespace RPGPractice.Engine.MobClasses
         private int defense;
         private int magicDefense;
         private bool isDefending;
-        private bool canUseSpecial;
         #endregion
 
         //TODO: Implement Block Logic
@@ -60,11 +59,13 @@ namespace RPGPractice.Engine.MobClasses
             this.name = name;
             this.random = random;
             isDefending = false;
-            canUseSpecial = false;
             specialActionString = "";
 
             //Initialize all variables
             Initialize();
+
+            //make sure hitpoints are at max
+            HitPoints = MaxHitPoints;
         }
 
         /// <summary>
@@ -88,7 +89,6 @@ namespace RPGPractice.Engine.MobClasses
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
-        /// <exception cref="NotImplementedException"></exception>
         protected abstract void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList);
 
 
@@ -199,16 +199,8 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="target"></param>
         public virtual void Special(MobData target)
         {
-            //Only attempt Special if CanUseSpecial returns true
-            //  Logic for CanUseSpecial is determined by subclass
-            if (CanUseSpecial)
-            {
-                UseSpecialAbility(target);
-            }
-            else
-            {
-                //TODO: Throw exception tellng calling class that Turn was not finished properly
-            }
+                //throw exception telling caller to try again
+                throw new NotSupportedException("This class does not have a special ability!");
         }
 
         public virtual void Block()
@@ -284,11 +276,11 @@ namespace RPGPractice.Engine.MobClasses
             result = ($"{Name} took {damage} damage");
 
 
-            //prevent over-healing
+            //Check for death
             if (!IsAlive)
             {
-                hitPoints = MaxHitPoints;
-                result += ($"{Name} has Died!");
+                result += ($"\r\n{Name} has Died!");
+                OnDeath();
             }
 
             //return string stating result
@@ -302,15 +294,6 @@ namespace RPGPractice.Engine.MobClasses
         #endregion
 
         #region Protected Methods
-        /// <summary>
-        /// Special is called when a Mob makes a special ability.
-        ///     Not all Mob types have a special ability, this should not be called in such cases
-        /// </summary>
-        /// <param name="target"></param>
-        protected virtual void UseSpecialAbility(MobData target)
-        {
-            //TODO: Throw exception tellng calling class that Turn was not finished properly
-        }
 
         /// <summary>
         /// Handles end logic for Block family of methods
@@ -337,7 +320,7 @@ namespace RPGPractice.Engine.MobClasses
                 turnSummary += Hurt(damage);
             }
             //If ability meets, then take half damage (rounded down, so integer is not a problem)
-            if (attackRoll == dodgeValue)
+            else if (attackRoll == dodgeValue)
             {
                 int halfDamage = damage / 2;
                 turnSummary += $"Glancing Blow! ";
@@ -416,7 +399,6 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Called to determine if Mob can actually use their special ability
         /// </summary>
-        protected virtual bool CanUseSpecial { get => canUseSpecial; }
         protected virtual int Defense { get => defense; set => defense = value; }
         protected virtual int MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
         protected virtual int HitPoints { get => hitPoints; set => hitPoints = value; }
@@ -451,7 +433,7 @@ namespace RPGPractice.Engine.MobClasses
             args.TurnSummary = TurnSummary;
 
             //invoke method
-            TurnEnd.Invoke(this, args);
+            TurnEnd?.Invoke(this, args);
         }
 
         /// <summary>
@@ -483,7 +465,6 @@ namespace RPGPractice.Engine.MobClasses
         {
             //publish events to eventManager
             TurnEnd -= eventManager.OnTurnEnd_Aggregator;
-            Death -= eventManager.OnDeath_Aggregator;
         }
         #endregion
     }

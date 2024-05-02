@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using RPGPractice.Core.Enumerations;
@@ -14,6 +15,11 @@ namespace RPGPractice.Engine
         //=========================================
         //                Variables
         //=========================================
+        
+        //Some items throw exceptions on purpose and attempt to loop until solved
+        //  MAX_EXCEPTIONS prevents infinite loops
+        private const int MAX_EXCEPTIONS = 5;
+
         private Mob[] enemies;
         private Mob[] heroes;
         private Mob currentTurn;
@@ -99,7 +105,24 @@ namespace RPGPractice.Engine
             GetTargetableMobs(heroTargetList, enemyTargetList);
 
             //Tell mob to take it's turn
-            currentTurn.StartTurn(heroTargetList, enemyTargetList);
+            //If NotSupportedException is thrown, an invalid selection has been made
+            bool turnCompleted = false;
+            int attempt = 0;
+            do
+            {
+                try
+                {
+                    currentTurn.StartTurn(heroTargetList, enemyTargetList);
+                }
+                catch (NotSupportedException)
+                {
+                    //TODO: implement an error box stating whats wrong
+                }
+                turnCompleted = true;
+                attempt++;
+            } while (!turnCompleted && attempt < MAX_EXCEPTIONS);
+
+            //TODO: If somehow the turn could not be completed notify user
         }
 
         private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
@@ -159,15 +182,18 @@ namespace RPGPractice.Engine
         /// Checks for Battle end state every time a MobID dies 
         /// (If all enemies or all heroes are dead)
         /// </summary>
-        private void IsEndGame()
+        private bool IsBattleEnd()
         {
             //Check if all heroes or villains are dead.
             //  Victory is only assured if at least one hero lives
             bool loss = AreMobsDead(heroes);
-            if (loss || AreMobsDead(enemies))
+            bool battleEnd = loss || AreMobsDead(enemies);
+            if (battleEnd)
             {
                 OnBattleEnd(!loss); //OnBattleEnd uses victory not loss, so reverse the boolean
             }
+
+            return battleEnd;
         }
 
         /// <summary>
@@ -208,12 +234,16 @@ namespace RPGPractice.Engine
             //publish events to eventManager
             BattleStart += eventManager.OnBattleStart_Aggregator;
             BattleEnd += eventManager.OnBattleEnd_Aggregator;
+            TurnEnd += eventManager.OnTurnEnd_Aggregator;
 
             //Subscribe to events from eventManager
-            eventManager.Death += OnDeath_Handler;
-            eventManager.TurnEnd += OnTurnEnd_Handler;
             eventManager.PlayerAction += OnPlayerAction_handler;
-            TurnEnd += eventManager.OnTurnEnd_Aggregator;
+
+            //subscribe to all mob TurnEnd events
+            foreach (Mob mob in mobDictionary.Values)
+            {
+                mob.TurnEnd += OnTurnEnd_Handler;
+            }
         }
 
         /// <summary>
@@ -225,11 +255,17 @@ namespace RPGPractice.Engine
             //publish events to eventManager
             BattleStart -= eventManager.OnBattleStart_Aggregator;
             BattleEnd -= eventManager.OnBattleEnd_Aggregator;
+            TurnEnd -= eventManager.OnTurnEnd_Aggregator;
 
-            //Subscribe to events from eventManager
-            eventManager.Death -= OnDeath_Handler;
-            eventManager.TurnEnd -= OnTurnEnd_Handler;
+            //unsubscribe events from eventManager
             eventManager.PlayerAction -= OnPlayerAction_handler;
+
+
+            //unsubscribe all mob TurnEnd events
+            foreach (Mob mob in mobDictionary.Values)
+            {
+                mob.TurnEnd -= OnTurnEnd_Handler;
+            }
         }
 
         #endregion
@@ -268,26 +304,19 @@ namespace RPGPractice.Engine
         //=========================================
 
         /// <summary>
-        /// Check for End Game when someone dies
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnDeath_Handler(object sender, EventArgs e)
-        {
-            IsEndGame();
-        }
-
-        /// <summary>
         /// At end of each turn, start the next turn
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnEndData)
+        private void OnTurnEnd_Handler(object? sender, TurnEndEventArgs turnEndData)
         {
-            //TODO: Determine if any attacks are pending completion
+            //Run through any pending TargetedActions
+            string turnSummary = "";
             while (turnEndData.HasTargetedActions)
             {
                 TargetedAbility ability = turnEndData.DequeueAction();
+
+                string result = "";
 
                 //Unpack detailsof ability and what it does
                 MobData attackerData = ability.Attacker;
@@ -303,19 +332,32 @@ namespace RPGPractice.Engine
                 switch (damageType)
                 {
                     case DamageType.Physical:
-                        target.DefendMagic(attackRoll, damage);
+                        result += $"\r\n{target.DefendPhysical(attackRoll, damage)}";
                         break;
                     case DamageType.Magic:
-                        target.DefendPhysical(attackRoll, damage);
+                        result += $"\r\n{target.DefendMagic(attackRoll, damage)}";
                         break;
                     case DamageType.Heal:
-                        target.Heal(damage);
+                        result += $"{ target.Heal(damage)} ";
                         break;
                 }
+
+                turnSummary += result;
             }
 
+            turnEndData.TurnSummary += turnSummary;
 
-            NextTurn();
+            TurnEnd?.Invoke(sender, turnEndData);
+
+            //check for game over
+            if (IsBattleEnd())
+            {
+
+            }
+            else
+            {
+                NextTurn();
+            }
         }
 
         /// <summary>
@@ -327,7 +369,6 @@ namespace RPGPractice.Engine
         {
             //Unpack Args
             MobActions action = playerAction.Action;
-            Mob target = mobDictionary[playerAction.TargetID];
 
             //determine type of action was selected and send the appropriate command
             switch (action)
@@ -336,10 +377,18 @@ namespace RPGPractice.Engine
                     currentTurn.Block();
                     break;
                 case MobActions.Attack:
-                    currentTurn.Attack(target.MobData);
+                    if (playerAction.TargetID != -1)
+                    {
+                        Mob target = mobDictionary[playerAction.TargetID];
+                        currentTurn.Attack(target.MobData);
+                    }
                     break;
                 case MobActions.Special:
-                    currentTurn.Special(target.MobData);
+                    if (playerAction.TargetID != -1)
+                    {
+                        Mob target = mobDictionary[playerAction.TargetID];
+                        currentTurn.Special(target.MobData);
+                    }
                     break;
             }
 

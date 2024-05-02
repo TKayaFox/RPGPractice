@@ -48,6 +48,10 @@ namespace RPGPractice
             
         public void Populate(List<MobData> mobDataList)
         {
+            battleSummaryTBox.Text = "\r\n=========================================\r\n" +
+                                     "New Battle!" +
+                                     "\r\n=========================================\r\n";
+
             mobDictionary = new Dictionary<int, MobData>();
 
             //Assign PictureBoxes to arrays for easier Sprite Handling
@@ -177,7 +181,7 @@ namespace RPGPractice
             //Empty Targets to prevent redundant items
             targetCBox.SelectedIndex = -1;
             targetCBox.SelectedItem = null;
-            targetCBox.Items.Clear();
+            targetCBox.DataSource = null;
             return data;
         }
 
@@ -306,7 +310,7 @@ namespace RPGPractice
         private void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnData)
         {
             //Unpack turnSummary and append to battleSummaryTBox
-            battleSummaryTBox.Text += $"\r\n{turnData.TurnSummary}\r\n";
+            battleSummaryTBox.Text += $"{turnData.TurnSummary}\r\n";
 
             // Scroll to the end of the textbox
             battleSummaryTBox.SelectionStart = battleSummaryTBox.Text.Length;
@@ -351,6 +355,6 @@ namespace RPGPractice
             }
         }
 
-        #endregion``QQ1`
+        #endregion
     }
 }

@@ -72,6 +72,7 @@ Future ideas:
 		ranged
 	get new Mob sprites
 	Make a Caster interface for classes like Mage and Cleric that use magic
+	Have names randomized from a text document
 	
 ONLY AFTER SUBMITTING FINAL Project
 	Add story?

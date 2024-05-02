@@ -36,17 +36,27 @@ namespace RPGPractice.Engine.MobClasses
             AttackMod = -2;
             Defense = 10;
             MagicDefense = 15;
-            SpecialActionString = "Heal";
+            SpecialActionString = "Fireball";
         }
 
         /// <summary>
-        /// Called to determine if Mob can actually use their special attack
-        /// Only allow Special Attack if current mana greater than 0
+        /// Special is called when a Mob makes a special ability.
+        ///     Not all Mob types have a special ability
+        /// Only tries to use Special if CanUseSpecial returns true
         /// </summary>
-        protected override bool CanUseSpecial 
-        { get
+        /// <param name="target"></param>
+        public override void Special(MobData target)
+        {
+            //Only attempt Special if CanUseSpecial returns true
+            //  Logic for CanUseSpecial is determined by subclass
+            if (Mana > 0)
             {
-                return (Mana > 0);
+                UseSpecialAbility(target);
+            }
+            else
+            {
+                //throw exception telling caller to try again
+                throw new NotSupportedException("Out of Mana!");
             }
         }
 
@@ -56,7 +66,7 @@ namespace RPGPractice.Engine.MobClasses
         ///     In this case, Special is a damaging spell
         /// </summary>
         /// <param name="target"></param>
-        protected override void UseSpecialAbility(MobData target)
+        protected void UseSpecialAbility(MobData target)
         {
             //Reduce Mana
             Mana--;
@@ -80,5 +90,22 @@ namespace RPGPractice.Engine.MobClasses
             //end turn
             OnTurnEnd();
             }
+
+
+
+        /// <summary>
+        /// Compiles TargetList Lists for OnPlayerTurn
+        ///     Override to alter Special Action behavior
+        /// </summary>
+        /// <param name="allyTargetList"></param>
+        /// <param name="enemyTargetList"></param>
+        /// <param name="args"></param>
+        protected override void CompileTargetLists(List<MobData> allyTargetList, List<MobData> enemyTargetList, PlayerTurnEventArgs args)
+        {
+            //Make lists of viable targets
+            args.AttackTargetList = enemyTargetList;
+
+            args.SpecialTargetList = enemyTargetList;
         }
+    }
 }

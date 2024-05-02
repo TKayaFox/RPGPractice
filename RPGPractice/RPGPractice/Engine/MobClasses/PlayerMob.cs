@@ -35,7 +35,7 @@ namespace RPGPractice.Engine.MobClasses
         protected virtual void CompileTargetLists(List<MobData> allyTargetList, List<MobData> enemyTargetList, PlayerTurnEventArgs args)
         {
             //Make lists of viable targets
-            args.AttackTargetList = allyTargetList;
+            args.AttackTargetList = enemyTargetList;
 
             //Unless overriden provide a list of all possible targets for Special Action
             //  combine both lists
