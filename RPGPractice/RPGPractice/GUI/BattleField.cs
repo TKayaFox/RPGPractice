@@ -326,7 +326,7 @@ namespace RPGPractice
             //Show Hero name in Action Menu
             TurnLabel.Text = mobData.Name;
 
-            //Setup Special Button to show what SpecialAction ability current mob has.
+            //Setup Special Button to show what SpecialActionString ability current mob has.
             UpdateSpecialAttack(mobData);
 
             //update targetedAbilityQueue Lists
@@ -339,12 +339,12 @@ namespace RPGPractice
 
         private void UpdateSpecialAttack(MobData mobData)
         {
-            if (!mobData.SpecialAction.Equals(""))
+            if (!mobData.SpecialActionString.Equals(""))
             {
                 SpecialButt.Visible = true;
-                SpecialButt.Text = mobData.SpecialAction;
+                SpecialButt.Text = mobData.SpecialActionString;
             }
-            //Else hide SpecialAction Button because no specialAction ability
+            //Else hide SpecialActionString Button because no specialAction ability
             else
             {
                 SpecialButt.Visible = false;

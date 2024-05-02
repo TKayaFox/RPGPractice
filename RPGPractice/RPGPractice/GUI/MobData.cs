@@ -15,7 +15,7 @@ namespace RPGPractice.GUI
         private string? name;
         private bool isNPC;
         private bool isAlive;
-        private MobActions specialAction;
+        private string specialAction = "";
 
         /// <summary>
         /// Override ToString so object is identified by name
@@ -33,6 +33,8 @@ namespace RPGPractice.GUI
         public int UniqueID { get => uniqueID; set => uniqueID = value; }
         public string? Name { get => name; set => name = value; }
         public bool IsNPC { get => isNPC; set => isNPC = value; }
+        public string SpecialActionString { get => specialAction; set => specialAction = value; }
+        public bool IsAlive { get => isAlive; set => isAlive = value; }
 
         /// <summary>
         /// Property but when PictureBox is set, Sprite is already applied to the PictureBox
@@ -66,8 +68,6 @@ namespace RPGPractice.GUI
             }
         }
 
-        public MobActions SpecialAction { get => specialAction; set => specialAction = value; }
-        public bool IsAlive { get => isAlive; set => isAlive = value; }
 
         /// <summary>
         /// Turn on and off Picture Border depending on boolean

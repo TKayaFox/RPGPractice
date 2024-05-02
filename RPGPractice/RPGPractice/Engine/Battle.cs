@@ -41,7 +41,7 @@ namespace RPGPractice.Engine
             this.random = random;
         }
 
-        public void Start(EventManager eventManager)
+        public async Task Start(EventManager eventManager)
         {
 
             //setup initiative order and enemies

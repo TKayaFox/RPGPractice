@@ -24,6 +24,7 @@ namespace RPGPractice.Engine.MobClasses
         private string name;
         private System.Drawing.Bitmap sprite;
         private string turnSummary;
+        private string specialActionString;
         private int uniqueID;
         private MobActions specialAction;
         Queue<TargetedAbility> targetedAbilityQueue;
@@ -60,6 +61,7 @@ namespace RPGPractice.Engine.MobClasses
             this.random = random;
             isDefending = false;
             canUseSpecial = false;
+            specialActionString = "";
 
             //Initialize all variables
             Initialize();
@@ -245,6 +247,7 @@ namespace RPGPractice.Engine.MobClasses
                 data.UniqueID = uniqueID;
                 data.IsNPC = (this is NPC); //if this object falls under NPC (MobID subclass)
                 data.IsAlive = IsAlive;
+                data.SpecialActionString = SpecialActionString;
 
                 //subscibe Mob to Death events
                 Death += data.OnDeath_Handler;
@@ -423,6 +426,7 @@ namespace RPGPractice.Engine.MobClasses
         protected virtual int AttackMod { get => attackMod; set => attackMod = value; }
         protected virtual string TurnSummary { get => turnSummary; set => turnSummary = value; }
         protected virtual Queue<TargetedAbility> TargetedAbilityQueue { get => targetedAbilityQueue; set => targetedAbilityQueue = value; }
+        protected string SpecialActionString { get => specialActionString; set => specialActionString = value; }
         #endregion
 
         //=========================================

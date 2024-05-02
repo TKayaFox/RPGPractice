@@ -3,7 +3,9 @@ using RPGPractice.GUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
 namespace RPGPractice.Engine.MobClasses
@@ -34,6 +36,7 @@ namespace RPGPractice.Engine.MobClasses
             AttackMod = -2;
             Defense = 10;
             MagicDefense = 15;
+            SpecialActionString = "Heal";
         }
 
         /// <summary>
@@ -78,4 +81,4 @@ namespace RPGPractice.Engine.MobClasses
             OnTurnEnd();
             }
         }
-    }
+}
