@@ -17,8 +17,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
         protected virtual int Mana { get => mana; set => mana = value; }
 
-        public Mage(Random random) : base("Mage", random) { }
-        public Mage(string name, Random random) : base(name, random) { }
+        public Mage(string name, Dice dice) : base(name, dice) { }
 
         /// <summary>
         /// Sets All stats for MobID
@@ -30,7 +29,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             MaxHitPoints = 16;
             MaxMana = 5; //Only casters get Mana
             Mana = MaxMana;
-            Initiative = 0;  //roll 1d20
+            Initiative = 2;
             Intelligence = 3;
             Strength = -2;
             AttackMod = -2;

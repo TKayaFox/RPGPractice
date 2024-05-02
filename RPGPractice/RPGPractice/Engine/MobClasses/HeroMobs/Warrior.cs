@@ -7,8 +7,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
     public class Warrior : PlayerMob
     {
-        public Warrior(Random random) : base("Warrior", random) { }
-        public Warrior(string name, Random random) : base(name, random) { }
+        public Warrior(string name, Dice dice) : base(name, dice) { }
 
         /// <summary>
         /// Sets All stats for MobID
@@ -18,7 +17,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         {
             Sprite = Properties.Resources.Fighter;
             MaxHitPoints = 30;
-            Initiative = 2;  //roll 1d20+2
+            Initiative = 1;
             Intelligence = -2;
             Strength = 2;
             AttackMod = 2;

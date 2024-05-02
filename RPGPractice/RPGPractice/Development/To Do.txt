@@ -1,5 +1,5 @@
 RPG Project to do:
-	Create Dice Class again
+	TODO:Create Dice Class again
 		instead of passing random to Mob pass Dice
 		potentially do the same for other classes
 	Add Defend functionality to Mob
@@ -58,8 +58,7 @@ RPG Project to do:
 				Just be careful in cases when want SOME members to remain okay. For isntance Unmanaging all mobs when deleting only Enemy Mobs
 
 Future ideas:
-	Actually ROLL initiative instead of using a static value.
-		Currently just using static for reliability, and to make things slightly easier on grader
+	improve handling for cass when notSupportedException raises too many times in Battle class.
 	add Testing (should have done this first, but better late than never)
 	Improve Initiative Class
 		perhaps use a tree?

@@ -29,9 +29,6 @@ namespace RPGPractice.Engine
         private int combatLevel;
         private Dictionary<int, Mob> mobDictionary;
 
-        //TODO: Implement Block Logic
-        //TODO: Implement Special Attack Logic
-
         //=========================================
         //              Main Methods
         //=========================================
@@ -115,16 +112,22 @@ namespace RPGPractice.Engine
                 {
                     currentTurn.StartTurn(heroTargetList, enemyTargetList);
                 }
-                catch (NotSupportedException)
+                catch (NotSupportedException e)
                 {
-                    //TODO: implement an error box stating whats wrong
+                    //implement an error box stating whats wrong
+                    MessageBox.Show(e.Message + "\r\nPlease choose another action!");
                 }
                 turnCompleted = true;
                 attempt++;
             } while (!turnCompleted && attempt < MAX_EXCEPTIONS);
 
-            //TODO: If somehow the turn could not be completed notify user
-        }
+            //If turn still not completed, show error message and move to next turn
+            if (!turnCompleted)
+            {
+                MessageBox.Show("Critical Error:Unable to complete Mob Turn, moving to next turn");
+                NextTurn();
+            }
+    }
 
         private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
         {

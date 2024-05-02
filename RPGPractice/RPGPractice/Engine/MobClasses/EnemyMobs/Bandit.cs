@@ -15,7 +15,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
         protected override void Initialize()
         {
             MaxHitPoints = 10;
-            Initiative = random.Next(21) + 3;
+            Initiative = 2;
             Sprite = Properties.Resources.Bandit;
             Intelligence = 0;
             Strength = 0;

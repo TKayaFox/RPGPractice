@@ -17,7 +17,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
         {
             Sprite = Properties.Resources.Dragon;
             MaxHitPoints = 40;
-            Initiative = 0; //Always last in initiative
+            Initiative = -1;
             Intelligence = 3;
             Strength = 3;
             AttackMod = 3;

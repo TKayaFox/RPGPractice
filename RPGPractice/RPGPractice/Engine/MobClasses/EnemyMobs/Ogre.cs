@@ -17,7 +17,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
         {
             Sprite = Properties.Resources.Ogre;
             MaxHitPoints = 18;
-            Initiative = random.Next(20) - 5;  //roll 1d20+2
+            Initiative = 1;  //roll 1d20+2
             Intelligence = 0;
             Strength = 2;
             AttackMod = 2;
