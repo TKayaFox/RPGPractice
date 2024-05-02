@@ -22,22 +22,21 @@ namespace RPGPractice.Engine.MobClasses
         /// </summary>
         /// <param name="heroTargetList"></param>
         /// <param name="enemyTargetList"></param>
-        public void TakeTurn(List<MobData> heroTargetList, List<MobData> enemyTargetList)
+        public override void TakeTurn(List<MobData> heroTargetList, List<MobData> enemyTargetList)
         {
             //set a target from available targets
-            Mob target = SetTarget(heroTargetList);
+            MobData target = SetTarget(heroTargetList);
             Attack(target);
         }
 
-        private Mob SetTarget(List<MobData> heroTargetList)
+        private MobData SetTarget(List<MobData> heroes)
         {
-            Mob target;
+            MobData target;
 
             //randomly choose a target, but make sure that it is actualy alive (stop beating the dead horse!)
             do
             {
-                int targetIndex = random.Next(heroes.Length);
-                System.Diagnostics.Debug.WriteLine($"Rolling Random Target. Heroes Length = {heroes.Length}. Index = {targetIndex}");
+                int targetIndex = random.Next(heroes.Count);
                 target = heroes[targetIndex];
             } while (!target.IsAlive);
 

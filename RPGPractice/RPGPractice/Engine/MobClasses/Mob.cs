@@ -74,14 +74,14 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Called on Mob's turn in initiative. For Mobs
         /// </summary>
-        public abstract void TakeTurn();
+        public abstract void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList);
 
         /// <summary>
         /// Called from Game when a MobID attacks another mobID.
         /// Returns an initial Attack Roll to see if hits
         /// </summary>
         /// <returns></returns>
-        public virtual void Attack(Mob target)
+        public virtual void Attack(MobData target)
         {
             //Determine damage and Attack Rolls (attackMod + 1d20)
             int damage = RollDamage(strength);
@@ -91,13 +91,9 @@ namespace RPGPractice.Engine.MobClasses
             AppendTurnSummary($"{name} Attacks {target.name}. \t[Attack roll: {attackRoll} Damage {damage}]");
 
             //Tell target they are being attacked
-            //  add return to TurnSummary
-            string targetTurnSummary = target.Hit(attackRoll, damage, name, DamageType.Physical);
-            AppendTurnSummary(targetTurnSummary);
-
-            //Raise TurnEnd event
-            OnTurnEnd();
+            OnHostileAction(targetTurnSummary);
         }
+
 
         public virtual void Defend()
         {

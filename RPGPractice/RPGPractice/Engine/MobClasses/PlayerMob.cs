@@ -18,21 +18,69 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="random"></param>
         protected PlayerMob(string name, Random random) : base(name, random) { }
 
-        public override void TakeTurn()
+        public override void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
         {
-
+            OnPlayerTurn(allyTargetList, enemyTargetList);
         }
 
+
         /// <summary>
-        /// Override the base EventManager to add new Events
+        /// Compiles Target Lists for OnPlayerTurn
+        ///     Override to alter Special Action behavior
+        /// </summary>
+        /// <param name="allyTargetList"></param>
+        /// <param name="enemyTargetList"></param>
+        /// <param name="args"></param>
+        protected virtual void CompileTargetLists(List<MobData> allyTargetList, List<MobData> enemyTargetList, PlayerTurnEventArgs args)
+        {
+            //Make lists of viable targets
+            args.AttackTargetList = allyTargetList;
+
+            //Unless overriden provide a list of all possible targets for Special Action
+            //  combine both lists
+            List<MobData> FullTargetList = new List<MobData>();
+            FullTargetList.AddRange(allyTargetList);
+            FullTargetList.AddRange(enemyTargetList);
+
+            args.SpecialTargetList = FullTargetList;
+        }
+
+        //=========================================
+        //                Events
+        //=========================================
+        public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
+
+
+        #region Event Managers
+        /// <summary>
+        /// Publishes self and subscribes to all events
         /// </summary>
         /// <param name="eventManager"></param>
         public override void ManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
             PlayerTurn += eventManager.OnPlayerTurn_Aggregator;
+
+            //also run for parent(Mob) class
+            base.ManageEvents(eventManager);
         }
 
+
+        /// <summary>
+        /// UnPublishes self and unsubscribes from all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public override void UnManageEvents(EventManager eventManager)
+        {
+            //unpublish events to eventManager
+            PlayerTurn -= eventManager.OnPlayerTurn_Aggregator;
+
+            //also run for parent(Mob) class
+            base.ManageEvents(eventManager);
+        }
+        #endregion
+
+        #region Event Invokers
         /// <summary>
         /// Tells the GUI to setup for players turn.
         /// </summary>
@@ -40,13 +88,12 @@ namespace RPGPractice.Engine.MobClasses
         {
             //setup event arguments
             PlayerTurnEventArgs args = new PlayerTurnEventArgs();
-            args.MobID = currentTurn.UniqueID;
+            args.MobID = UniqueID;
 
-            //Make lists of viable targets
-            args.AttackTargetList = attackTargetList;
-            args.SpecialTargetList = specialTargetList;
+            CompileTargetLists(allyTargetList, enemyTargetList, args);
 
             PlayerTurn?.Invoke(this, args);
         }
+        #endregion
     }
 }

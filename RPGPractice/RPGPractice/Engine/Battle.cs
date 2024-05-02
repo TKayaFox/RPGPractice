@@ -93,7 +93,7 @@ namespace RPGPractice.Engine
                 System.Diagnostics.Debug.WriteLine($"Current Turn: {currentTurn.Name} [{isAlive}]");
             }
 
-            //Make lists of all targetable mobs
+            //Make lists of all targetable mobs on both sides
             List<MobData> heroTargetList = new List<MobData>();
             List<MobData> enemyTargetList = new List<MobData>();
             GetTargetableMobs(heroTargetList, enemyTargetList);
@@ -180,6 +180,20 @@ namespace RPGPractice.Engine
             attacker.Attack(target);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="mobs"></param>
+        /// <param name="mobDataList"></param>
+        private static void CompileMobData(Mob[] mobs, List<MobData> mobDataList)
+        {
+            foreach (Mob mob in mobs)
+            {
+                MobData data = mob.MobData;
+                mobDataList.Add(data);
+            }
+        }
+
         //=========================================
         //             Getters/Setters
         //=========================================
@@ -191,9 +205,8 @@ namespace RPGPractice.Engine
         //                Events
         //=========================================
         public event EventHandler<BattleStartEventArgs> BattleStart;
-        public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
         public event EventHandler<BattleEndEventArgs> BattleEnd;
-
+        #region Event Invokers
         public void OnBattleStart()
         {
             BattleStartEventArgs args = new BattleStartEventArgs();
@@ -208,15 +221,8 @@ namespace RPGPractice.Engine
 
             BattleStart?.Invoke(this, args);
         }
+        #endregion
 
-        private static void CompileMobData(Mob[] mobs, List<MobData> mobDataList)
-        {
-            foreach (Mob mob in mobs)
-            {
-                MobData data = mob.MobData;
-                mobDataList.Add(data);
-            }
-        }
 
         /// <summary>
         /// Called when either all heroes, or all villains have died.
