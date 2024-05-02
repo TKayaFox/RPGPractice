@@ -6,6 +6,7 @@ using System.Xml.Linq;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
+using RPGPractice.Engine.MobClasses.EnemyMobs;
 using RPGPractice.GUI;
 
 namespace RPGPractice.Engine
@@ -133,7 +134,7 @@ namespace RPGPractice.Engine
                 if (mob.IsAlive)
                 {
                     //Add to enemyTargetList if an NPC
-                    if (mob is NPC)
+                    if (mob is Enemy)
                     {
                         enemyTargetList.Add(mob.MobData);
                     }
@@ -170,7 +171,7 @@ namespace RPGPractice.Engine
 
             for (int i = 0; i < enemies.Length; i++)
             {
-                Mob enemy = new Bandit($"Bandit {i}", random);
+                Mob enemy = new Bandit($"Bandit {i}", dice);
                 enemy.ManageEvents(eventManager);
                 enemy.UniqueID = i + 100;
                 enemies[i] = enemy;

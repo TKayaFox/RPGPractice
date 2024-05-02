@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGPractice.Engine.MobClasses
+namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
     public abstract class PlayerMob : Mob
     {
@@ -16,7 +16,7 @@ namespace RPGPractice.Engine.MobClasses
         /// </summary>
         /// <param name="name"></param>
         /// <param name="random"></param>
-        protected PlayerMob(string name, Random random) : base(name, random) { }
+        protected PlayerMob(string name, Dice dice) : base(name, dice) { }
 
         protected override void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
         {

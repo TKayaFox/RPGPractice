@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPGPractice.Engine.MobClasses
+namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
-    public class Bandit : NPC
+    public class Bandit : Enemy
     {
-        public Bandit(Random random) : base("Bandit", random) { }
-        public Bandit(string name, Random random) : base(name, random) { }
+        public Bandit(string name, Dice dice) : base(name, dice) { }
 
         /// <summary>
         /// Sets All stats for MobID

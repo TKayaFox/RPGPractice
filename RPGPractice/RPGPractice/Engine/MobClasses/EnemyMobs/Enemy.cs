@@ -6,16 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RPGPractice.Engine.MobClasses
+namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
-    public abstract class NPC : Mob
+    public abstract class Enemy : Mob
     {
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="name"></param>
         /// <param name="random"></param>
-        protected NPC(string name, Random random) :base(name, random) { }
+        protected Enemy(string name, Dice dice) : base(name, dice) { }
 
         /// <summary>
         /// Automate a turn for the Mob

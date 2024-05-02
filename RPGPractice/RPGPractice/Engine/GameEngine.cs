@@ -5,6 +5,8 @@ using System.Text;
 using System.Windows.Forms;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
+using RPGPractice.Engine.MobClasses.EnemyMobs;
+using RPGPractice.Engine.MobClasses.HeroMobs;
 using RPGPractice.GUI;
 
 namespace RPGPractice.Engine
@@ -20,6 +22,7 @@ namespace RPGPractice.Engine
         private Mob[] heroes;
         private Battle battle;
         private EventManager eventManager;
+        public Dice dice;
         private Random random;
 
         private string name;
@@ -39,6 +42,7 @@ namespace RPGPractice.Engine
         {
             random= new Random();
             this.eventManager = eventManager;
+            this.dice = new Dice(random);
 
             //subscribe to events
             ManageEvents();
@@ -51,9 +55,9 @@ namespace RPGPractice.Engine
         {
             Mob[] heroes = new Mob[NUM_HEROES];
 
-            heroes[0] = new Warrior("Mabel", random);
-            heroes[1] = new Mage("Boop", random);
-            heroes[2] = new Cleric("Fred", random);
+            heroes[0] = new Warrior("Mabel", dice);
+            heroes[1] = new Mage("Boop", dice);
+            heroes[2] = new Cleric("Fred", dice);
 
             // give each hero a uniqueId and publish them to eventmanager
             for (int i = 0; i < 3; i++)

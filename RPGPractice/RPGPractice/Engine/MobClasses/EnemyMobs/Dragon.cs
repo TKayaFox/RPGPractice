@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPGPractice.Engine.MobClasses
+namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
-    public class Dragon : NPC
+    public class Dragon : Enemy
     {
-
-        public Dragon(Random random) : base("Dragon", random) { }
-        public Dragon(string name, Random random) : base(name, random) { }
+        public Dragon(string name, Dice dice) : base(name, dice) { }
 
         /// <summary>
         /// Sets All stats for MobID

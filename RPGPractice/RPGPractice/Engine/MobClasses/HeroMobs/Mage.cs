@@ -3,20 +3,22 @@ using RPGPractice.GUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
+using System.Xml;
 using System.Xml.Linq;
 
-namespace RPGPractice.Engine.MobClasses
+namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
-    public class Cleric : PlayerMob
+    public class Mage : PlayerMob
     {
         private int maxMana; //Only casters get Mana
         private int mana;
         protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
         protected virtual int Mana { get => mana; set => mana = value; }
 
-        public Cleric(Random random) : base("Cleric", random) { }
-        public Cleric(string name, Random random) : base(name, random) { }
+        public Mage(Random random) : base("Mage", random) { }
+        public Mage(string name, Random random) : base(name, random) { }
 
         /// <summary>
         /// Sets All stats for MobID
@@ -24,17 +26,17 @@ namespace RPGPractice.Engine.MobClasses
         /// </summary>
         protected override void Initialize()
         {
-            Sprite = Properties.Resources.Cleric;
-            MaxHitPoints = 25;
+            Sprite = Properties.Resources.Mage;
+            MaxHitPoints = 16;
             MaxMana = 5; //Only casters get Mana
             Mana = MaxMana;
-            Initiative = 0;
-            Intelligence = 2;
-            Strength = -1;
-            AttackMod = -1;
-            Defense = 12;
-            MagicDefense = 12;
-            SpecialActionString = "Heal";
+            Initiative = 0;  //roll 1d20
+            Intelligence = 3;
+            Strength = -2;
+            AttackMod = -2;
+            Defense = 10;
+            MagicDefense = 15;
+            SpecialActionString = "Fireball";
         }
 
         /// <summary>
@@ -59,9 +61,9 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
-        /// Special is called when a Mob makes a special heal.
-        ///     Not all Mob types have a special heal
-        ///     In this case Special is a heal spell
+        /// Special is called when a Mob makes a special attack.
+        ///     Not all Mob types have a special attack
+        ///     In this case, Special is a damaging spell
         /// </summary>
         /// <param name="target"></param>
         protected void UseSpecialAbility(MobData target)
@@ -69,23 +71,25 @@ namespace RPGPractice.Engine.MobClasses
             //Reduce Mana
             Mana--;
 
-            //Roll for heal
-            int healValue = random.Next(1, 9) + Intelligence;
+            //Determine damage and Attack Rolls (attackMod + 1d20)
+            (int attackRoll, int damage) = dice.RollAttack(Intelligence, Intelligence);
+
+            //add attack roll to turn summary
+            AppendTurnSummary($"{Name} throws a Fireball at {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
 
             //Build a new TargetedAction object and add to Queue
-            TargetedAbility heal = new TargetedAbility();
-            heal.Attacker = MobData;
-            heal.Target = target;
-            heal.Damage = healValue; ;
-            heal.Damage = healValue; ;
-            heal.DamageType = DamageType.Heal;
-            TargetedAbilityQueue.Enqueue(heal);
-
-            AppendTurnSummary($"{Name} Heals {target.Name}. \t[+{healValue} HP]");
+            TargetedAbility attack = new TargetedAbility();
+            attack.Attacker = MobData;
+            attack.Target = target;
+            attack.AttackRoll = attackRoll;
+            attack.Damage = damage;
+            attack.DamageType = DamageType.Magic;
+            TargetedAbilityQueue.Enqueue(attack);
 
             //end turn
             OnTurnEnd();
         }
+
 
 
         /// <summary>
@@ -100,7 +104,7 @@ namespace RPGPractice.Engine.MobClasses
             //Make lists of viable targets
             args.AttackTargetList = enemyTargetList;
 
-            args.SpecialTargetList = allyTargetList;
+            args.SpecialTargetList = enemyTargetList;
         }
     }
 }

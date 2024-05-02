@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace RPGPractice.Engine.MobClasses
+namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
-    public class Ogre : NPC
+    public class Ogre : Enemy
     {
-        public Ogre(Random random) : base("Ogre", random) { }
-        public Ogre(string name, Random random) : base(name, random) { }
+        public Ogre(string name, Dice dice) : base(name, dice) { }
 
         /// <summary>
         /// Sets All stats for MobID
@@ -36,7 +35,7 @@ namespace RPGPractice.Engine.MobClasses
         /// <returns>string describing what occurred during this turn</returns>
         public override string DefendMagic(int attackRoll, int damage)
         {
-            damage = damage + (damage / 2); //Add half damage rounded down (int dataloss does this)
+            damage = damage + damage / 2; //Add half damage rounded down (int dataloss does this)
 
             return base.DefendMagic(attackRoll, damage);
         }

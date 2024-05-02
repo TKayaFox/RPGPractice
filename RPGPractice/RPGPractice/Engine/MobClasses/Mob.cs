@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
+using RPGPractice.Engine.MobClasses.EnemyMobs;
 using RPGPractice.GUI;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -20,13 +21,13 @@ namespace RPGPractice.Engine.MobClasses
         //=========================================
         #region Variables
         //MobID identifying data
-        protected Random random;
         private string name;
-        private System.Drawing.Bitmap sprite;
         private string turnSummary;
         private string specialActionString;
         private int uniqueID;
         private MobActions specialAction;
+        protected Dice dice;
+        private System.Drawing.Bitmap sprite;
         Queue<TargetedAbility> targetedAbilityQueue;
 
         //TODO: Move Mana related items to interface.
@@ -55,10 +56,10 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Constructor initializes default fields
         /// </summary>
-        public Mob(string name, Random random)
+        public Mob(string name, Dice dice)
         {
             this.name = name;
-            this.random = random;
+            this.dice = dice;
             isBlocking = false;
             specialActionString = "";
             blockingBonus = 2;
@@ -102,8 +103,7 @@ namespace RPGPractice.Engine.MobClasses
         public virtual void Attack(MobData target)
         {
             //Determine damage and Attack Rolls (attackMod + 1d20)
-            int damage = RollDamage(strength);
-            int attackRoll = RollAttack(ref damage, attackMod);
+            (int attackRoll,int damage) = dice.RollAttack(attackMod, strength);
 
             //add ability roll to turn summary
             AppendTurnSummary($"{name} Attacks {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
@@ -257,7 +257,7 @@ namespace RPGPractice.Engine.MobClasses
                 data.Sprite = sprite;
                 data.Name = name;
                 data.UniqueID = uniqueID;
-                data.IsNPC = (this is NPC); //if this object falls under NPC (MobID subclass)
+                data.IsNPC = (this is Enemy); //if this object falls under NPC (MobID subclass)
                 data.IsAlive = IsAlive;
                 data.SpecialActionString = SpecialActionString;
 
@@ -372,42 +372,6 @@ namespace RPGPractice.Engine.MobClasses
             {
                 TurnSummary += $"\r\n{eventMessage}";
             }
-        }
-
-        /// <summary>
-        /// Rolls ability dice (1d20) and adds a modifier
-        /// TODO: Setup Dice class to do this instead
-        /// </summary>
-        /// <param name="damage"></param>
-        /// <param name="modifier"></param>
-        /// <returns></returns>
-        protected virtual int RollAttack(ref int damage, int modifier)
-        {
-            //Determine Attack Roll (attackMod + 1d20)
-            int attackRoll = random.Next(1, 21);
-
-            //Critical Hit: If ability roll was a 20, then slightly boost hit chance (attackRoll) and boost damage
-            if (attackRoll >= 20)
-            {
-                attackRoll += 5;
-                damage += random.Next(9); //add another d8
-            }
-            attackRoll += modifier;
-            return attackRoll;
-        }
-
-        /// <summary>
-        /// rolls a damage dice and adds a modifier
-        /// TODO: Setup Dice class to do this instead
-        /// </summary>
-        /// <param name="modifier"></param>
-        /// <returns></returns>
-        protected virtual int RollDamage(int modifier)
-        {
-            //Determine damage Roll (strength + 1d8)
-            int damage = random.Next(1, 9);
-            damage += modifier;
-            return damage;
         }
         #endregion
 
