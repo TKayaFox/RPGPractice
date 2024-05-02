@@ -8,6 +8,7 @@ namespace RPGPractice
     public enum DamageType
     {
         Physical,
-        Magic
+        Magic,
+        Heal
     }
 }

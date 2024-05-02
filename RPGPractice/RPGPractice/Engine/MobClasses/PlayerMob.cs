@@ -18,8 +18,9 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="random"></param>
         protected PlayerMob(string name, Random random) : base(name, random) { }
 
-        public override void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
+        protected override void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
         {
+            //raise PlayerTurn event to capture user's action
             OnPlayerTurn(allyTargetList, enemyTargetList);
         }
 
@@ -76,7 +77,7 @@ namespace RPGPractice.Engine.MobClasses
             PlayerTurn -= eventManager.OnPlayerTurn_Aggregator;
 
             //also run for parent(Mob) class
-            base.ManageEvents(eventManager);
+            base.UnManageEvents(eventManager);
         }
         #endregion
 

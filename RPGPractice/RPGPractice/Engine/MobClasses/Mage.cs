@@ -61,7 +61,7 @@ namespace RPGPractice.Engine.MobClasses
                 //add attack roll to turn summary
                 AppendTurnSummary($"{Name} throws a Fireball at {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
 
-                //Tell targetQueue they are being attacked
+                //Tell targetedAbilityQueue they are being attacked
                 //  add return to TurnSummary
                 string targetTurnSummary = target.Hit(attackRoll, damage, Name, DamageType.Physical);
                 AppendTurnSummary(targetTurnSummary);
@@ -72,7 +72,7 @@ namespace RPGPractice.Engine.MobClasses
             else
             {
                 //Restart Turn and display an error message "No Mana!"
-                //TODO: Give all Mobs (Hero or villain) a TakeTurn method. 
+                //TODO: Give all Mobs (Hero or villain) a StartTurn method. 
                 //      Player controlled mobs will raise an event.
             }
         }

@@ -25,7 +25,8 @@ namespace RPGPractice.Engine.MobClasses
         private System.Drawing.Bitmap sprite;
         private string turnSummary;
         private int uniqueID;
-        private MobActions specialAction; 
+        private MobActions specialAction;
+        Queue<TargetedAbility> targetedAbilityQueue;
 
         //TODO: Move Mana related items to interface.
         //          Not all Mobs need mana
@@ -68,13 +69,28 @@ namespace RPGPractice.Engine.MobClasses
             //Set mana and hitpoints to max
             mana = MaxMana;
             HitPoints = MaxHitPoints;
-            turnSummary = "";
         }
 
         /// <summary>
         /// Called on Mob's turn in initiative. For Mobs
         /// </summary>
-        public abstract void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList);
+        public void StartTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
+        {
+            //reset turnSummary and targetedAbilityQueue for next turn
+            TurnSummary = "";
+            TargetedAbilityQueue = new Queue<TargetedAbility>();
+
+            TakeTurn(allyTargetList, enemyTargetList);
+        }
+
+        /// <summary>
+        /// Run actual turn logic
+        /// </summary>
+        /// <param name="v1"></param>
+        /// <param name="v2"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        protected abstract void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList);
+
 
         /// <summary>
         /// Called from Game when a MobID attacks another mobID.
@@ -87,68 +103,91 @@ namespace RPGPractice.Engine.MobClasses
             int damage = RollDamage(strength);
             int attackRoll = RollAttack(ref damage, attackMod);
 
-            //add attack roll to turn summary
+            //add ability roll to turn summary
             AppendTurnSummary($"{name} Attacks {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
 
-            //Tell targetQueue they are being attacked
-            OnTurnEnd(target);
+            //Build a new TargetedAction object and add to Queue
+            TargetedAbility attack = new TargetedAbility();
+            attack.Attacker = MobData;
+            attack.Target = target;
+            attack.AttackRoll = attackRoll;
+            attack.Damage = damage;
+            attack.DamageType = DamageType.Physical;
+            TargetedAbilityQueue.Enqueue(attack);
+
+            //end turn
+            OnTurnEnd();
         }
 
-        public virtual void Defend()
-        {
-            //Start defending
-            isDefending = true;
-
-            //TODO: Somehow turn off Defend at start of next turn
-            //TODO: give ALL mobs a TakeTurn method
-            //          Move appropriate event into Mob
-            //          Instead of NPC subtype, just go back to using isPlayerControlled
-        }
 
         /// <summary>
-        /// 
-        /// Called when an attack (or heal) hits MobID
-        /// Modifies HP as needed
-        /// Async is purely so that can delay the task slightly so things feel less instantaneous
+        /// Heals hitpoints
+        /// If no inputs provided, heals Mob to full health
         /// </summary>
-        /// <param name="attackRoll">Value used to determine hit or miss</param>
-        /// <param name="damage">Value determining damage on hit</param>
-        /// <param name="attacker">name of the attacker</param>
-        /// <param name="damageType">type of damage (ex: physical, magical)</param>
-        /// <returns>String summarizing result of hit</returns>
-        public virtual string Hit(int attackRoll, int damage, string attacker, DamageType damageType)
+        /// <param name="damage"></param>
+        /// <param name="healer"></param>
+        public virtual string Heal(int damage)
         {
-            //turnSummary is returned to attacker so it knows what happened
-            string turnSummary = "";
+            hitPoints += damage;
 
-            //If attack is for negative damage, dont attempt to defend just take the heal
-            if (attackRoll < 0)
+            //prevent over-healing
+            if (hitPoints > MaxHitPoints)
             {
-                turnSummary = Heal(-damage, attacker);
+                hitPoints = MaxHitPoints;
             }
-            //determine appropriate defense and calculate damage if needed
+
+            //return string stating result
+            return ($"{Name} healed back to {hitPoints} health!");
+        }
+        public virtual string Heal()
+        {
+            //if not specified, heal all
+            hitPoints = MaxHitPoints;
+            return $"{name} healed to full health";
+        }
+
+
+        /// <summary>
+        /// Called when hit by a physical ability
+        /// </summary>
+        /// <param name="attackRoll"></param>
+        /// <param name="damage"></param>
+        /// <param name="attacker"></param>
+        /// <returns>string describing what occurred during this turn</returns>
+        public virtual string DefendPhysical(int attackRoll, int damage)
+        {            
+            //Make sure action wouldnt actually heal user, if it would allow it to do so
+            if (damage < 0)
+            {
+                return Heal(damage);
+            }
             else
             {
-                //call different defend method depending on damage type
-                switch (damageType)
-                {
-                    case DamageType.Physical:
-                        turnSummary = DefendPhysical(attackRoll, damage, attacker);
-                        break;
-                    case DamageType.Magic:
-                        turnSummary = DefendMagic(attackRoll, damage, attacker);
-                        break;
-                }
+                //Calculate Defend result and add Strength if currently isDefending
+                return DefendResult(attackRoll, Strength, damage);
             }
+        }
 
-            //raise appropriate events in case of MobID death
-            if (!IsAlive)
+
+        /// <summary>
+        /// Called when hit by a Magical offensive ability
+        /// </summary>
+        /// <param name="attackRoll"></param>
+        /// <param name="damage"></param>
+        /// <param name="attacker"></param>
+        /// <returns>string describing what occurred during this turn</returns>
+        public virtual string DefendMagic(int attackRoll, int damage)
+        {
+            //Make sure action wouldnt actually heal user, if it would allow it to do so
+            if (damage < 0)
             {
-                turnSummary = ($"{name} has died");
-                OnDeath();
+                return Heal(damage);
             }
-
-            return turnSummary;
+            else
+            {
+                //Calculate Defend result and add Intelligence if currently isDefending
+                return DefendResult(attackRoll, Intelligence, damage);
+            }
         }
 
 
@@ -170,33 +209,6 @@ namespace RPGPractice.Engine.MobClasses
             {
                 //TODO: Throw exception tellng calling class that Turn was not finished properly
             }
-        }
-
-
-        /// <summary>
-        /// Heals hitpoints
-        /// If no inputs provided, heals Mob to full health
-        /// </summary>
-        /// <param name="damage"></param>
-        /// <param name="healer"></param>
-        public virtual string Heal(int damage, string healer)
-        {
-            hitPoints += damage;
-
-            //prevent over-healing
-            if (hitPoints > MaxHitPoints)
-            {
-                hitPoints = MaxHitPoints;
-            }
-
-            //return string stating result
-            return ($"{healer} healed {name} back to {hitPoints} health!");
-        }
-        public virtual string Heal()
-        {
-            //if not specified, heal all
-            hitPoints = MaxHitPoints;
-            return $"{name} healed to full health";
         }
         #endregion
 
@@ -256,6 +268,25 @@ namespace RPGPractice.Engine.MobClasses
         //          Protected Methods
         //=========================================
         #region Abstract Methods
+        protected virtual string Hurt(int damage)
+        {
+            string result;
+
+            hitPoints -= damage;
+
+            result = ($"{Name} took {damage} damage");
+
+
+            //prevent over-healing
+            if (!IsAlive)
+            {
+                hitPoints = MaxHitPoints;
+                result += ($"{Name} has Died!");
+            }
+
+            //return string stating result
+            return result;
+        }
 
         /// <summary>
         /// Sets All stats for MobID
@@ -265,8 +296,8 @@ namespace RPGPractice.Engine.MobClasses
 
         #region Protected Methods
         /// <summary>
-        /// Special is called when a Mob makes a special attack.
-        ///     Not all Mob types have a special attack, this should not be called in such cases
+        /// Special is called when a Mob makes a special ability.
+        ///     Not all Mob types have a special ability, this should not be called in such cases
         /// </summary>
         /// <param name="target"></param>
         protected virtual void UseSpecialAbility(Mob target)
@@ -275,51 +306,39 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
-        /// Called when hit by a physical attack
+        /// Handles end logic for Defend family of methods
+        ///     Assigns damage as needed and returns turnSummary
         /// </summary>
         /// <param name="attackRoll"></param>
+        /// <param name="dodgeValue"></param>
         /// <param name="damage"></param>
-        /// <param name="attacker"></param>
-        /// <returns>string summarizing what happened</returns>
-        protected virtual string DefendPhysical(int attackRoll, int damage, string attacker)
+        /// <returns>string describing what occurred during this turn</returns>
+        private string DefendResult(int attackRoll, int defenseMod, int damage)
         {
-            string turnSummary;
+            string turnSummary = "";
 
-            //If attack hits, take damage. Either way update turnSummary with what happened
-            if (attackRoll > defense)
+            //If defending, boost defense
+            int dodgeValue = Defense;
+            if (isDefending)
             {
-                hitPoints -= damage;
-                turnSummary = ($"{attacker} hit {name} for {damage} Damage!\t[{hitPoints} health remaining]");
+                dodgeValue += defenseMod;
+            }
+
+            //If ability hits, take damage. Update turnSummary with what happened either way
+            if (attackRoll > dodgeValue)
+            {
+                turnSummary += Hurt(damage);
+            }
+            //If ability meets, then take half damage (rounded down, so integer is not a problem)
+            if (attackRoll == dodgeValue)
+            {
+                int halfDamage = damage / 2;
+                turnSummary += $"Glancing Blow! ";
+                turnSummary += Hurt(halfDamage);
             }
             else
             {
-                turnSummary = ($"{name} dodged {attacker}'s attack. \t[{attackRoll} < {defense}]");
-            }
-
-            return turnSummary;
-        }
-
-        /// <summary>
-        /// Called when hit by a Magical attack
-        /// </summary>
-        /// <param name="attackRoll"></param>
-        /// <param name="damage"></param>
-        /// <param name="attacker"></param>
-        /// <returns></returns>
-        protected virtual string DefendMagic(int attackRoll, int damage, string attacker)
-        {
-            string turnSummary;
-            //If attack hits reduce hitpoints as needed
-            //attackRoll < defense
-            if (attackRoll > magicDefense)
-            {
-                hitPoints -= damage;
-                turnSummary = ($"{attacker} hit {name} for {damage} Magic Damage!\t[{hitPoints} health remaining]");
-            }
-            //Else it was just a miss
-            else
-            {
-                turnSummary = ($"{name} dodged {attacker}'s attack. \t[{attackRoll} < {defense}]");
+                turnSummary = ($"{name} avoided the attack. \t[{attackRoll} < {dodgeValue}]");
             }
 
             return turnSummary;
@@ -333,18 +352,18 @@ namespace RPGPractice.Engine.MobClasses
         protected virtual void AppendTurnSummary(string eventMessage)
         {
             //if String is empty just replace it
-            if (turnSummary == "")
+            if (TurnSummary == "")
             {
-                turnSummary = eventMessage;
+                TurnSummary = eventMessage;
             }
             else //append
             {
-                turnSummary += $"\r\n{eventMessage}";
+                TurnSummary += $"\r\n{eventMessage}";
             }
         }
 
         /// <summary>
-        /// Rolls attack dice (1d20) and adds a modifier
+        /// Rolls ability dice (1d20) and adds a modifier
         /// TODO: Setup Dice class to do this instead
         /// </summary>
         /// <param name="damage"></param>
@@ -355,7 +374,7 @@ namespace RPGPractice.Engine.MobClasses
             //Determine Attack Roll (attackMod + 1d20)
             int attackRoll = random.Next(1, 21);
 
-            //Critical Hit: If attack roll was a 20, then slightly boost hit chance (attackRoll) and boost damage
+            //Critical Hit: If ability roll was a 20, then slightly boost hit chance (attackRoll) and boost damage
             if (attackRoll >= 20)
             {
                 attackRoll += 5;
@@ -388,7 +407,7 @@ namespace RPGPractice.Engine.MobClasses
         #region Protected Getters/Setters
 
         /// <summary>
-        /// Called to determine if Mob can actually use their special attack
+        /// Called to determine if Mob can actually use their special ability
         /// </summary>
         protected virtual bool CanUseSpecial { get => canUseSpecial; }
         protected virtual int Defense { get => defense; set => defense = value; }
@@ -400,6 +419,8 @@ namespace RPGPractice.Engine.MobClasses
         protected virtual int Strength { get => strength; set => strength = value; }
         protected virtual int MagicDefense { get => magicDefense; set => magicDefense = value; }
         protected virtual int AttackMod { get => attackMod; set => attackMod = value; }
+        protected virtual string TurnSummary { get => turnSummary; set => turnSummary = value; }
+        protected virtual Queue<TargetedAbility> TargetedAbilityQueue { get => targetedAbilityQueue; set => targetedAbilityQueue = value; }
         #endregion
 
         //=========================================
@@ -414,28 +435,15 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Packages and raisesBattle Events 
         /// (Which display for user a readout of what has happened in the battle so far)
-        /// Overloaded because sometimes there will be a target and sometimes there will not.
         /// </summary>
         /// <param name="target">Optional parameter if attacking a target</param>
-        protected virtual void OnTurnEnd(MobData target)
-        {
-            //Package
-            TurnEndEventArgs args = new TurnEndEventArgs();
-            args.AddTarget(target);
-
-            //reset turnSummary for next turn
-            turnSummary = "";
-        }
         protected virtual void OnTurnEnd()
         {
-            TurnEndEventArgs args = new TurnEndEventArgs();
-            OnTurnEnd(args);
-        }
-        protected virtual void OnTurnEnd(TurnEndEventArgs args)
-        {
             //This data will always be stored in args
+            TurnEndEventArgs args = new TurnEndEventArgs();
+            args.TargetedAbilityQueue = TargetedAbilityQueue;
             args.Attacker = MobData;
-            args.TurnSummary = turnSummary;
+            args.TurnSummary = TurnSummary;
 
             //invoke method
             TurnEnd?.Invoke(this, args);
@@ -459,7 +467,6 @@ namespace RPGPractice.Engine.MobClasses
         public virtual void ManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
-            TurnEnd += eventManager.OnTurnEnd_Aggregator;
             Death += eventManager.OnDeath_Aggregator;
         }
 

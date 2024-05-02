@@ -99,7 +99,7 @@ namespace RPGPractice.Engine
             GetTargetableMobs(heroTargetList, enemyTargetList);
 
             //Tell mob to take it's turn
-            currentTurn.TakeTurn(heroTargetList, enemyTargetList);
+            currentTurn.StartTurn(heroTargetList, enemyTargetList);
         }
 
         private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
@@ -171,7 +171,7 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// Tell attacker MobID to attack targetQueue
+        /// Tell attacker MobID to attack targetedAbilityQueue
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="target"></param>
@@ -206,6 +206,44 @@ namespace RPGPractice.Engine
         //=========================================
         public event EventHandler<BattleStartEventArgs> BattleStart;
         public event EventHandler<BattleEndEventArgs> BattleEnd;
+        public event EventHandler<TurnEndEventArgs> TurnEnd;
+        #region Event Managers
+
+        /// <summary>
+        /// Publishes MobData and subscribes to all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public void ManageEvents(EventManager eventManager)
+        {
+            //publish events to eventManager
+            BattleStart += eventManager.OnBattleStart_Aggregator;
+            BattleEnd += eventManager.OnBattleEnd_Aggregator;
+
+            //Subscribe to events from eventManager
+            eventManager.Death += OnDeath_Handler;
+            eventManager.TurnEnd += OnTurnEnd_Handler;
+            eventManager.PlayerAction += OnPlayerAction_handler;
+            TurnEnd += eventManager.OnTurnEnd_Aggregator;
+        }
+
+        /// <summary>
+        /// UnPublishes MobData and unsubscribes from all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public void UnManageEvents(EventManager eventManager)
+        {
+            //publish events to eventManager
+            BattleStart -= eventManager.OnBattleStart_Aggregator;
+            BattleEnd -= eventManager.OnBattleEnd_Aggregator;
+
+            //Subscribe to events from eventManager
+            eventManager.Death -= OnDeath_Handler;
+            eventManager.TurnEnd -= OnTurnEnd_Handler;
+            eventManager.PlayerAction -= OnPlayerAction_handler;
+        }
+
+        #endregion
+
         #region Event Invokers
         public void OnBattleStart()
         {
@@ -240,39 +278,6 @@ namespace RPGPractice.Engine
         //=========================================
 
         /// <summary>
-        /// Publishes MobData and subscribes to all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void ManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            BattleStart += eventManager.OnBattleStart_Aggregator;
-            BattleEnd += eventManager.OnBattleEnd_Aggregator;
-
-            //Subscribe to events from eventManager
-            eventManager.Death += OnDeath_Handler;
-            eventManager.TurnEnd += OnTurnEnd_Handler;
-            eventManager.PlayerAction += OnPlayerAction_handler;
-        }
-
-        /// <summary>
-        /// UnPublishes MobData and unsubscribes from all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void UnManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            BattleStart -= eventManager.OnBattleStart_Aggregator;
-            BattleEnd -= eventManager.OnBattleEnd_Aggregator;
-            PlayerTurn -= eventManager.OnPlayerTurn_Aggregator;
-
-            //Subscribe to events from eventManager
-            eventManager.Death -= OnDeath_Handler;
-            eventManager.TurnEnd -= OnTurnEnd_Handler;
-            eventManager.PlayerAction -= OnPlayerAction_handler;
-        }
-
-        /// <summary>
         /// Check for End Game when someone dies
         /// </summary>
         /// <param name="sender"></param>
@@ -287,8 +292,39 @@ namespace RPGPractice.Engine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OnTurnEnd_Handler(object sender, TurnEndEventArgs e)
+        private void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnEndData)
         {
+            //TODO: Determine if any attacks are pending completion
+            while (turnEndData.HasTargetedActions)
+            {
+                TargetedAbility ability = turnEndData.DequeueAction();
+
+                //Unpack detailsof ability and what it does
+                MobData attackerData = ability.Attacker;
+                MobData targetData = ability.Target;
+                Mob target = mobDictionary[targetData.UniqueID];
+
+                //
+                int attackRoll = ability.AttackRoll;
+                int damage = ability.Damage;
+                DamageType damageType = ability.DamageType;
+
+                //Determine what logic to follow
+                switch (damageType)
+                {
+                    case DamageType.Physical:
+                        target.DefendMagic(attackRoll, damage);
+                        break;
+                    case DamageType.Magic:
+                        target.DefendPhysical(attackRoll, damage);
+                        break;
+                    case DamageType.Heal:
+                        target.Heal(damage);
+                        break;
+                }
+            }
+
+
             NextTurn();
         }
 

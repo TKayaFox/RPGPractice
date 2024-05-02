@@ -150,7 +150,7 @@ namespace RPGPractice
             //Populate targetCBox with all potential targets
             //add MobData to ComboBox.
             //  Note: non-Strings added to Combobox will display their toString()
-            //  This makes it easy to know what targetQueue the user selects.
+            //  This makes it easy to know what targetedAbilityQueue the user selects.
             switch (action)
             {
                 //Attackable targets
@@ -207,12 +207,12 @@ namespace RPGPractice
                 action = (MobActions)tag;
             }
 
-            //If defending, skip targetQueue selection
+            //If defending, skip targetedAbilityQueue selection
             if (action == MobActions.Defend)
             {
                 OnPlayerAction(0, action);
             }
-            //else show ActionTargetBox for targetQueue selection
+            //else show ActionTargetBox for targetedAbilityQueue selection
             else
             {
                 InitializeTargetSelectMenu();
@@ -231,13 +231,13 @@ namespace RPGPractice
 
             if (targetCBox.SelectedItem is MobData)
             {
-                //get selected targetQueue data then send PlayerAction event
+                //get selected targetedAbilityQueue data then send PlayerAction event
                 data = GetTargetData();
                 OnPlayerAction(data.UniqueID, action);
             }
             else
             {
-                //edit: If targetQueue is NOT selected, provide error telling user to select a targetQueue
+                //edit: If targetedAbilityQueue is NOT selected, provide error telling user to select a targetedAbilityQueue
             }
 
             //re-show ActionButtBox
@@ -252,7 +252,7 @@ namespace RPGPractice
         /// <param name="action"></param>
         private void OnPlayerAction(int targetID, MobActions action)
         {
-            //Package PlayerAction event with targetQueue and action
+            //Package PlayerAction event with targetedAbilityQueue and action
             PlayerActionEventArgs actionData = new PlayerActionEventArgs();
             actionData.TargetID = targetID;
             actionData.Action = action;
@@ -329,7 +329,7 @@ namespace RPGPractice
             //Setup Special Button to show what SpecialAction ability current mob has.
             UpdateSpecialAttack(mobData);
 
-            //update targetQueue Lists
+            //update targetedAbilityQueue Lists
             attackTargetList = args.AttackTargetList;
             specialTargetList = args.SpecialTargetList;
 

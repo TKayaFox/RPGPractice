@@ -1,4 +1,5 @@
-﻿using RPGPractice.GUI;
+﻿using RPGPractice.Core.Events;
+using RPGPractice.GUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,13 +19,13 @@ namespace RPGPractice.Engine.MobClasses
 
         /// <summary>
         /// Automate a turn for the Mob
-        /// by default, attacks a random targetQueue
+        /// by default, attacks a random targetedAbilityQueue
         /// </summary>
         /// <param name="heroTargetList"></param>
         /// <param name="enemyTargetList"></param>
-        public override void TakeTurn(List<MobData> heroTargetList, List<MobData> enemyTargetList)
+        protected override void TakeTurn(List<MobData> heroTargetList, List<MobData> enemyTargetList)
         {
-            //set a targetQueue from available targets
+            //set a targetedAbilityQueue from available targets
             MobData target = SetTarget(heroTargetList);
             Attack(target);
         }
@@ -33,7 +34,7 @@ namespace RPGPractice.Engine.MobClasses
         {
             MobData target;
 
-            //randomly choose a targetQueue, but make sure that it is actualy alive (stop beating the dead horse!)
+            //randomly choose a targetedAbilityQueue, but make sure that it is actualy alive (stop beating the dead horse!)
             do
             {
                 int targetIndex = random.Next(heroes.Count);
