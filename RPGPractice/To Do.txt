@@ -58,6 +58,10 @@ RPG Project to do:
 				Just be careful in cases when want SOME members to remain okay. For isntance Unmanaging all mobs when deleting only Enemy Mobs
 
 Future ideas:
+	Have MobData track HP and Mana
+		setup Update event to update Gui displays
+		in Battlefield add display for each Mob's name, hp, mana(if applicable)
+			possibly put into own UserControl
 	Actually ROLL initiative instead of using a static value.
 		Currently just using static for reliability, and to make things slightly easier on grader
 	add Testing (should have done this first, but better late than never)
