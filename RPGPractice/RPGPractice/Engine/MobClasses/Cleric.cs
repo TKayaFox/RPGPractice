@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace RPGPractice.Engine.MobClasses
 {
@@ -75,8 +76,12 @@ namespace RPGPractice.Engine.MobClasses
             TargetedAbility heal = new TargetedAbility();
             heal.Attacker = MobData;
             heal.Target = target;
+            heal.Damage = healValue; ;
+            heal.Damage = healValue; ;
             heal.DamageType = DamageType.Heal;
             TargetedAbilityQueue.Enqueue(heal);
+
+            AppendTurnSummary($"{Name} Heals {target.Name}. \t[+{healValue} HP]");
 
             //end turn
             OnTurnEnd();

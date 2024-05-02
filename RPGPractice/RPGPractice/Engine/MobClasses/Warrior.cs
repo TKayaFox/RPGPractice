@@ -24,6 +24,7 @@ namespace RPGPractice.Engine.MobClasses
             AttackMod = 2;
             Defense = 15;
             MagicDefense = 8;
+            BlockingBonus = 3;
         }
     }
 }

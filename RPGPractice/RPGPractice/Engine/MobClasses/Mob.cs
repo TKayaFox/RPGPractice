@@ -40,7 +40,8 @@ namespace RPGPractice.Engine.MobClasses
         private int attackMod;
         private int defense;
         private int magicDefense;
-        private bool isDefending;
+        private int blockingBonus;
+        private bool isBlocking;
         #endregion
 
         //TODO: Implement Block Logic
@@ -58,8 +59,9 @@ namespace RPGPractice.Engine.MobClasses
         {
             this.name = name;
             this.random = random;
-            isDefending = false;
+            isBlocking = false;
             specialActionString = "";
+            blockingBonus = 2;
 
             //Initialize all variables
             Initialize();
@@ -78,7 +80,7 @@ namespace RPGPractice.Engine.MobClasses
             TargetedAbilityQueue = new Queue<TargetedAbility>();
 
             //Stop defending
-            isDefending = false;
+            isBlocking = false;
 
             //Run subClass specific Turn Logic.
             TakeTurn(allyTargetList, enemyTargetList);
@@ -128,16 +130,30 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="healer"></param>
         public virtual string Heal(int damage)
         {
-            hitPoints += damage;
+            string result;
 
-            //prevent over-healing
-            if (hitPoints > MaxHitPoints)
+            //see if healing will even do anything
+            if (hitPoints == MaxHitPoints)
             {
-                hitPoints = MaxHitPoints;
+                result = $"{Name} is already fully healed.";
             }
+            else
+            {
+                int initialHP = hitPoints;
 
-            //return string stating result
-            return ($"{Name} healed back to {hitPoints} health!");
+                hitPoints += damage;
+
+                //prevent over-healing
+                if (hitPoints >= MaxHitPoints)
+                {
+                    hitPoints = MaxHitPoints;
+                    result = $"Has reached full health! {maxHitPoints}";
+                }
+
+                //return string stating result
+                result = $"{Name} gained {hitPoints - initialHP} health!\t[HP={hitPoints}]";
+            }
+            return result;
         }
         public virtual string Heal()
         {
@@ -163,7 +179,7 @@ namespace RPGPractice.Engine.MobClasses
             }
             else
             {
-                //Calculate Block result and add Strength if currently isDefending
+                //Calculate Block result and add Strength if currently isBlocking
                 return DefendResult(attackRoll,defense, Strength, damage);
             }
         }
@@ -185,7 +201,7 @@ namespace RPGPractice.Engine.MobClasses
             }
             else
             {
-                //Calculate Block result and add Intelligence if currently isDefending
+                //Calculate Block result and add Intelligence if currently isBlocking
                 return DefendResult(attackRoll, magicDefense, Intelligence, damage);
             }
         }
@@ -206,7 +222,11 @@ namespace RPGPractice.Engine.MobClasses
         public virtual void Block()
         {
             //temporarily give the Defending buff
-            isDefending = true;
+            isBlocking = true;
+
+
+            AppendTurnSummary($"{name} takes a defensive stance!");
+            OnTurnEnd();
         }
         #endregion
 
@@ -307,20 +327,22 @@ namespace RPGPractice.Engine.MobClasses
         {
             string turnSummary = "";
 
-            //If defending, boost defense
-            int dodgeValue = Defense;
-            if (isDefending)
-            {
-                dodgeValue += defenseMod;
-            }
-
             //If ability hits, take damage. Update turnSummary with what happened either way
-            if (attackRoll > dodgeValue)
+            if (attackRoll > defense)
             {
-                turnSummary += Hurt(damage);
+                //check if Blocking prevented damage
+                bool blockPrevents = ((defense + BlockingBonus) > attackRoll);
+                if (isBlocking && blockPrevents)
+                {
+                    turnSummary = ($"{name} was able to deflect the attack! [Blocking]");
+                }
+                else
+                {
+                    turnSummary += Hurt(damage); 
+                }
             }
             //If ability meets, then take half damage (rounded down, so integer is not a problem)
-            else if (attackRoll == dodgeValue)
+            else if (attackRoll == defense)
             {
                 int halfDamage = damage / 2;
                 turnSummary += $"Glancing Blow! ";
@@ -328,7 +350,7 @@ namespace RPGPractice.Engine.MobClasses
             }
             else
             {
-                turnSummary = ($"{name} avoided the attack. \t[{attackRoll} < {dodgeValue}]");
+                turnSummary = ($"{name} avoided the attack. \t[{attackRoll} < {defense}]");
             }
 
             return turnSummary;
@@ -409,6 +431,7 @@ namespace RPGPractice.Engine.MobClasses
         protected virtual string TurnSummary { get => turnSummary; set => turnSummary = value; }
         protected virtual Queue<TargetedAbility> TargetedAbilityQueue { get => targetedAbilityQueue; set => targetedAbilityQueue = value; }
         protected string SpecialActionString { get => specialActionString; set => specialActionString = value; }
+        protected int BlockingBonus { get => blockingBonus; set => blockingBonus = value; }
         #endregion
 
         //=========================================
