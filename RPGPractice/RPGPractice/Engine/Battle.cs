@@ -22,7 +22,7 @@ namespace RPGPractice.Engine
         private int combatLevel;
         private Dictionary<int, Mob> mobDictionary;
 
-        //TODO: Implement Defend Logic
+        //TODO: Implement Block Logic
         //TODO: Implement Special Attack Logic
 
         //=========================================
@@ -41,7 +41,7 @@ namespace RPGPractice.Engine
             this.random = random;
         }
 
-        public async Task Start(EventManager eventManager)
+        public void Start(EventManager eventManager)
         {
 
             //setup initiative order and enemies
@@ -80,7 +80,7 @@ namespace RPGPractice.Engine
         /// Either tell NPCs to take their turn OR get Player input
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task NextTurn()
+        public void NextTurn()
         {
             //Determine who is next in initiative, but skip dead mobs.
             bool isAlive = false;
@@ -171,16 +171,6 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// Tell attacker MobID to attack targetedAbilityQueue
-        /// </summary>
-        /// <param name="attacker"></param>
-        /// <param name="target"></param>
-        private void Attack(Mob attacker, Mob target)
-        {
-            attacker.Attack(target);
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="mobs"></param>
@@ -257,7 +247,7 @@ namespace RPGPractice.Engine
 
             args.MobDataList = mobDataList;
 
-            BattleStart?.Invoke(this, args);
+            BattleStart.Invoke(this, args);
         }
         #endregion
 
@@ -270,7 +260,7 @@ namespace RPGPractice.Engine
         {
             BattleEndEventArgs args = new BattleEndEventArgs();
             args.Victory = victory;
-            BattleEnd?.Invoke(this, args);
+            BattleEnd.Invoke(this, args);
         }
 
         //=========================================
@@ -342,14 +332,14 @@ namespace RPGPractice.Engine
             //determine type of action was selected and send the appropriate command
             switch (action)
             {
-                case MobActions.Defend:
-                    currentTurn.Defend();
+                case MobActions.Block:
+                    currentTurn.Block();
                     break;
                 case MobActions.Attack:
-                    currentTurn.Attack(target);
+                    currentTurn.Attack(target.MobData);
                     break;
                 case MobActions.Special:
-                    currentTurn.Special(target);
+                    currentTurn.Special(target.MobData);
                     break;
             }
 

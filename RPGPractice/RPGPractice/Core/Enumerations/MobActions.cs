@@ -11,7 +11,7 @@ namespace RPGPractice.Core.Enumerations
     public enum MobActions
     {
         Attack,
-        Defend,
+        Block,
         Special
     }
 }

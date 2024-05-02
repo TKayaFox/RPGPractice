@@ -71,9 +71,9 @@ Future ideas:
 		blunt vs slashing
 		ranged
 	get new Mob sprites
+	Make a Caster interface for classes like Mage and Cleric that use magic
 	
 ONLY AFTER SUBMITTING FINAL Project
 	Add story?
 	Add dungeon navigation
 	Add leveling system
-		

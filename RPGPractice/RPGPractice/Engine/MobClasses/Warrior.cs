@@ -5,7 +5,7 @@ using System.Text;
 
 namespace RPGPractice.Engine.MobClasses
 {
-    public class Warrior : Mob
+    public class Warrior : PlayerMob
     {
         public Warrior(Random random) : base("Warrior", random) { }
         public Warrior(string name, Random random) : base(name, random) { }
@@ -18,7 +18,6 @@ namespace RPGPractice.Engine.MobClasses
         {
             Sprite = Properties.Resources.Fighter;
             MaxHitPoints = 30;
-            MaxMana = 0; //Only casters get Mana
             Initiative = 2;  //roll 1d20+2
             Intelligence = -2;
             Strength = 2;

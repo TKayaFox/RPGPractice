@@ -43,33 +43,33 @@ namespace RPGPractice.Core.Events
         //===========================================
         #region Event Relays
 
-        public void OnPlayerAction_Aggregator(object? sender, PlayerActionEventArgs e)
+        public void OnPlayerAction_Aggregator(object sender, PlayerActionEventArgs e)
         {
-            PlayerAction?.Invoke(sender, e);
+            PlayerAction.Invoke(sender, e);
         }
         public void OnDeath_Aggregator(object sender, EventArgs e)
         {
             Death?.Invoke(sender, e);
         }
-        public void OnBattleEnd_Aggregator(object? sender, BattleEndEventArgs e)
+        public void OnBattleEnd_Aggregator(object sender, BattleEndEventArgs e)
         {
-            BattleEnd?.Invoke(sender, e);
+            BattleEnd.Invoke(sender, e);
         }
-        public void OnBattleStart_Aggregator(object? sender, BattleStartEventArgs e)
+        public void OnBattleStart_Aggregator(object sender, BattleStartEventArgs e)
         {
-            BattleStart?.Invoke(sender, e);
+            BattleStart.Invoke(sender, e);
         }
-        public void OnNewGame_Aggregator(object? sender, EventArgs e)
+        public void OnNewGame_Aggregator(object sender, EventArgs e)
         {
-            NewGame?.Invoke(sender, e);
+            NewGame.Invoke(sender, e);
         }
-        public void OnPlayerTurn_Aggregator(object? sender, PlayerTurnEventArgs e)
+        public void OnPlayerTurn_Aggregator(object sender, PlayerTurnEventArgs e)
         {
-            PlayerTurn?.Invoke(sender, e);
+            PlayerTurn.Invoke(sender, e);
         }
-        public void OnTurnEnd_Aggregator(object? sender, TurnEndEventArgs e)
+        public void OnTurnEnd_Aggregator(object sender, TurnEndEventArgs e)
         {
-            TurnEnd?.Invoke(sender, e);
+            TurnEnd.Invoke(sender, e);
         }
         #endregion
     }

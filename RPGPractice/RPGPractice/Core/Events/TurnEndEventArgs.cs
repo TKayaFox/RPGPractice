@@ -20,7 +20,9 @@ namespace RPGPractice.Core.Events
 
         public string TurnSummary { get => turnSummary; set => turnSummary = value; }
         public MobData Attacker { get => attacker; set => attacker = value; }
-        public bool HasTargetedActions { get {return (targetedAbilityQueue.Count > 0);} }
+        public bool HasTargetedActions { get {return (TargetedAbilityQueue.Count > 0);} }
+
+        public Queue<TargetedAbility> TargetedAbilityQueue { get => targetedAbilityQueue; set => targetedAbilityQueue = value; }
 
         /// <summary>
         /// Targets are stored as a Queue and must be queued or dequeued. So new targets can be added if needed
@@ -29,11 +31,11 @@ namespace RPGPractice.Core.Events
         /// <returns></returns>
         public void QueueAttack(TargetedAbility attack)
         {
-            targetedAbilityQueue.Enqueue(attack);
+            TargetedAbilityQueue.Enqueue(attack);
         }
         public TargetedAbility DequeueAction()
         {
-            return targetedAbilityQueue.Dequeue();
+            return TargetedAbilityQueue.Dequeue();
         }
     }
 }

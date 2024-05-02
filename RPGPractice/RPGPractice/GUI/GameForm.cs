@@ -93,7 +93,7 @@ namespace RPGPractice
         /// <param name="e"></param>
         private void OnNewGame(object sender, EventArgs e)
         {
-            NewGame?.Invoke(this, EventArgs.Empty);
+            NewGame.Invoke(this, EventArgs.Empty);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace RPGPractice
             eventManager.BattleStart += OnBattleStart_Handler;
         }
 
-        public void OnBattleStart_Handler(object sender, BattleStartEventArgs args)
+        public void OnBattleStart_Handler(object? sender, BattleStartEventArgs args)
         {
             //unpack relevent data from BattleStartEventArgs
             List<MobData> mobDataList = args.MobDataList;

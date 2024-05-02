@@ -10,9 +10,9 @@ namespace RPGPractice.GUI
     public class MobData
     {
         private int uniqueID;
-        private System.Drawing.Bitmap sprite;
-        private PictureBox pictureBox;
-        private string name;
+        private System.Drawing.Bitmap? sprite;
+        private PictureBox? pictureBox;
+        private string? name;
         private bool isNPC;
         private bool isAlive;
         private MobActions specialAction;
@@ -23,6 +23,7 @@ namespace RPGPractice.GUI
         /// <returns></returns>
         public override string ToString()
         {
+            if (name == null) { name = ""; }
             return name;
         }
 
@@ -30,20 +31,23 @@ namespace RPGPractice.GUI
         // Property setters/getters
         public Bitmap Sprite { set => sprite = value; }
         public int UniqueID { get => uniqueID; set => uniqueID = value; }
-        public string Name { get => name; set => name = value; }
+        public string? Name { get => name; set => name = value; }
         public bool IsNPC { get => isNPC; set => isNPC = value; }
 
         /// <summary>
         /// Property but when PictureBox is set, Sprite is already applied to the PictureBox
         /// </summary>
-        public PictureBox PictureBox 
+        public PictureBox? PictureBox 
         { 
             get => pictureBox;
             set
             {
-                pictureBox = value;
-                pictureBox.Image = sprite;
-                PictureBox.Visible = true;
+                if (value != null)
+                {
+                    pictureBox = value;
+                    pictureBox.Image = sprite;
+                    pictureBox.Visible = true;
+                }
             }
         }
 
@@ -53,10 +57,13 @@ namespace RPGPractice.GUI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        internal void OnDeath_Handler(object? sender, EventArgs e)
+        internal void OnDeath_Handler(object sender, EventArgs e)
         {
             isAlive = false;
-            pictureBox.Image = null;
+            if (pictureBox != null)
+            {
+                pictureBox.Image = null;
+            }
         }
 
         public MobActions SpecialAction { get => specialAction; set => specialAction = value; }
@@ -85,7 +92,10 @@ namespace RPGPractice.GUI
         /// </summary>
         private void Select()
         {
-            pictureBox.BorderStyle = BorderStyle.FixedSingle;
+            if (pictureBox != null)
+            {
+                pictureBox.BorderStyle = BorderStyle.FixedSingle;
+            }
         }
 
         /// <summary>
@@ -93,7 +103,10 @@ namespace RPGPractice.GUI
         /// </summary>
         private void DeSelect()
         {
-            pictureBox.BorderStyle = BorderStyle.None;
+            if (pictureBox != null)
+            {
+                pictureBox.BorderStyle = BorderStyle.None;
+            }
         }
     }
 }

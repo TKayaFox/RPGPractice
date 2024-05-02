@@ -16,7 +16,6 @@ namespace RPGPractice.Engine.MobClasses
         protected override void Initialize()
         {
             MaxHitPoints = 10;
-            MaxMana = 0; //Only casters get Mana
             Initiative = random.Next(21) + 3;
             Sprite = Properties.Resources.Bandit;
             Intelligence = 0;

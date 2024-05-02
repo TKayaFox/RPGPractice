@@ -17,8 +17,7 @@ namespace RPGPractice.Engine.MobClasses
         protected override void Initialize()
         {
             Sprite = Properties.Resources.Ogre;
-            MaxHitPoints = 30;
-            MaxMana = 0; //Only casters get Mana
+            MaxHitPoints = 18;
             Initiative = random.Next(20) - 5;  //roll 1d20+2
             Intelligence = 0;
             Strength = 2;
@@ -27,12 +26,19 @@ namespace RPGPractice.Engine.MobClasses
             MagicDefense = 8;
         }
 
-
-        public void TakeTurn()
+        /// <summary>
+        /// Called when hit by a Magical offensive ability
+        ///     Ogre Doubles all Magic Damage
+        /// </summary>
+        /// <param name="attackRoll"></param>
+        /// <param name="damage"></param>
+        /// <param name="attacker"></param>
+        /// <returns>string describing what occurred during this turn</returns>
+        public override string DefendMagic(int attackRoll, int damage)
         {
-            //Edit: Implement
-        }
+            damage = damage + (damage / 2); //Add half damage rounded down (int dataloss does this)
 
-        //EDIT: Add damage multiplier for magic attacks
+            return base.DefendMagic(attackRoll, damage);
+        }
     }
 }

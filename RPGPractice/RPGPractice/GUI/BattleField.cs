@@ -42,7 +42,7 @@ namespace RPGPractice
 
             //Tag ActionButtons
             AttackButt.Tag = MobActions.Attack;
-            DefendButt.Tag = MobActions.Defend;
+            DefendButt.Tag = MobActions.Block;
             SpecialButt.Tag = MobActions.Special;
         }
             
@@ -208,7 +208,7 @@ namespace RPGPractice
             }
 
             //If defending, skip targetedAbilityQueue selection
-            if (action == MobActions.Defend)
+            if (action == MobActions.Block)
             {
                 OnPlayerAction(0, action);
             }
@@ -266,7 +266,7 @@ namespace RPGPractice
             attacker.Selected = false;
 
             //Raise PlayerAction event
-            PlayerAction?.Invoke(this, actionData);
+            PlayerAction.Invoke(this, actionData);
         }
 
         #endregion
@@ -303,7 +303,7 @@ namespace RPGPractice
             eventManager.TurnEnd -= OnTurnEnd_Handler;
         }
 
-        private void OnTurnEnd_Handler(object? sender, TurnEndEventArgs turnData)
+        private void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnData)
         {
             //Unpack turnSummary and append to battleSummaryTBox
             battleSummaryTBox.Text += $"\r\n{turnData.TurnSummary}\r\n";
@@ -313,7 +313,7 @@ namespace RPGPractice
             battleSummaryTBox.ScrollToCaret();
         }
 
-        private void OnPlayerTurn_Handler(object? sender, PlayerTurnEventArgs args)
+        private void OnPlayerTurn_Handler(object sender, PlayerTurnEventArgs args)
         {
             //find mobData using MobID
             int mobID = args.MobID;

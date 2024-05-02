@@ -33,8 +33,6 @@ namespace RPGPractice.Engine.MobClasses
         //Game specific stats
         private int maxHitPoints;
         private int hitPoints;
-        private int maxMana; //Only casters get Mana
-        private int mana;
         private int initiative;
         private int intelligence;
         private int strength;
@@ -45,7 +43,7 @@ namespace RPGPractice.Engine.MobClasses
         private bool canUseSpecial;
         #endregion
 
-        //TODO: Implement Defend Logic
+        //TODO: Implement Block Logic
         //TODO: Implement Special Attack Logic
 
         //=========================================
@@ -65,10 +63,6 @@ namespace RPGPractice.Engine.MobClasses
 
             //Initialize all variables
             Initialize();
-
-            //Set mana and hitpoints to max
-            mana = MaxMana;
-            HitPoints = MaxHitPoints;
         }
 
         /// <summary>
@@ -80,6 +74,10 @@ namespace RPGPractice.Engine.MobClasses
             TurnSummary = "";
             TargetedAbilityQueue = new Queue<TargetedAbility>();
 
+            //Stop defending
+            isDefending = false;
+
+            //Run subClass specific Turn Logic.
             TakeTurn(allyTargetList, enemyTargetList);
         }
 
@@ -163,8 +161,8 @@ namespace RPGPractice.Engine.MobClasses
             }
             else
             {
-                //Calculate Defend result and add Strength if currently isDefending
-                return DefendResult(attackRoll, Strength, damage);
+                //Calculate Block result and add Strength if currently isDefending
+                return DefendResult(attackRoll,defense, Strength, damage);
             }
         }
 
@@ -185,8 +183,8 @@ namespace RPGPractice.Engine.MobClasses
             }
             else
             {
-                //Calculate Defend result and add Intelligence if currently isDefending
-                return DefendResult(attackRoll, Intelligence, damage);
+                //Calculate Block result and add Intelligence if currently isDefending
+                return DefendResult(attackRoll, magicDefense, Intelligence, damage);
             }
         }
 
@@ -197,7 +195,7 @@ namespace RPGPractice.Engine.MobClasses
         /// Only tries to use Special if CanUseSpecial returns true
         /// </summary>
         /// <param name="target"></param>
-        public virtual void Special(Mob target)
+        public virtual void Special(MobData target)
         {
             //Only attempt Special if CanUseSpecial returns true
             //  Logic for CanUseSpecial is determined by subclass
@@ -209,6 +207,12 @@ namespace RPGPractice.Engine.MobClasses
             {
                 //TODO: Throw exception tellng calling class that Turn was not finished properly
             }
+        }
+
+        public virtual void Block()
+        {
+            //temporarily give the Defending buff
+            isDefending = true;
         }
         #endregion
 
@@ -300,20 +304,20 @@ namespace RPGPractice.Engine.MobClasses
         ///     Not all Mob types have a special ability, this should not be called in such cases
         /// </summary>
         /// <param name="target"></param>
-        protected virtual void UseSpecialAbility(Mob target)
+        protected virtual void UseSpecialAbility(MobData target)
         {
             //TODO: Throw exception tellng calling class that Turn was not finished properly
         }
 
         /// <summary>
-        /// Handles end logic for Defend family of methods
+        /// Handles end logic for Block family of methods
         ///     Assigns damage as needed and returns turnSummary
         /// </summary>
         /// <param name="attackRoll"></param>
         /// <param name="dodgeValue"></param>
         /// <param name="damage"></param>
         /// <returns>string describing what occurred during this turn</returns>
-        private string DefendResult(int attackRoll, int defenseMod, int damage)
+        private string DefendResult(int attackRoll, int defense, int defenseMod, int damage)
         {
             string turnSummary = "";
 
@@ -413,8 +417,6 @@ namespace RPGPractice.Engine.MobClasses
         protected virtual int Defense { get => defense; set => defense = value; }
         protected virtual int MaxHitPoints { get => maxHitPoints; set => maxHitPoints = value; }
         protected virtual int HitPoints { get => hitPoints; set => hitPoints = value; }
-        protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
-        protected virtual int Mana { get => mana; set => mana = value; }
         protected virtual int Intelligence { get => intelligence; set => intelligence = value; }
         protected virtual int Strength { get => strength; set => strength = value; }
         protected virtual int MagicDefense { get => magicDefense; set => magicDefense = value; }
@@ -426,9 +428,8 @@ namespace RPGPractice.Engine.MobClasses
         //=========================================
         //                  Events
         //=========================================
-        public event EventHandler<TurnEndEventArgs>? BattleEvent;
         public event EventHandler<TurnEndEventArgs> TurnEnd;
-        public event EventHandler? Death;
+        public event EventHandler Death;
 
         #region Event Invokers
 
@@ -446,7 +447,7 @@ namespace RPGPractice.Engine.MobClasses
             args.TurnSummary = TurnSummary;
 
             //invoke method
-            TurnEnd?.Invoke(this, args);
+            TurnEnd.Invoke(this, args);
         }
 
         /// <summary>
@@ -455,7 +456,7 @@ namespace RPGPractice.Engine.MobClasses
         protected void OnDeath()
         {
             //Raise a death event stating that MobID has died
-            Death?.Invoke(this, EventArgs.Empty);
+            Death.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

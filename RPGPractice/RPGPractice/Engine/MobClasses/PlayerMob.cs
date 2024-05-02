@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RPGPractice.Engine.MobClasses
 {
-    internal abstract class PlayerMob : Mob
+    public abstract class PlayerMob : Mob
     {
         /// <summary>
         /// Constructor
@@ -93,7 +93,7 @@ namespace RPGPractice.Engine.MobClasses
 
             CompileTargetLists(allyTargetList, enemyTargetList, args);
 
-            PlayerTurn?.Invoke(this, args);
+            PlayerTurn.Invoke(this, args);
         }
         #endregion
     }

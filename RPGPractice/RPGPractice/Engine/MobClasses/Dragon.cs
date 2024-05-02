@@ -18,8 +18,7 @@ namespace RPGPractice.Engine.MobClasses
         protected override void Initialize()
         {
             Sprite = Properties.Resources.Dragon;
-            MaxHitPoints = 50;
-            MaxMana = 0; //Breath Attacks dont use Mana
+            MaxHitPoints = 40;
             Initiative = 0; //Always last in initiative
             Intelligence = 3;
             Strength = 3;
