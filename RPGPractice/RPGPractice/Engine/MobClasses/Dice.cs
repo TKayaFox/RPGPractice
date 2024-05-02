@@ -11,21 +11,8 @@ namespace RPGPractice.Engine.MobClasses
     /// </summary>
     public class Dice
     {
-        Random random;
-
-        /// <summary>
-        /// constructor
-        /// </summary>
-        /// <param name="random">Optional: If not provided will make it's own</param>
-        public Dice(Random random)
-        {
-            this.random = random;
-        }
-        public Dice()
-        {
-            this.random = new Random();
-        }
-
+        //Randomizer is static so all Dice use same randomizer rather than having to pass in
+        static Random random = new Random();
 
         /// <summary>
         /// Rolls attack and damage.
@@ -57,12 +44,11 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
-        /// rolls a damage dice and adds a modifier
-        /// TODO: Setup Dice class to do this instead
+        /// rolls attack damage
         /// </summary>
-        /// <param name="modifier"></param>
+        /// <param name="modifier">Optional: Added to result</param>
         /// <returns></returns>
-        public int RollDamage(int modifier)
+        public int RollDamage(int modifier=0)
         {
             //Determine damage Roll (strength + 1d8)
             int damage = Roll(8); //roll 1d8
@@ -73,18 +59,22 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Generic roll command for rolling a specific dice
         /// </summary>
-        /// <param name="numsides">Required: specifies number of sides on the dice</param>
+        /// <param name="numSides">Required: specifies number of sides on the dice</param>
         /// <param name="numDice">Optional: specifies number of dice to roll</param>
         /// <returns>int total result of roll</returns>
-        public int Roll(int numsides, int numDice = 1)
+        public int Roll(int numDice,int numSides)
         {
             int roll = 0;
             for (int i = 0;i< numDice;i++)
             {
-                //Possible rolls should be between 1 and numSides INCLUSIVE so increment numSides by 1
-                roll += random.Next(1, (numsides + 1));
+                roll += Roll(numSides);
             }
             return roll;
+        }
+        public int Roll(int numSides)
+        {
+            //Possible rolls should be between 1 and numSides INCLUSIVE so increment numSides by 1
+            return random.Next(1, (numSides + 1));
         }
     }
 }

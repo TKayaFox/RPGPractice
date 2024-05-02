@@ -40,8 +40,28 @@ RPG Project to do:
 				up to 5 bandits
 				up to 3 orcs
 			or something
+	Refactor:
+		Setup comments with consistent layout
+			Use XML tags
+				Add explanations for parameters and returns
+			Look into other XML tags and see if theres other ways to add clarity
+		Put in more data validation rather than assumptions
+			make sure numbers are in range (for instance > 0 for Roll class)
+			check for Null
+		Clear all yellow warnings if possible
+		Break large methods down into smaller parts
+			some methods got kidn of big.
+	Move Event Management back into event Manager?
+		Would need to handle cases such as Battle class needing to unmanage all Mobs
+			Or maybe make UnManageAllMobs method in eventManager
+			Could do for all Classes, since normally want to manage all existing classes of the same type.
+				Just be careful in cases when want SOME members to remain okay. For isntance Unmanaging all mobs when deleting only Enemy Mobs
 
 Future ideas:
+	add Testing (should have done this first, but better late than never)
+	Improve Initiative Class
+		perhaps use a tree?
+		or revisit how to use existing PriorityQueue options in C#
 	In save data keep track of more data:
 		number of dead Heroes
 		number of dead enemies
