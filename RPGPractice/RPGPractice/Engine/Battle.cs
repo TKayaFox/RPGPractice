@@ -14,7 +14,7 @@ namespace RPGPractice.Engine
         //=========================================
         //                Variables
         //=========================================
-        private Mob[] villians;
+        private Mob[] enemies;
         private Mob[] heroes;
         private Mob currentTurn;
         private Initiative initiative;
@@ -35,7 +35,7 @@ namespace RPGPractice.Engine
         /// <param name="combatLevel"></param>
         public Battle(Mob[] heroes, int combatLevel, Random random)
         {
-            //Populate hero and villians for battle
+            //Populate hero and enemies for battle
             this.heroes = heroes;
             this.combatLevel = combatLevel;
             this.random = random;
@@ -44,16 +44,16 @@ namespace RPGPractice.Engine
         public async Task Start(EventManager eventManager)
         {
 
-            //setup initiative order and villians
-            villians = GenerateEncounter(eventManager);
-            initiative = new Initiative(heroes, villians);
+            //setup initiative order and enemies
+            enemies = GenerateEncounter(eventManager);
+            initiative = new Initiative(heroes, enemies);
 
             //setup MobID dictionary for easy reference
             mobDictionary = new Dictionary<int, Mob>();
 
             //add heroes and villains to dictionary
             AddToDictionary(heroes, mobDictionary);
-            AddToDictionary(villians, mobDictionary);
+            AddToDictionary(enemies, mobDictionary);
 
             //subscribe to Events
             ManageEvents(eventManager);
@@ -93,16 +93,33 @@ namespace RPGPractice.Engine
                 System.Diagnostics.Debug.WriteLine($"Current Turn: {currentTurn.Name} [{isAlive}]");
             }
 
-            //If currentMob is Not player controlled tell it to take it's turn
-            if (currentTurn is NPC npc)
+            //Make lists of all targetable mobs
+            List<MobData> heroTargetList = new List<MobData>();
+            List<MobData> enemyTargetList = new List<MobData>();
+            GetTargetableMobs(heroTargetList, enemyTargetList);
+
+            //Tell mob to take it's turn
+            currentTurn.TakeTurn(heroTargetList, enemyTargetList);
+        }
+
+        private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
+        {
+            //Only add living Mobs to Lists
+            foreach (Mob mob in mobDictionary.Values)
             {
-                // Tell the NPC to take its turn
-                npc.TakeTurn(heroes);
-            }
-            //Else display Action buttons for user and wait for players move
-            else
-            {
-                OnPlayerTurn();
+                if (mob.IsAlive)
+                {
+                    //Add to enemyTargetList if an NPC
+                    if (mob is NPC)
+                    {
+                        enemyTargetList.Add(mob.MobData);
+                    }
+                    //Otherwise add to heroTargetList
+                    else
+                    {
+                        heroTargetList.Add(mob.MobData);
+                    }
+                }
             }
         }
 
@@ -121,33 +138,33 @@ namespace RPGPractice.Engine
         /// <summary>
         /// Initializes an array of Mobs for a combat encounter
         /// </summary>
-        /// <returns>MobID[] array of villians/NPCs</returns>
+        /// <returns>MobID[] array of enemies/NPCs</returns>
         public Mob[] GenerateEncounter(EventManager eventManager)
         {
             //TODO: Implement actuall encounter scaling
             //      depending on Combat Level
-            Mob[] villians = new Mob[1];
+            Mob[] enemies = new Mob[1];
 
-            for (int i = 0; i < villians.Length; i++)
+            for (int i = 0; i < enemies.Length; i++)
             {
-                Mob villain = new Bandit($"Bandit {i}", random);
-                villain.ManageEvents(eventManager);
-                villain.UniqueID = i + 100;
-                villians[i] = villain;
+                Mob enemy = new Bandit($"Bandit {i}", random);
+                enemy.ManageEvents(eventManager);
+                enemy.UniqueID = i + 100;
+                enemies[i] = enemy;
             }
-            return villians;
+            return enemies;
         }
 
         /// <summary>
         /// Checks for Battle end state every time a MobID dies 
-        /// (If all villians or all heroes are dead)
+        /// (If all enemies or all heroes are dead)
         /// </summary>
         private void IsEndGame()
         {
             //Check if all heroes or villains are dead.
             //  Victory is only assured if at least one hero lives
             bool loss = AreMobsDead(heroes);
-            if (loss || AreMobsDead(villians))
+            if (loss || AreMobsDead(enemies))
             {
                 OnBattleEnd(!loss); //OnBattleEnd uses victory not loss, so reverse the boolean
             }
@@ -167,7 +184,7 @@ namespace RPGPractice.Engine
         //             Getters/Setters
         //=========================================
 
-        public Mob[] Villians { get => villians; set => villians = value; }
+        public Mob[] Enemies { get => enemies; set => enemies = value; }
         public Mob[] Heroes { get => heroes; set => heroes = value; }
 
         //=========================================
@@ -185,7 +202,7 @@ namespace RPGPractice.Engine
             Mob[] mobs;
             List<MobData> mobDataList = new List<MobData>();
             CompileMobData(heroes, mobDataList);
-            CompileMobData(villians, mobDataList);
+            CompileMobData(enemies, mobDataList);
 
             args.MobDataList = mobDataList;
 
@@ -196,42 +213,9 @@ namespace RPGPractice.Engine
         {
             foreach (Mob mob in mobs)
             {
-                MobData data = mob.GetMobData();
+                MobData data = mob.MobData;
                 mobDataList.Add(data);
             }
-        }
-
-        public void OnPlayerTurn()
-        {
-            //setup event arguments
-            PlayerTurnEventArgs args = new PlayerTurnEventArgs();
-            args.MobID = currentTurn.UniqueID;
-
-            //Make lists of viable targets
-            List<MobData> attackTargetList = new List<MobData>();
-            List<MobData> healTargetList = new List<MobData>();
-            foreach (Mob mob in mobDictionary.Values)
-            {
-                //Make sure Mob is alive before adding.
-                if (mob.IsAlive)
-                {
-                    //Add to attackTargetList if an NPC
-                    //  Or if specialAction attack is offensive
-                    if (mob.mob is NPC)
-                    {
-                        attackTargetList.Add(mob.MobData);
-                    }
-                    //Otherwise add to specialTargetList
-                    else
-                    {
-                        healTargetList.Add(mob.MobData);
-                    }
-                }
-            }
-            args.AttackTargetList = attackTargetList;
-            args.HealTargetList = healTargetList;
-
-            PlayerTurn?.Invoke(this, args);
         }
 
         /// <summary>
@@ -258,7 +242,6 @@ namespace RPGPractice.Engine
             //publish events to eventManager
             BattleStart += eventManager.OnBattleStart_Aggregator;
             BattleEnd += eventManager.OnBattleEnd_Aggregator;
-            PlayerTurn += eventManager.OnPlayerTurn_Aggregator;
 
             //Subscribe to events from eventManager
             eventManager.Death += OnDeath_Handler;
@@ -324,7 +307,7 @@ namespace RPGPractice.Engine
                     currentTurn.Attack(target);
                     break;
                 case MobActions.Special:
-                    currentTurn.SpecialAction();
+                    currentTurn.Special(target);
                     break;
             }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RPGPractice.GUI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,19 +17,19 @@ namespace RPGPractice.Engine.MobClasses
         protected NPC(string name, Random random) :base(name, random) { }
 
         /// <summary>
-        /// Attack a random target
+        /// Automate a turn for the Mob
+        /// by default, attacks a random target
         /// </summary>
-        /// <param name="heroes"></param>
-        public void TakeTurn(Mob[] heroes)
+        /// <param name="heroTargetList"></param>
+        /// <param name="enemyTargetList"></param>
+        public void TakeTurn(List<MobData> heroTargetList, List<MobData> enemyTargetList)
         {
-
-            Mob target = SetTarget(heroes);
-
-            //BAndit only knows to attack
+            //set a target from available targets
+            Mob target = SetTarget(heroTargetList);
             Attack(target);
         }
 
-        private Mob SetTarget(Mob[] heroes)
+        private Mob SetTarget(List<MobData> heroTargetList)
         {
             Mob target;
 

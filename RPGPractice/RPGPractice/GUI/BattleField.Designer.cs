@@ -35,15 +35,15 @@ namespace RPGPractice
             AttackButt = new Button();
             heroSprite5 = new PictureBox();
             BatleArenaGroupBox = new GroupBox();
-            villianSprite4 = new PictureBox();
+            enemySprite4 = new PictureBox();
             heroSprite4 = new PictureBox();
             heroSprite2 = new PictureBox();
-            villianSprite2 = new PictureBox();
+            enemySprite2 = new PictureBox();
             heroSprite3 = new PictureBox();
-            villianSprite3 = new PictureBox();
+            enemySprite3 = new PictureBox();
             heroSprite1 = new PictureBox();
-            villianSprite5 = new PictureBox();
-            villianSprite1 = new PictureBox();
+            enemySprite5 = new PictureBox();
+            enemySprite1 = new PictureBox();
             ActionMenuGroup = new GroupBox();
             TurnLabel = new Label();
             ActionTargetBox = new GroupBox();
@@ -53,15 +53,15 @@ namespace RPGPractice
             ActionButtBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)heroSprite5).BeginInit();
             BatleArenaGroupBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)villianSprite4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)villianSprite2).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)villianSprite3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite3).BeginInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite1).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)villianSprite5).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)villianSprite1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite5).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite1).BeginInit();
             ActionMenuGroup.SuspendLayout();
             ActionTargetBox.SuspendLayout();
             SuspendLayout();
@@ -126,32 +126,32 @@ namespace RPGPractice
             // 
             BatleArenaGroupBox.BackgroundImage = Properties.Resources.game_background_1;
             BatleArenaGroupBox.BackgroundImageLayout = ImageLayout.Stretch;
-            BatleArenaGroupBox.Controls.Add(villianSprite4);
+            BatleArenaGroupBox.Controls.Add(enemySprite4);
             BatleArenaGroupBox.Controls.Add(heroSprite4);
             BatleArenaGroupBox.Controls.Add(heroSprite2);
-            BatleArenaGroupBox.Controls.Add(villianSprite2);
+            BatleArenaGroupBox.Controls.Add(enemySprite2);
             BatleArenaGroupBox.Controls.Add(heroSprite3);
-            BatleArenaGroupBox.Controls.Add(villianSprite3);
+            BatleArenaGroupBox.Controls.Add(enemySprite3);
             BatleArenaGroupBox.Controls.Add(heroSprite1);
-            BatleArenaGroupBox.Controls.Add(villianSprite5);
+            BatleArenaGroupBox.Controls.Add(enemySprite5);
             BatleArenaGroupBox.Controls.Add(heroSprite5);
-            BatleArenaGroupBox.Controls.Add(villianSprite1);
+            BatleArenaGroupBox.Controls.Add(enemySprite1);
             BatleArenaGroupBox.Location = new Point(0, 5);
             BatleArenaGroupBox.Name = "BatleArenaGroupBox";
             BatleArenaGroupBox.Size = new Size(730, 418);
             BatleArenaGroupBox.TabIndex = 3;
             BatleArenaGroupBox.TabStop = false;
             // 
-            // villianSprite4
+            // enemySprite4
             // 
-            villianSprite4.BackColor = Color.Transparent;
-            villianSprite4.BackgroundImageLayout = ImageLayout.Stretch;
-            villianSprite4.Location = new Point(617, 282);
-            villianSprite4.Name = "villianSprite4";
-            villianSprite4.Size = new Size(100, 100);
-            villianSprite4.SizeMode = PictureBoxSizeMode.StretchImage;
-            villianSprite4.TabIndex = 6;
-            villianSprite4.TabStop = false;
+            enemySprite4.BackColor = Color.Transparent;
+            enemySprite4.BackgroundImageLayout = ImageLayout.Stretch;
+            enemySprite4.Location = new Point(617, 282);
+            enemySprite4.Name = "enemySprite4";
+            enemySprite4.Size = new Size(100, 100);
+            enemySprite4.SizeMode = PictureBoxSizeMode.StretchImage;
+            enemySprite4.TabIndex = 6;
+            enemySprite4.TabStop = false;
             // 
             // heroSprite4
             // 
@@ -175,16 +175,16 @@ namespace RPGPractice
             heroSprite2.TabIndex = 5;
             heroSprite2.TabStop = false;
             // 
-            // villianSprite2
+            // enemySprite2
             // 
-            villianSprite2.BackColor = Color.Transparent;
-            villianSprite2.BackgroundImageLayout = ImageLayout.Stretch;
-            villianSprite2.Location = new Point(592, 177);
-            villianSprite2.Name = "villianSprite2";
-            villianSprite2.Size = new Size(100, 100);
-            villianSprite2.SizeMode = PictureBoxSizeMode.StretchImage;
-            villianSprite2.TabIndex = 5;
-            villianSprite2.TabStop = false;
+            enemySprite2.BackColor = Color.Transparent;
+            enemySprite2.BackgroundImageLayout = ImageLayout.Stretch;
+            enemySprite2.Location = new Point(592, 177);
+            enemySprite2.Name = "enemySprite2";
+            enemySprite2.Size = new Size(100, 100);
+            enemySprite2.SizeMode = PictureBoxSizeMode.StretchImage;
+            enemySprite2.TabIndex = 5;
+            enemySprite2.TabStop = false;
             // 
             // heroSprite3
             // 
@@ -197,16 +197,16 @@ namespace RPGPractice
             heroSprite3.TabIndex = 4;
             heroSprite3.TabStop = false;
             // 
-            // villianSprite3
+            // enemySprite3
             // 
-            villianSprite3.BackColor = Color.Transparent;
-            villianSprite3.BackgroundImageLayout = ImageLayout.Stretch;
-            villianSprite3.Location = new Point(465, 127);
-            villianSprite3.Name = "villianSprite3";
-            villianSprite3.Size = new Size(100, 100);
-            villianSprite3.SizeMode = PictureBoxSizeMode.StretchImage;
-            villianSprite3.TabIndex = 4;
-            villianSprite3.TabStop = false;
+            enemySprite3.BackColor = Color.Transparent;
+            enemySprite3.BackgroundImageLayout = ImageLayout.Stretch;
+            enemySprite3.Location = new Point(465, 127);
+            enemySprite3.Name = "enemySprite3";
+            enemySprite3.Size = new Size(100, 100);
+            enemySprite3.SizeMode = PictureBoxSizeMode.StretchImage;
+            enemySprite3.TabIndex = 4;
+            enemySprite3.TabStop = false;
             // 
             // heroSprite1
             // 
@@ -219,27 +219,27 @@ namespace RPGPractice
             heroSprite1.TabIndex = 3;
             heroSprite1.TabStop = false;
             // 
-            // villianSprite5
+            // enemySprite5
             // 
-            villianSprite5.BackColor = Color.Transparent;
-            villianSprite5.BackgroundImageLayout = ImageLayout.Stretch;
-            villianSprite5.Location = new Point(577, 71);
-            villianSprite5.Name = "villianSprite5";
-            villianSprite5.Size = new Size(100, 100);
-            villianSprite5.SizeMode = PictureBoxSizeMode.StretchImage;
-            villianSprite5.TabIndex = 2;
-            villianSprite5.TabStop = false;
+            enemySprite5.BackColor = Color.Transparent;
+            enemySprite5.BackgroundImageLayout = ImageLayout.Stretch;
+            enemySprite5.Location = new Point(577, 71);
+            enemySprite5.Name = "enemySprite5";
+            enemySprite5.Size = new Size(100, 100);
+            enemySprite5.SizeMode = PictureBoxSizeMode.StretchImage;
+            enemySprite5.TabIndex = 2;
+            enemySprite5.TabStop = false;
             // 
-            // villianSprite1
+            // enemySprite1
             // 
-            villianSprite1.BackColor = Color.Transparent;
-            villianSprite1.BackgroundImageLayout = ImageLayout.Stretch;
-            villianSprite1.Location = new Point(486, 236);
-            villianSprite1.Name = "villianSprite1";
-            villianSprite1.Size = new Size(100, 100);
-            villianSprite1.SizeMode = PictureBoxSizeMode.StretchImage;
-            villianSprite1.TabIndex = 3;
-            villianSprite1.TabStop = false;
+            enemySprite1.BackColor = Color.Transparent;
+            enemySprite1.BackgroundImageLayout = ImageLayout.Stretch;
+            enemySprite1.Location = new Point(486, 236);
+            enemySprite1.Name = "enemySprite1";
+            enemySprite1.Size = new Size(100, 100);
+            enemySprite1.SizeMode = PictureBoxSizeMode.StretchImage;
+            enemySprite1.TabIndex = 3;
+            enemySprite1.TabStop = false;
             // 
             // ActionMenuGroup
             // 
@@ -322,15 +322,15 @@ namespace RPGPractice
             ActionButtBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)heroSprite5).EndInit();
             BatleArenaGroupBox.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)villianSprite4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite4).EndInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite4).EndInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)villianSprite2).EndInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite2).EndInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)villianSprite3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite3).EndInit();
             ((System.ComponentModel.ISupportInitialize)heroSprite1).EndInit();
-            ((System.ComponentModel.ISupportInitialize)villianSprite5).EndInit();
-            ((System.ComponentModel.ISupportInitialize)villianSprite1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite5).EndInit();
+            ((System.ComponentModel.ISupportInitialize)enemySprite1).EndInit();
             ActionMenuGroup.ResumeLayout(false);
             ActionTargetBox.ResumeLayout(false);
             ResumeLayout(false);
@@ -349,11 +349,11 @@ namespace RPGPractice
         private PictureBox heroSprite4;
         private PictureBox heroSprite2;
         private PictureBox heroSprite3;
-        private PictureBox villianSprite4;
-        private PictureBox villianSprite2;
-        private PictureBox villianSprite3;
-        private PictureBox villianSprite5;
-        private PictureBox villianSprite1;
+        private PictureBox enemySprite4;
+        private PictureBox enemySprite2;
+        private PictureBox enemySprite3;
+        private PictureBox enemySprite5;
+        private PictureBox enemySprite1;
         private GroupBox ActionMenuGroup;
         private GroupBox ActionTargetBox;
         private ComboBox targetCBox;

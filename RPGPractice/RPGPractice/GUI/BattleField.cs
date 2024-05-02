@@ -22,7 +22,7 @@ namespace RPGPractice
         private const int Max_Sprites = 5;
 
         private PictureBox[] heroSprites;
-        private PictureBox[] villianSprites;
+        private PictureBox[] enemySprites;
         private Dictionary<int, MobData> mobDictionary;
         private List<MobData> attackTargetList;
         private List<MobData> specialTargetList;
@@ -63,14 +63,14 @@ namespace RPGPractice
         private void BuildPictureArrays()
         {
             heroSprites = new PictureBox[Max_Sprites];
-            villianSprites = new PictureBox[Max_Sprites];
+            enemySprites = new PictureBox[Max_Sprites];
 
             for (int i = 0; i < Max_Sprites; i++)
             {
                 heroSprites[i] = (PictureBox)Controls.Find($"heroSprite{i + 1}", true)[0];
-                villianSprites[i] = (PictureBox)Controls.Find($"villianSprite{i + 1}", true)[0];
+                enemySprites[i] = (PictureBox)Controls.Find($"enemySprite{i + 1}", true)[0];
                 heroSprites[i].Image = null;
-                villianSprites[i].Image = null;
+                enemySprites[i].Image = null;
             }
         }
 
@@ -90,7 +90,7 @@ namespace RPGPractice
                 //determine if mobID is a Hero or Villain(NPC) and assign to Sprite
                 if (data.IsNPC)
                 {
-                    AssignSprite(data, villianSprites);
+                    AssignSprite(data, enemySprites);
                 }
                 else
                 {
@@ -326,7 +326,7 @@ namespace RPGPractice
             //Show Hero name in Action Menu
             TurnLabel.Text = mobData.Name;
 
-            //Setup SpecialAttack Button to show what SpecialAction ability current mob has.
+            //Setup Special Button to show what SpecialAction ability current mob has.
             UpdateSpecialAttack(mobData);
 
             //update target Lists

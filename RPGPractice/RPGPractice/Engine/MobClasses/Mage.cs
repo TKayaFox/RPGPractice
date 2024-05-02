@@ -41,9 +41,9 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
-        /// SpecialAttack is called when a Mob makes a special attack.
+        /// Special is called when a Mob makes a special attack.
         ///     Not all Mob types have a special attack
-        ///     In this case, SpecialAttack is a damaging spell
+        ///     In this case, Special is a damaging spell
         /// </summary>
         /// <param name="target"></param>
         protected override void UseSpecialAbility(Mob target)

@@ -16,7 +16,7 @@ namespace RPGPractice.Engine
         Node currentNode;
         int index;
 
-        public Initiative(Mob[] heroes, Mob[] villians)
+        public Initiative(Mob[] heroes, Mob[] enemies)
         {
             index = 0;
 
@@ -25,7 +25,7 @@ namespace RPGPractice.Engine
             {
                 addNode(mob);
             }
-            foreach (Mob mob in villians)
+            foreach (Mob mob in enemies)
             {
                 addNode(mob);
             }
@@ -104,7 +104,7 @@ namespace RPGPractice.Engine
             public Node(Mob mob)
             {
                 this.data = mob.UniqueID;
-                this.Initiative = mob.Initiative();
+                this.Initiative = mob.Initiative;
             }
 
             public int Data { get => data; set => data = value; }

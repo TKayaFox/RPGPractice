@@ -72,6 +72,11 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
+        /// Called on Mob's turn in initiative. For Mobs
+        /// </summary>
+        public abstract void TakeTurn();
+
+        /// <summary>
         /// Called from Game when a MobID attacks another mobID.
         /// Returns an initial Attack Roll to see if hits
         /// </summary>
@@ -153,18 +158,24 @@ namespace RPGPractice.Engine.MobClasses
 
 
         /// <summary>
-        /// SpecialAttack is called when a Mob makes a special attack.
-        ///     Not all Mob types have a special attack
-        /// Only tries to use SpecialAttack if CanUseSpecial returns true
+        /// Special is called when a Mob makes a special ability.
+        ///     Not all Mob types have a special ability
+        /// Only tries to use Special if CanUseSpecial returns true
         /// </summary>
         /// <param name="target"></param>
-        public virtual void SpecialAttack(Mob target)
+        public virtual void Special(Mob target)
         {
-            //Only attempt SpecialAttack if CanUseSpecial returns true
+            //Only attempt Special if CanUseSpecial returns true
             //  Logic for CanUseSpecial is determined by subclass
             if (CanUseSpecial)
             {
                 UseSpecialAbility(target);
+            }
+            else
+            {
+                //Restart turn and display error message
+                TakeTurn();
+                //TODO: Display error message that special ability is not available
             }
         }
 
@@ -253,8 +264,6 @@ namespace RPGPractice.Engine.MobClasses
         //=========================================
         #region Abstract Methods
 
-        protected abstract void UseSpecialAbility(Mob target);
-
         /// <summary>
         /// Sets All stats for MobID
         /// </summary>
@@ -262,6 +271,18 @@ namespace RPGPractice.Engine.MobClasses
         #endregion
 
         #region Protected Methods
+        /// <summary>
+        /// Special is called when a Mob makes a special attack.
+        ///     Not all Mob types have a special attack, this should not be called in such cases
+        ///     But if it is called it will simply restart the turn.
+        /// </summary>
+        /// <param name="target"></param>
+        protected virtual void UseSpecialAbility(Mob target)
+        {
+            //Start a new Turn
+            //TODO: instead of doing TakeTurn setup ExceptionHandling such that it restarts a mobs turn and displays an error message.
+            TakeTurn();
+        }
 
         /// <summary>
         /// Called when hit by a physical attack
