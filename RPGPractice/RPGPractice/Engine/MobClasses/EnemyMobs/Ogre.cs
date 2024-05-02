@@ -7,7 +7,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
     public class Ogre : Enemy
     {
-        public Ogre(string name, Dice dice) : base(name, dice) { }
+        public Ogre(string name) : base(name) { }
 
         /// <summary>
         /// Sets All stats for MobID

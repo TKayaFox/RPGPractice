@@ -22,7 +22,6 @@ namespace RPGPractice.Engine
         private Mob[] heroes;
         private Battle battle;
         private EventManager eventManager;
-        public Dice dice;
         private Random random;
 
         private string name;
@@ -42,7 +41,6 @@ namespace RPGPractice.Engine
         {
             random= new Random();
             this.eventManager = eventManager;
-            this.dice = new Dice(random);
 
             //subscribe to events
             ManageEvents();
@@ -55,9 +53,9 @@ namespace RPGPractice.Engine
         {
             Mob[] heroes = new Mob[NUM_HEROES];
 
-            heroes[0] = new Warrior("Mabel", dice);
-            heroes[1] = new Mage("Boop", dice);
-            heroes[2] = new Cleric("Fred", dice);
+            heroes[0] = new Warrior("Mabel");
+            heroes[1] = new Mage("Boop");
+            heroes[2] = new Cleric("Fred");
 
             // give each hero a uniqueId and publish them to eventmanager
             for (int i = 0; i < 3; i++)

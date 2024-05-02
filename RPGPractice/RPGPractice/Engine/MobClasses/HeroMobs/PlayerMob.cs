@@ -16,7 +16,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         /// </summary>
         /// <param name="name"></param>
         /// <param name="random"></param>
-        protected PlayerMob(string name, Dice dice) : base(name, dice) { }
+        protected PlayerMob(string name) : base(name) { }
 
         protected override void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
         {

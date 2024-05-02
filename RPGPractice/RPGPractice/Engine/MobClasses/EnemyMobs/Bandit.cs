@@ -7,7 +7,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
     public class Bandit : Enemy
     {
-        public Bandit(string name, Dice dice) : base(name, dice) { }
+        public Bandit(string name) : base(name) { }
 
         /// <summary>
         /// Sets All stats for MobID

@@ -1,18 +1,6 @@
 RPG Project to do:
-	TODO:Create Dice Class again
-		instead of passing random to Mob pass Dice
-		potentially do the same for other classes
-	Add Defend functionality to Mob
-	Have the type of damage get relayed by Attack commands
-		Have HIT run different logic depending on type of damage
-			magic
-			physical
-	Add Special Attack functionality to Mob
-		throw exception
-		subMobs
-			mage magic spell
-			Orc damage multiplier for magic spells
-			Dragon special attacks
+	Store Mobs in List instead of array
+	Dragon special attacks
 	GameEngine
 		endgame
 			game over
@@ -25,21 +13,23 @@ RPG Project to do:
 				start a new battle
 		after battle
 			heal all Heroes
-	Battle
+	Encounter
+		move encounterMaximum determination to NPC class
+			static method
 		Setup encounter generation to generate different encounters
-			first 1 bandit (tutorial)
-			then 3 bandits
-			then 2 Orcs
-			then 1 dragon
-			then 5 bandits
-			then 2 Orcs 3 Bandits
-			then 3 bandits 1 dragon
-			then randomized selection of:
-				Perhaps use combat level to determine maximums and num of villains
-				up to 1 dragon, if so generate max 3 other mobs
-				up to 5 bandits
-				up to 3 orcs
-			or something
+				first 1 bandit (tutorial)
+				then 3 bandits
+				then 2 Orcs
+				then 1 dragon
+				then 5 bandits
+				then 2 Orcs 3 Bandits
+				then 3 bandits 1 dragon
+				then randomized selection of:
+					Perhaps use combat level to determine maximums and num of villains
+					up to 1 dragon, if so generate max 3 other mobs
+					up to 5 bandits
+					up to 3 orcs
+				or something
 	Refactor:
 		Setup comments with consistent layout
 			Use XML tags
@@ -51,14 +41,50 @@ RPG Project to do:
 		Clear all yellow warnings if possible
 		Break large methods down into smaller parts
 			some methods got kidn of big.
-	Move Event Management back into event Manager?
-		Would need to handle cases such as Battle class needing to unmanage all Mobs
-			Or maybe make UnManageAllMobs method in eventManager
-			Could do for all Classes, since normally want to manage all existing classes of the same type.
-				Just be careful in cases when want SOME members to remain okay. For isntance Unmanaging all mobs when deleting only Enemy Mobs
+		Set consistent Method organization across classes
+	Enemy decision making
+		Orc
+			attack whoever attacked last, otherwise attack random.
+		Dragon
+			decide type of attack:
+				breath attack: (targets one)
+					if high on health
+						attack random
+					if below half health
+						attack hardest hitter
+				swipe attack:  (targets all)
+					seperate attack for ALL targets
 
 Future ideas:
-	improve handling for cass when notSupportedException raises too many times in Battle class.
+	make instructions for creating a new Mob/Enemy/Hero class somehow (stuff not already covered by abstract)
+		need to add the new class to the appropriate enum for instance
+		possibly an interface for spellcasting
+		explain any existing interfaces/abstract subclasses
+	look up naming conventions for:
+		enums
+		interfaces
+		object classes
+		subclasses
+	setup Boss subclass for NPC
+		dragon implements Boss
+		have minion count for each boss
+		in Encounter
+			setup logic so that number of minions is limited by minion count
+				though increment minion count at higher combat levels
+	Set better way of handling UniqueIDs so they are guarunteed to be Unique
+		Perhaps a UniqueID class.
+	Move Event Management back into event Manager?
+			Would need to handle cases such as Battle class needing to unmanage all Mobs
+				Or maybe make UnManageAllMobs method in eventManager
+				Could do for all Classes, since normally want to manage all existing classes of the same type.
+					Just be careful in cases when want SOME members to remain okay. For isntance Unmanaging all mobs when deleting only Enemy Mobs
+	improve handling for case when notSupportedException raises too many times in Battle class.
+	Have MobData track HP and Mana
+		setup Update event to update Gui displays
+		in Battlefield add display for each Mob's name, hp, mana(if applicable)
+			possibly put into own UserControl
+	Actually ROLL initiative instead of using a static value.
+		Currently just using static for reliability, and to make things slightly easier on grader
 	add Testing (should have done this first, but better late than never)
 	Improve Initiative Class
 		perhaps use a tree?

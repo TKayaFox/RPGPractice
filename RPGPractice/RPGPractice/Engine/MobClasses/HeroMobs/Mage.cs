@@ -17,7 +17,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
         protected virtual int Mana { get => mana; set => mana = value; }
 
-        public Mage(string name, Dice dice) : base(name, dice) { }
+        public Mage(string name) : base(name) { }
 
         /// <summary>
         /// Sets All stats for MobID
@@ -71,7 +71,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             Mana--;
 
             //Determine damage and Attack Rolls (attackMod + 1d20)
-            (int attackRoll, int damage) = dice.RollAttack(Intelligence, Intelligence);
+            (int attackRoll, int damage) = base.Dice.RollAttack(base.Intelligence, base.Intelligence);
 
             //add attack roll to turn summary
             AppendTurnSummary($"{Name} throws a Fireball at {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");

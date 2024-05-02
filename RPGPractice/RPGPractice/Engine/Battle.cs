@@ -32,24 +32,18 @@ namespace RPGPractice.Engine
         //=========================================
         //              Main Methods
         //=========================================
-        /// <summary>
-        /// Construtor
-        /// </summary>
-        /// <param name="heroes"></param>
-        /// <param name="combatLevel"></param>
-        public Battle(Mob[] heroes, int combatLevel, Random random)
+
+        public Battle(Encounter encounter)
         {
             //Populate hero and enemies for battle
-            this.heroes = heroes;
+            this.heroes = encounter.Heroes;
+            this.enemies = encounter.Enemies;
             this.combatLevel = combatLevel;
             this.random = random;
         }
 
         public async Task Start(EventManager eventManager)
         {
-
-            //setup initiative order and enemies
-            enemies = GenerateEncounter(eventManager);
             initiative = new Initiative(heroes, enemies);
 
             //setup MobID dictionary for easy reference
@@ -162,25 +156,6 @@ namespace RPGPractice.Engine
             return mobArr.All(mob => !mob.IsAlive);
         }
 
-        /// <summary>
-        /// Initializes an array of Mobs for a combat encounter
-        /// </summary>
-        /// <returns>MobID[] array of enemies/NPCs</returns>
-        public Mob[] GenerateEncounter(EventManager eventManager)
-        {
-            //TODO: Implement actuall encounter scaling
-            //      depending on Combat Level
-            Mob[] enemies = new Mob[1];
-
-            for (int i = 0; i < enemies.Length; i++)
-            {
-                Mob enemy = new Bandit($"Bandit {i}", dice);
-                enemy.ManageEvents(eventManager);
-                enemy.UniqueID = i + 100;
-                enemies[i] = enemy;
-            }
-            return enemies;
-        }
 
         /// <summary>
         /// Checks for Battle end state every time a MobID dies 

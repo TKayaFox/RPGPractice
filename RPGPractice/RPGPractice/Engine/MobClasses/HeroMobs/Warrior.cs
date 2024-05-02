@@ -7,7 +7,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
     public class Warrior : PlayerMob
     {
-        public Warrior(string name, Dice dice) : base(name, dice) { }
+        public Warrior(string name) : base(name) { }
 
         /// <summary>
         /// Sets All stats for MobID

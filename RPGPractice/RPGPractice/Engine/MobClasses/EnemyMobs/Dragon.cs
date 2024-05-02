@@ -7,7 +7,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
     public class Dragon : Enemy
     {
-        public Dragon(string name, Dice dice) : base(name, dice) { }
+        public Dragon(string name) : base(name) { }
 
         /// <summary>
         /// Sets All stats for MobID

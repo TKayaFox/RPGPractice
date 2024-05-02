@@ -1,4 +1,6 @@
-﻿using RPGPractice.Core.Events;
+﻿using RPGPractice.Core.Enumerations;
+using RPGPractice.Core.Events;
+using RPGPractice.Engine.MobClasses.EnemyMobs;
 using RPGPractice.GUI;
 using System;
 using System.Collections.Generic;
@@ -15,7 +17,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
         /// </summary>
         /// <param name="name"></param>
         /// <param name="random"></param>
-        protected Enemy(string name, Dice dice) : base(name, dice) { }
+        protected Enemy(string name) : base(name) { }
 
         /// <summary>
         /// Automate a turn for the Mob
@@ -43,5 +45,10 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
 
             return target;
         }
+
+
+
+        //          STATIC Mob methods do not require Instantiation
+        public abstract (int min, int max) EncounterData(int combatLevel);
     }
 }

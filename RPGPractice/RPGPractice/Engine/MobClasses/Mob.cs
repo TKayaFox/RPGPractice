@@ -26,7 +26,6 @@ namespace RPGPractice.Engine.MobClasses
         private string specialActionString;
         private int uniqueID;
         private MobActions specialAction;
-        protected Dice dice;
         private System.Drawing.Bitmap sprite;
         Queue<TargetedAbility> targetedAbilityQueue;
 
@@ -56,10 +55,9 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Constructor initializes default fields
         /// </summary>
-        public Mob(string name, Dice dice)
+        public Mob(string name)
         {
             this.name = name;
-            this.dice = dice;
             isBlocking = false;
             specialActionString = "";
             blockingBonus = 2;
@@ -103,7 +101,7 @@ namespace RPGPractice.Engine.MobClasses
         public virtual void Attack(MobData target)
         {
             //Determine damage and Attack Rolls (attackMod + 1d20)
-            (int attackRoll,int damage) = dice.RollAttack(attackMod, strength);
+            (int attackRoll,int damage) = Dice.RollAttack(attackMod, strength);
 
             //add ability roll to turn summary
             AppendTurnSummary($"{name} Attacks {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");

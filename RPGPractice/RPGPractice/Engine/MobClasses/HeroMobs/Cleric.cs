@@ -15,7 +15,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
         protected virtual int Mana { get => mana; set => mana = value; }
 
-        public Cleric(string name, Dice dice) : base(name, dice) { }
+        public Cleric(string name) : base(name) { }
 
         /// <summary>
         /// Sets All stats for MobID
@@ -69,7 +69,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             Mana--;
 
             //Roll for heal
-            int healValue = dice.RollDamage(Intelligence);
+            int healValue = base.Dice.RollDamage(base.Intelligence);
 
             //Build a new TargetedAction object and add to Queue
             TargetedAbility heal = new TargetedAbility();
