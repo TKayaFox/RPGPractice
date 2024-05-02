@@ -18,13 +18,13 @@ namespace RPGPractice.Engine.MobClasses
 
         /// <summary>
         /// Automate a turn for the Mob
-        /// by default, attacks a random target
+        /// by default, attacks a random targetQueue
         /// </summary>
         /// <param name="heroTargetList"></param>
         /// <param name="enemyTargetList"></param>
         public override void TakeTurn(List<MobData> heroTargetList, List<MobData> enemyTargetList)
         {
-            //set a target from available targets
+            //set a targetQueue from available targets
             MobData target = SetTarget(heroTargetList);
             Attack(target);
         }
@@ -33,7 +33,7 @@ namespace RPGPractice.Engine.MobClasses
         {
             MobData target;
 
-            //randomly choose a target, but make sure that it is actualy alive (stop beating the dead horse!)
+            //randomly choose a targetQueue, but make sure that it is actualy alive (stop beating the dead horse!)
             do
             {
                 int targetIndex = random.Next(heroes.Count);

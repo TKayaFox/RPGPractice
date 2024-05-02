@@ -61,7 +61,7 @@ namespace RPGPractice.Engine.MobClasses
                 //add attack roll to turn summary
                 AppendTurnSummary($"{Name} throws a Fireball at {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
 
-                //Tell target they are being attacked
+                //Tell targetQueue they are being attacked
                 //  add return to TurnSummary
                 string targetTurnSummary = target.Hit(attackRoll, damage, Name, DamageType.Physical);
                 AppendTurnSummary(targetTurnSummary);

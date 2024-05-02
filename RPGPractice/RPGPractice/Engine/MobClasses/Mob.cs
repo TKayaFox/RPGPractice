@@ -25,7 +25,7 @@ namespace RPGPractice.Engine.MobClasses
         private System.Drawing.Bitmap sprite;
         private string turnSummary;
         private int uniqueID;
-        private MobActions specialAction;
+        private MobActions specialAction; 
 
         //TODO: Move Mana related items to interface.
         //          Not all Mobs need mana
@@ -88,12 +88,11 @@ namespace RPGPractice.Engine.MobClasses
             int attackRoll = RollAttack(ref damage, attackMod);
 
             //add attack roll to turn summary
-            AppendTurnSummary($"{name} Attacks {target.name}. \t[Attack roll: {attackRoll} Damage {damage}]");
+            AppendTurnSummary($"{name} Attacks {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
 
-            //Tell target they are being attacked
-            OnHostileAction(targetTurnSummary);
+            //Tell targetQueue they are being attacked
+            OnTurnEnd(target);
         }
-
 
         public virtual void Defend()
         {
@@ -169,9 +168,7 @@ namespace RPGPractice.Engine.MobClasses
             }
             else
             {
-                //Restart turn and display error message
-                TakeTurn();
-                //TODO: Display error message that special ability is not available
+                //TODO: Throw exception tellng calling class that Turn was not finished properly
             }
         }
 
@@ -270,14 +267,11 @@ namespace RPGPractice.Engine.MobClasses
         /// <summary>
         /// Special is called when a Mob makes a special attack.
         ///     Not all Mob types have a special attack, this should not be called in such cases
-        ///     But if it is called it will simply restart the turn.
         /// </summary>
         /// <param name="target"></param>
         protected virtual void UseSpecialAbility(Mob target)
         {
-            //Start a new Turn
-            //TODO: instead of doing TakeTurn setup ExceptionHandling such that it restarts a mobs turn and displays an error message.
-            TakeTurn();
+            //TODO: Throw exception tellng calling class that Turn was not finished properly
         }
 
         /// <summary>
@@ -418,17 +412,30 @@ namespace RPGPractice.Engine.MobClasses
         #region Event Invokers
 
         /// <summary>
-        /// Packages and raisesBattle Events (Which display for user a readout of what has happened in the battle so far)
+        /// Packages and raisesBattle Events 
+        /// (Which display for user a readout of what has happened in the battle so far)
+        /// Overloaded because sometimes there will be a target and sometimes there will not.
         /// </summary>
-        /// <param name="output"></param>
-        protected void OnTurnEnd()
+        /// <param name="target">Optional parameter if attacking a target</param>
+        protected virtual void OnTurnEnd(MobData target)
         {
-            //Package and send battle message
+            //Package
             TurnEndEventArgs args = new TurnEndEventArgs();
-            args.TurnSummary = turnSummary;
+            args.AddTarget(target);
 
             //reset turnSummary for next turn
             turnSummary = "";
+        }
+        protected virtual void OnTurnEnd()
+        {
+            TurnEndEventArgs args = new TurnEndEventArgs();
+            OnTurnEnd(args);
+        }
+        protected virtual void OnTurnEnd(TurnEndEventArgs args)
+        {
+            //This data will always be stored in args
+            args.Attacker = MobData;
+            args.TurnSummary = turnSummary;
 
             //invoke method
             TurnEnd?.Invoke(this, args);
@@ -442,7 +449,6 @@ namespace RPGPractice.Engine.MobClasses
             //Raise a death event stating that MobID has died
             Death?.Invoke(this, EventArgs.Empty);
         }
-
 
         #endregion
         #region Event Managers

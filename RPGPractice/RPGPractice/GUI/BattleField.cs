@@ -150,7 +150,7 @@ namespace RPGPractice
             //Populate targetCBox with all potential targets
             //add MobData to ComboBox.
             //  Note: non-Strings added to Combobox will display their toString()
-            //  This makes it easy to know what target the user selects.
+            //  This makes it easy to know what targetQueue the user selects.
             switch (action)
             {
                 //Attackable targets
@@ -193,7 +193,7 @@ namespace RPGPractice
 
         /// <summary>
         /// Any time user selects an Action Button
-        ///     if targeted action, show Target selection
+        ///     if targeted action, show TargetList selection
         ///     else Invoke PlayerAction event
         /// </summary>
         /// <param name="sender"></param>
@@ -207,12 +207,12 @@ namespace RPGPractice
                 action = (MobActions)tag;
             }
 
-            //If defending, skip target selection
+            //If defending, skip targetQueue selection
             if (action == MobActions.Defend)
             {
                 OnPlayerAction(0, action);
             }
-            //else show ActionTargetBox for target selection
+            //else show ActionTargetBox for targetQueue selection
             else
             {
                 InitializeTargetSelectMenu();
@@ -220,24 +220,24 @@ namespace RPGPractice
         }
 
         /// <summary>
-        /// Handles Target Selection
+        /// Handles TargetList Selection
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void TargetButt_Click(object sender, EventArgs e)
         {
-            //Get Target from ComboBox. interestingly comboBox is populated with MobData objects
+            //Get TargetList from ComboBox. interestingly comboBox is populated with MobData objects
             MobData data;
 
             if (targetCBox.SelectedItem is MobData)
             {
-                //get selected target data then send PlayerAction event
+                //get selected targetQueue data then send PlayerAction event
                 data = GetTargetData();
                 OnPlayerAction(data.UniqueID, action);
             }
             else
             {
-                //edit: If target is NOT selected, provide error telling user to select a target
+                //edit: If targetQueue is NOT selected, provide error telling user to select a targetQueue
             }
 
             //re-show ActionButtBox
@@ -252,7 +252,7 @@ namespace RPGPractice
         /// <param name="action"></param>
         private void OnPlayerAction(int targetID, MobActions action)
         {
-            //Package PlayerAction event with target and action
+            //Package PlayerAction event with targetQueue and action
             PlayerActionEventArgs actionData = new PlayerActionEventArgs();
             actionData.TargetID = targetID;
             actionData.Action = action;
@@ -329,7 +329,7 @@ namespace RPGPractice
             //Setup Special Button to show what SpecialAction ability current mob has.
             UpdateSpecialAttack(mobData);
 
-            //update target Lists
+            //update targetQueue Lists
             attackTargetList = args.AttackTargetList;
             specialTargetList = args.SpecialTargetList;
 

@@ -25,7 +25,7 @@ namespace RPGPractice.Engine.MobClasses
 
 
         /// <summary>
-        /// Compiles Target Lists for OnPlayerTurn
+        /// Compiles TargetList Lists for OnPlayerTurn
         ///     Override to alter Special Action behavior
         /// </summary>
         /// <param name="allyTargetList"></param>

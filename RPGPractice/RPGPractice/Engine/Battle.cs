@@ -171,7 +171,7 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// Tell attacker MobID to attack target
+        /// Tell attacker MobID to attack targetQueue
         /// </summary>
         /// <param name="attacker"></param>
         /// <param name="target"></param>
