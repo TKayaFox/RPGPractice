@@ -10,7 +10,7 @@ using RPGPractice.GUI;
 
 namespace RPGPractice.Engine
 {
-    public class Battle
+    public class Battle 
     {
         //=========================================
         //                Variables
