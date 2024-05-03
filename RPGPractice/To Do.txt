@@ -11,7 +11,7 @@ RPG Project to do:
 		throw exception
 		subMobs
 			mage magic spell
-			Orc damage multiplier for magic spells 
+			Orc damage multiplier for magic spells
 			Dragon special attacks
 	GameEngine
 		endgame
