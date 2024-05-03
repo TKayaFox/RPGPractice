@@ -16,7 +16,7 @@ namespace RPGPractice.Engine
         //=========================================
         //                Variables
         //=========================================
-        
+
         //Some items throw exceptions on purpose and attempt to loop until solved
         //  MAX_EXCEPTIONS prevents infinite loops
         private const int MAX_EXCEPTIONS = 5;
@@ -91,37 +91,22 @@ namespace RPGPractice.Engine
                 System.Diagnostics.Debug.WriteLine($"Current Turn: {currentTurn.Name} [{isAlive}]");
             }
 
+            TakeTurn();
+        }
+
+        /// <summary>
+        /// Compile list of attackable targets and tell Mob to take its turn
+        /// </summary>
+        private void TakeTurn()
+        {
             //Make lists of all targetable mobs on both sides
             List<MobData> heroTargetList = new List<MobData>();
             List<MobData> enemyTargetList = new List<MobData>();
             GetTargetableMobs(heroTargetList, enemyTargetList);
 
-            //Tell mob to take it's turn
-            //If NotSupportedException is thrown, an invalid selection has been made
-            bool turnCompleted = false;
-            int attempt = 0;
-            do
-            {
-                try
-                {
-                    currentTurn.StartTurn(heroTargetList, enemyTargetList);
-                }
-                catch (NotSupportedException e)
-                {
-                    //implement an error box stating whats wrong
-                    MessageBox.Show(e.Message + "\r\nPlease choose another action!");
-                }
-                turnCompleted = true;
-                attempt++;
-            } while (!turnCompleted && attempt < MAX_EXCEPTIONS);
-
-            //If turn still not completed, show error message and move to next turn
-            if (!turnCompleted)
-            {
-                MessageBox.Show("Critical Error:Unable to complete Mob Turn, moving to next turn");
-                NextTurn();
-            }
-    }
+            //take turn
+            currentTurn.StartTurn(heroTargetList, enemyTargetList);
+        }
 
         private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
         {
@@ -161,7 +146,7 @@ namespace RPGPractice.Engine
         /// Checks for Battle end state every time a MobID dies 
         /// (If all enemies or all heroes are dead)
         /// </summary>
-        private bool IsBattleEnd()
+        private void IsBattleEnd(TurnEndEventArgs turnData)
         {
             //Check if all heroes or villains are dead.
             //  Victory is only assured if at least one hero lives
@@ -171,8 +156,11 @@ namespace RPGPractice.Engine
             {
                 OnBattleEnd(!loss); //OnBattleEnd uses victory not loss, so reverse the boolean
             }
-
-            return battleEnd;
+            else
+            {
+                //raise turn end logic and start next turn
+                OnTurnEnd(turnData);
+            }
         }
 
         /// <summary>
@@ -278,6 +266,13 @@ namespace RPGPractice.Engine
             BattleEnd.Invoke(this, args);
         }
 
+        public void OnTurnEnd(TurnEndEventArgs turnData)
+        {
+            //raise event then start next turn
+            TurnEnd?.Invoke(this, turnData);
+            NextTurn();
+        }
+
         //=========================================
         //                Event Handlers
         //=========================================
@@ -317,7 +312,7 @@ namespace RPGPractice.Engine
                         result += $"\r\n{target.DefendMagic(attackRoll, damage)}";
                         break;
                     case DamageType.Heal:
-                        result += $"{ target.Heal(damage)} ";
+                        result += $"{target.Heal(damage)} ";
                         break;
                 }
 
@@ -326,17 +321,8 @@ namespace RPGPractice.Engine
 
             turnEndData.TurnSummary += turnSummary;
 
-            TurnEnd?.Invoke(sender, turnEndData);
-
-            //check for game over
-            if (IsBattleEnd())
-            {
-
-            }
-            else
-            {
-                NextTurn();
-            }
+            //if game is over, start endgame logic, otherwise invoke TurnEnd
+            IsBattleEnd(turnEndData);
         }
 
         /// <summary>
@@ -348,27 +334,37 @@ namespace RPGPractice.Engine
         {
             //Unpack Args
             MobActions action = playerAction.Action;
+            //If NotSupportedException is thrown, an invalid selection has been made
 
-            //determine type of action was selected and send the appropriate command
-            switch (action)
+            try
             {
-                case MobActions.Block:
-                    currentTurn.Block();
-                    break;
-                case MobActions.Attack:
-                    if (playerAction.TargetID != -1)
-                    {
-                        Mob target = mobDictionary[playerAction.TargetID];
-                        currentTurn.Attack(target.MobData);
-                    }
-                    break;
-                case MobActions.Special:
-                    if (playerAction.TargetID != -1)
-                    {
-                        Mob target = mobDictionary[playerAction.TargetID];
-                        currentTurn.Special(target.MobData);
-                    }
-                    break;
+                //determine type of action was selected and send the appropriate command
+                switch (action)
+                {
+                    case MobActions.Block:
+                        currentTurn.Block();
+                        break;
+                    case MobActions.Attack:
+                        if (playerAction.TargetID != -1)
+                        {
+                            Mob target = mobDictionary[playerAction.TargetID];
+                            currentTurn.Attack(target.MobData);
+                        }
+                        break;
+                    case MobActions.Special:
+                        if (playerAction.TargetID != -1)
+                        {
+                            Mob target = mobDictionary[playerAction.TargetID];
+                            currentTurn.Special(target.MobData);
+                        }
+                        break;
+                }
+            }
+            catch (NotSupportedException e)
+            {
+                //implement an error box stating whats wrong then allow them to try again
+                MessageBox.Show(e.Message + "\r\nPlease choose another action!");
+                TakeTurn();
             }
 
         }

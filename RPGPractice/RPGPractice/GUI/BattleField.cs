@@ -48,9 +48,10 @@ namespace RPGPractice
             
         public void Populate(List<MobData> mobDataList)
         {
-            battleSummaryTBox.Text = "\r\n=========================================\r\n" +
+            //show user that a new battle has started
+            BattleUpdate("\r\n=========================================\r\n" +
                                      "New Battle!" +
-                                     "\r\n=========================================\r\n";
+                        "\r\n=========================================\r\n");
 
             mobDictionary = new Dictionary<int, MobData>();
 
@@ -185,6 +186,20 @@ namespace RPGPractice
             return data;
         }
 
+        /// <summary>
+        /// Appends a string as a new line to battleSummaryTBox and keeps textbox scrolled
+        /// </summary>
+        /// <param name="data"></param>
+        private void BattleUpdate(string data)
+        {
+
+            battleSummaryTBox.Text += $"\r\n{data}";
+
+            // Scroll to the end of the textbox
+            battleSummaryTBox.SelectionStart = battleSummaryTBox.Text.Length;
+            battleSummaryTBox.ScrollToCaret();
+        }
+
         #endregion
 
         //=========================================
@@ -310,11 +325,7 @@ namespace RPGPractice
         private void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnData)
         {
             //Unpack turnSummary and append to battleSummaryTBox
-            battleSummaryTBox.Text += $"{turnData.TurnSummary}\r\n";
-
-            // Scroll to the end of the textbox
-            battleSummaryTBox.SelectionStart = battleSummaryTBox.Text.Length;
-            battleSummaryTBox.ScrollToCaret();
+            BattleUpdate(turnData.TurnSummary);
         }
 
         private void OnPlayerTurn_Handler(object sender, PlayerTurnEventArgs args)

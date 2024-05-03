@@ -36,19 +36,21 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
         {
             MobData target;
 
-            //randomly choose a targetedAbilityQueue, but make sure that it is actualy alive (stop beating the dead horse!)
+            //cycle through targetedAbilityQueue to find a target, skipping dead targets
+            int targetIndex = 0;
             do
             {
-                int targetIndex = random.Next(heroes.Count);
                 target = heroes[targetIndex];
+                targetIndex++;
+
+                //reset index if outside of bounds
+                if (targetIndex >= heroes.Count)
+                {
+                    targetIndex = 0;
+                }
             } while (!target.IsAlive);
 
             return target;
         }
-
-
-
-        //          STATIC Mob methods do not require Instantiation
-        public abstract (int min, int max) EncounterData(int combatLevel);
     }
 }

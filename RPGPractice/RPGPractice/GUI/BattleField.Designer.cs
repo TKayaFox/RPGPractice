@@ -248,7 +248,7 @@ namespace RPGPractice
             ActionMenuGroup.Controls.Add(ActionTargetBox);
             ActionMenuGroup.Location = new Point(0, 563);
             ActionMenuGroup.Margin = new Padding(3, 2, 3, 2);
-            ActionMenuGroup.Name = "ActionMenuGrou";
+            ActionMenuGroup.Name = "ActionMenuGroup";
             ActionMenuGroup.Padding = new Padding(3, 2, 3, 2);
             ActionMenuGroup.Size = new Size(730, 56);
             ActionMenuGroup.TabIndex = 4;
@@ -280,7 +280,7 @@ namespace RPGPractice
             targetCBox.FormattingEnabled = true;
             targetCBox.Items.AddRange(new object[] { "- Select Target -" });
             targetCBox.Location = new Point(5, 14);
-            targetCBox.Name = "TargetCBox";
+            targetCBox.Name = "targetCBox";
             targetCBox.Size = new Size(260, 39);
             targetCBox.TabIndex = 4;
             // 
@@ -307,7 +307,6 @@ namespace RPGPractice
             battleSummaryTBox.ScrollBars = ScrollBars.Vertical;
             battleSummaryTBox.Size = new Size(722, 144);
             battleSummaryTBox.TabIndex = 5;
-            battleSummaryTBox.Text = "Battle Start!";
             battleSummaryTBox.TextAlign = HorizontalAlignment.Center;
             // 
             // BattleField

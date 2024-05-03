@@ -69,7 +69,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             Mana--;
 
             //Roll for heal
-            int healValue = base.Dice.RollDamage(base.Intelligence);
+            int healValue = Dice.RollDamage(base.Intelligence);
 
             //Build a new TargetedAction object and add to Queue
             TargetedAbility heal = new TargetedAbility();

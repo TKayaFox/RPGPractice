@@ -71,7 +71,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             Mana--;
 
             //Determine damage and Attack Rolls (attackMod + 1d20)
-            (int attackRoll, int damage) = base.Dice.RollAttack(base.Intelligence, base.Intelligence);
+            (int attackRoll, int damage) = Dice.RollAttack(Intelligence, Intelligence);
 
             //add attack roll to turn summary
             AppendTurnSummary($"{Name} throws a Fireball at {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");

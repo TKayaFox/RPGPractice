@@ -18,6 +18,7 @@ namespace RPGPractice.Engine
         //=========================================
         #region Variables
         private const int NUM_HEROES = 3;
+        private const int MAX_ENEMIES = 5;
 
         private Mob[] heroes;
         private Battle battle;
@@ -39,7 +40,7 @@ namespace RPGPractice.Engine
         /// <param name="eventManager"></param>
         public GameEngine(EventManager eventManager)
         {
-            random= new Random();
+            random = new Random();
             this.eventManager = eventManager;
 
             //subscribe to events
@@ -53,14 +54,14 @@ namespace RPGPractice.Engine
         {
             Mob[] heroes = new Mob[NUM_HEROES];
 
-            heroes[0] = new Warrior("Mabel");
-            heroes[1] = new Mage("Boop");
-            heroes[2] = new Cleric("Fred");
+            heroes[0] = new Warrior("Warrior");
+            heroes[1] = new Mage("Mage");
+            heroes[2] = new Cleric("Cleric");
 
             // give each hero a uniqueId and publish them to eventmanager
             for (int i = 0; i < 3; i++)
             {
-                heroes[i].UniqueID = i+1;
+                heroes[i].UniqueID = i + 1;
 
                 //Subscribe and add to array
                 heroes[i].ManageEvents(eventManager);
@@ -83,14 +84,12 @@ namespace RPGPractice.Engine
         /// </summary>
         private void EndGame(bool victory)
         {
-            //stop publishing battle and unsubscribe it from all events
-            battle.UnManageEvents(eventManager);
-
             //IF result of battle was player victory, keep looping
             if (victory)
             {
                 //Increment victory count
                 numWins++;
+                MessageBox.Show("Victory!");
 
                 //Start a new battle
                 NewBattle();
@@ -99,6 +98,7 @@ namespace RPGPractice.Engine
             {
                 //TODO: End game logic
                 //  save result to leaderboard, etc
+                MessageBox.Show("Game Over");
             }
 
             //TODO: Save game data
@@ -112,8 +112,11 @@ namespace RPGPractice.Engine
         {
             //TODO: Revive all heroes
 
-            //Initialize a new Battle object
-            battle = new Battle(heroes, numWins, random);
+            //Initialize a new encounter and Battle object
+            Encounter encounter = new Encounter(MAX_ENEMIES, random);
+            encounter.GenerateEncounter(eventManager, numWins);
+            encounter.Heroes = heroes;
+            battle = new Battle(encounter);
 
             //Actually Start Battle logic
             await battle.Start(eventManager);

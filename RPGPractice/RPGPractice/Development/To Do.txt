@@ -13,23 +13,6 @@ RPG Project to do:
 				start a new battle
 		after battle
 			heal all Heroes
-	Encounter
-		move encounterMaximum determination to NPC class
-			static method
-		Setup encounter generation to generate different encounters
-				first 1 bandit (tutorial)
-				then 3 bandits
-				then 2 Orcs
-				then 1 dragon
-				then 5 bandits
-				then 2 Orcs 3 Bandits
-				then 3 bandits 1 dragon
-				then randomized selection of:
-					Perhaps use combat level to determine maximums and num of villains
-					up to 1 dragon, if so generate max 3 other mobs
-					up to 5 bandits
-					up to 3 orcs
-				or something
 	Refactor:
 		Setup comments with consistent layout
 			Use XML tags
@@ -42,6 +25,7 @@ RPG Project to do:
 		Break large methods down into smaller parts
 			some methods got kidn of big.
 		Set consistent Method organization across classes
+		redo indenting
 	Enemy decision making
 		Orc
 			attack whoever attacked last, otherwise attack random.
@@ -56,10 +40,20 @@ RPG Project to do:
 					seperate attack for ALL targets
 
 Future ideas:
+	for EncounterData return whether Mob is treated as a Boss
+		(first interaction should be)
+		modify encounterdata to handle differently if adding a boss
+			perhaps also pass max number of minions?
+			OR generate a new encounter with the minions first (maxMobs -1 so theres room for boss), but add in the Boss?
+			or something else?		
 	make instructions for creating a new Mob/Enemy/Hero class somehow (stuff not already covered by abstract)
-		need to add the new class to the appropriate enum for instance
-		possibly an interface for spellcasting
+		add the new class to the appropriate enum for instance
 		explain any existing interfaces/abstract subclasses
+		must include EncounterData static class for enemies
+		modify Encounter generation to include new Enemy class
+		possibly an interface for spellcasting
+	have Encounter populate using a Dictionary for each EnemyType instead of having to enter manually
+		see dictionary branch for attempted implementation
 	look up naming conventions for:
 		enums
 		interfaces
