@@ -1,4 +1,5 @@
-﻿using RPGPractice.Core.Events;
+﻿using RPGPractice.Core;
+using RPGPractice.Core.Events;
 using RPGPractice.GUI;
 using System;
 using System.Collections.Generic;

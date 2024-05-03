@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
@@ -254,7 +255,7 @@ namespace RPGPractice.Engine
         {
             BattleEndEventArgs args = new BattleEndEventArgs();
             args.Victory = victory;
-            BattleEnd.Invoke(this, args);
+            BattleEnd?.Invoke(this, args);
         }
 
         public void OnTurnEnd(TurnEndEventArgs turnData)

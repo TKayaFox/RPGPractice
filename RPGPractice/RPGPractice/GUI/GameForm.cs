@@ -1,3 +1,4 @@
+using RPGPractice.Core;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;

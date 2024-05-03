@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses.EnemyMobs;

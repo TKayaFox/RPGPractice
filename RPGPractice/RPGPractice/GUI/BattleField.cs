@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;

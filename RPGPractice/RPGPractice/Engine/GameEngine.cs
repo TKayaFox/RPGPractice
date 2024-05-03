@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using RPGPractice.Core;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
@@ -116,6 +117,12 @@ namespace RPGPractice.Engine
             Encounter encounter = new Encounter(MAX_ENEMIES, random);
             encounter.GenerateEncounter(eventManager, numWins);
             encounter.Heroes = heroes;
+
+            //Reinitialize Battle
+            if (battle != null)
+            {
+                battle.UnManageEvents(eventManager); // Ensure to unsubscribe from all events
+            }
             battle = new Battle(encounter);
 
             //Actually Start Battle logic
@@ -151,9 +158,6 @@ namespace RPGPractice.Engine
         }
         #endregion
 
-        //=========================================
-        //                Event Handlers
-        //=========================================
         #region Event Handlers
 
 

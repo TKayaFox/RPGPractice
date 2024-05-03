@@ -4,10 +4,11 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using RPGPractice.Core.Events;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
 
-namespace RPGPractice.Core.Events
+namespace RPGPractice.Core
 {
     /// <summary>
     /// Subscriber MobData tracks all Objects and what evens they may raise.
@@ -22,26 +23,49 @@ namespace RPGPractice.Core.Events
         //=========================================
         //  Remember to add an aggregator below as well to relay the event, and subscriber in appropriate method
 
-        //MobID Events
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler? Death;
-
-        //Battle Events
         public event EventHandler<BattleStartEventArgs> BattleStart;
         public event EventHandler<BattleEndEventArgs> BattleEnd;
         public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
-
-        //BattleField Events
         public event EventHandler<PlayerActionEventArgs> PlayerAction;
-
-        //GameForm Events
         public event EventHandler NewGame;
+
+        //===========================================
+        //          Managers
+        //  Relay Events to EventManager subscribers
+        //===========================================
+        #region Event Managers
+
+        /// <summary>
+        /// Publishes MobData and subscribes to all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public virtual void ManageMob(Mob mob)
+        {
+            //publish events to eventManager
+            mob.Death += OnDeath_Aggregator;
+        }
+
+        /// <summary>
+        /// Publishes MobData and subscribes to all events
+        /// </summary>
+        /// <param name="eventManager"></param>
+        public virtual void UnManageMob(Mob mob)
+        {
+            //publish events to eventManager
+            mob.Death += OnDeath_Aggregator;
+        }
+
+
+
+        #endregion
 
         //===========================================
         //          Event Aggregators
         //  Relay Events to EventManager subscribers
         //===========================================
-        #region Event Relays
+        #region Event Aggregators
 
         public void OnPlayerAction_Aggregator(object sender, PlayerActionEventArgs e)
         {
