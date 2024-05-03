@@ -1,4 +1,5 @@
 RPG Project to do:
+	Create custom exception for invalid mob action.
 	Store Mobs in List instead of array
 	Dragon special attacks
 	GameEngine

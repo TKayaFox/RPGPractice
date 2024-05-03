@@ -23,7 +23,7 @@ namespace RPGPractice.Engine
 
         private Mob[] enemies;
         private Mob[] heroes;
-        private Mob activeMob;
+        private Mob turnHolder;
         private Initiative initiative;
         private Dictionary<int, Mob> mobDictionary;
 
@@ -86,12 +86,12 @@ namespace RPGPractice.Engine
             }
             else
             {
-                AssignActiveMob();
+                AssignTurnHolder();
                 TakeTurn();
             }
         }
 
-        private void AssignActiveMob()
+        private void AssignTurnHolder()
         {
             //Determine who is next in initiative, but skip dead mobs.
             bool isAlive = false;
@@ -99,9 +99,9 @@ namespace RPGPractice.Engine
             {
                 //get next MobID in initiative
                 int uniqueID = initiative.NextTurn();
-                activeMob = mobDictionary[uniqueID];
-                isAlive = activeMob.IsAlive;
-                System.Diagnostics.Debug.WriteLine($"Current Turn: {activeMob.Name} [{isAlive}]");
+                turnHolder = mobDictionary[uniqueID];
+                isAlive = turnHolder.IsAlive;
+                System.Diagnostics.Debug.WriteLine($"Current Turn: {turnHolder.Name} [{isAlive}]");
             }
         }
 
@@ -117,8 +117,8 @@ namespace RPGPractice.Engine
             GetTargetableMobs(heroTargetList, enemyTargetList);
 
             //take turn
-            System.Diagnostics.Debug.WriteLine($"{activeMob}'s action:");
-            activeMob.StartTurn(heroTargetList, enemyTargetList);
+            System.Diagnostics.Debug.WriteLine($"{turnHolder.Name}'s Turn");
+            turnHolder.StartTurn(heroTargetList, enemyTargetList);
         }
 
         private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
@@ -326,43 +326,62 @@ namespace RPGPractice.Engine
         {
             //Unpack Args
             MobActions action = playerAction.Action;
-            //If NotSupportedException is thrown, an invalid selection has been made
 
+            //If NotSupportedException is thrown, an invalid selection has been made
             try
             {
-                //determine type of action was selected and send the appropriate command
-                switch (action)
-                {
-                    case MobActions.Block:
-                        activeMob.Block();
-                        break;
-                    case MobActions.Attack:
-                        //Ensure theres a target to attack
-                        if (playerAction.TargetID != -1)
-                        {
-                            Mob target = mobDictionary[playerAction.TargetID];
-                            activeMob.Attack(target.MobData);
-                        }
-                        break;
-                    case MobActions.Special:
-                        //Ensure theres a target to attack
-                        if (playerAction.TargetID != -1)
-                        {
-
-                            Mob target = mobDictionary[playerAction.TargetID];
-                            System.Diagnostics.Debug.WriteLine($"Special Action attempted by {activeMob.Name}");
-                            activeMob.Special(target.MobData);
-                        }
-                        break;
-                }
+                PlayerAction(playerAction, action);
             }
             catch (NotSupportedException e)
             {
-                //implement an error box stating whats wrong then allow them to try again
+                //Tell user about the error, then allow them to try again
                 MessageBox.Show(e.Message + "\r\nPlease choose another action!");
                 TakeTurn();
             }
 
+        }
+
+        private void PlayerAction(PlayerActionEventArgs playerAction, MobActions action)
+        {
+            //Check for valid target (see of dictionary contains the key
+            bool validTarget = mobDictionary.ContainsKey(playerAction.TargetID);
+
+            Mob target = null;
+            if (validTarget)
+            {
+                target = mobDictionary[playerAction.TargetID];
+            }
+
+            //determine type of action was selected and send the appropriate command
+            switch (action)
+            {
+                case MobActions.Block:
+                    turnHolder.Block();
+                    break;
+                case MobActions.Attack:
+                    //Ensure theres a target
+                    if (validTarget)
+                    {
+                        turnHolder.Attack(target.MobData);
+                    }
+                    else //throw exception telling user to re-try theit action
+                    {
+                        throw new NotSupportedException("Invalid Target");
+                    }
+                    break;
+                case MobActions.Special:
+                    //Ensure theres a target
+                    if (validTarget)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"\t{turnHolder.Name} using Special");
+                        turnHolder.Attack(target.MobData);
+                    }
+                    else //throw exception telling user to re-try theit action
+                    {
+                        throw new NotSupportedException("Invalid Target");
+                    }
+                    break;
+            }
         }
     }
 }

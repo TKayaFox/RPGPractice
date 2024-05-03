@@ -333,8 +333,6 @@ namespace RPGPractice
 
         private void OnPlayerTurn_Handler(object sender, PlayerTurnEventArgs args)
         {
-            System.Diagnostics.Debug.WriteLine("Player Turn Event Received by battleField");
-
             //find mobData using MobID
             int mobID = args.MobID;
             currentTurnID = mobID;

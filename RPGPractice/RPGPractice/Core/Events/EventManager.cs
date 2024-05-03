@@ -65,10 +65,13 @@ namespace RPGPractice.Core.Events
         }
         public void OnPlayerTurn_Aggregator(object sender, PlayerTurnEventArgs e)
         {
+
+            System.Diagnostics.Debug.WriteLine($"PlayerTurn event raised by sender");
             PlayerTurn.Invoke(sender, e);
         }
         public void OnTurnEnd_Aggregator(object sender, TurnEndEventArgs e)
         {
+            System.Diagnostics.Debug.WriteLine($"TurnEnd event raised by sender");
             TurnEnd.Invoke(sender, e);
         }
         #endregion
