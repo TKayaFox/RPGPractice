@@ -23,7 +23,7 @@ namespace RPGPractice.Engine
 
         private Mob[] enemies;
         private Mob[] heroes;
-        private Mob currentTurn;
+        private Mob activeMob;
         private Initiative initiative;
         private Dictionary<int, Mob> mobDictionary;
 
@@ -76,18 +76,33 @@ namespace RPGPractice.Engine
         /// <exception cref="NotImplementedException"></exception>
         public void NextTurn()
         {
+            //Check if all heroes or villains are dead.
+            //  Victory is only assured if at least one hero lives
+            bool loss = AreMobsDead(heroes);
+            bool battleEnd = loss || AreMobsDead(enemies);
+            if (battleEnd)
+            {
+                OnBattleEnd(!loss); //OnBattleEnd uses victory not loss, so reverse the boolean
+            }
+            else
+            {
+                AssignActiveMob();
+                TakeTurn();
+            }
+        }
+
+        private void AssignActiveMob()
+        {
             //Determine who is next in initiative, but skip dead mobs.
             bool isAlive = false;
             while (!isAlive)
             {
                 //get next MobID in initiative
                 int uniqueID = initiative.NextTurn();
-                currentTurn = mobDictionary[uniqueID];
-                isAlive = currentTurn.IsAlive;
-                System.Diagnostics.Debug.WriteLine($"Current Turn: {currentTurn.Name} [{isAlive}]");
+                activeMob = mobDictionary[uniqueID];
+                isAlive = activeMob.IsAlive;
+                System.Diagnostics.Debug.WriteLine($"Current Turn: {activeMob.Name} [{isAlive}]");
             }
-
-            TakeTurn();
         }
 
         /// <summary>
@@ -102,8 +117,8 @@ namespace RPGPractice.Engine
             GetTargetableMobs(heroTargetList, enemyTargetList);
 
             //take turn
-            System.Diagnostics.Debug.WriteLine($"{currentTurn}'s action:");
-            currentTurn.StartTurn(heroTargetList, enemyTargetList);
+            System.Diagnostics.Debug.WriteLine($"{activeMob}'s action:");
+            activeMob.StartTurn(heroTargetList, enemyTargetList);
         }
 
         private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
@@ -137,28 +152,6 @@ namespace RPGPractice.Engine
         {
             // Simplified with LINQ for readability and performance
             return mobArr.All(mob => !mob.IsAlive);
-        }
-
-
-        /// <summary>
-        /// Checks for Battle end state every time a MobID dies 
-        /// (If all enemies or all heroes are dead)
-        /// </summary>
-        private void IsBattleEnd(TurnEndEventArgs turnData)
-        {
-            //Check if all heroes or villains are dead.
-            //  Victory is only assured if at least one hero lives
-            bool loss = AreMobsDead(heroes);
-            bool battleEnd = loss || AreMobsDead(enemies);
-            if (battleEnd)
-            {
-                OnBattleEnd(!loss); //OnBattleEnd uses victory not loss, so reverse the boolean
-            }
-            else
-            {
-                //start next turn
-                NextTurn();
-            }
         }
 
         /// <summary>
@@ -319,12 +312,9 @@ namespace RPGPractice.Engine
 
             turnEndData.TurnSummary += turnSummary;
 
-            //relay event
-
+            //relay event then start next turn
             OnTurnEnd(turnEndData);
-
-            //if game is over, start endgame logic, otherwise start
-            IsBattleEnd(turnEndData);
+            NextTurn();
         }
 
         /// <summary>
@@ -344,14 +334,14 @@ namespace RPGPractice.Engine
                 switch (action)
                 {
                     case MobActions.Block:
-                        currentTurn.Block();
+                        activeMob.Block();
                         break;
                     case MobActions.Attack:
                         //Ensure theres a target to attack
                         if (playerAction.TargetID != -1)
                         {
                             Mob target = mobDictionary[playerAction.TargetID];
-                            currentTurn.Attack(target.MobData);
+                            activeMob.Attack(target.MobData);
                         }
                         break;
                     case MobActions.Special:
@@ -360,8 +350,8 @@ namespace RPGPractice.Engine
                         {
 
                             Mob target = mobDictionary[playerAction.TargetID];
-                            System.Diagnostics.Debug.WriteLine($"Special Action attempted by {currentTurn.Name}");
-                            currentTurn.Special(target.MobData);
+                            System.Diagnostics.Debug.WriteLine($"Special Action attempted by {activeMob.Name}");
+                            activeMob.Special(target.MobData);
                         }
                         break;
                 }
