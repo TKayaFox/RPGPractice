@@ -285,6 +285,9 @@ namespace RPGPractice
             attacker.Selected = false;
 
             //Raise PlayerAction event
+            System.Diagnostics.Debug.WriteLine($"battleField: {attacker.Name} action: {action}\r\nEvent Raised");
+
+
             PlayerAction.Invoke(this, actionData);
         }
 
@@ -330,6 +333,8 @@ namespace RPGPractice
 
         private void OnPlayerTurn_Handler(object sender, PlayerTurnEventArgs args)
         {
+            System.Diagnostics.Debug.WriteLine("Player Turn Event Received by battleField");
+
             //find mobData using MobID
             int mobID = args.MobID;
             currentTurnID = mobID;
@@ -341,20 +346,27 @@ namespace RPGPractice
             //Show Hero name in Action Menu
             TurnLabel.Text = mobData.Name;
 
+            System.Diagnostics.Debug.WriteLine($"battleField (GUI) Received Player Turn event for {mobData}");
+
             //Setup Special Button to show what SpecialActionString ability current mob has.
-            UpdateSpecialAttack(mobData);
+            UpdateSpecialAction(mobData);
 
             //update targetedAbilityQueue Lists
             attackTargetList = args.AttackTargetList;
             specialTargetList = args.SpecialTargetList;
 
             //Show Action Menu
+            System.Diagnostics.Debug.WriteLine($"Displaying Action Menu");
+
             ShowActionMenu();
         }
 
-        private void UpdateSpecialAttack(MobData mobData)
+        private void UpdateSpecialAction(MobData mobData)
         {
-            if (!mobData.SpecialActionString.Equals(""))
+            string action = mobData.SpecialActionString;
+            System.Diagnostics.Debug.WriteLine($"Updating Special Action Button: {action}");
+
+            if (!action.Equals(""))
             {
                 SpecialButt.Visible = true;
                 SpecialButt.Text = mobData.SpecialActionString;
@@ -362,6 +374,7 @@ namespace RPGPractice
             //Else hide SpecialActionString Button because no specialAction ability
             else
             {
+                System.Diagnostics.Debug.WriteLine("Special Action Empty");
                 SpecialButt.Visible = false;
             }
         }

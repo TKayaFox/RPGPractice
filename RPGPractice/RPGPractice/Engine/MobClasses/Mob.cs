@@ -74,11 +74,12 @@ namespace RPGPractice.Engine.MobClasses
         /// </summary>
         public void StartTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
         {
-            //reset turnSummary and targetedAbilityQueue for next turn
+            //reset turnSummary and targetedAbilityQueue
             TurnSummary = "";
             TargetedAbilityQueue = new Queue<TargetedAbility>();
 
             //Stop defending
+            System.Diagnostics.Debug.WriteLine($"was blocking? {isBlocking}");
             isBlocking = false;
 
             //Run subClass specific Turn Logic.
@@ -213,8 +214,9 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="target"></param>
         public virtual void Special(MobData target)
         {
-                //throw exception telling caller to try again
-                throw new NotSupportedException("This class does not have a special ability!");
+            //throw exception telling caller to try again
+            System.Diagnostics.Debug.WriteLine($"{this.Name} Atttempting Special Ability that is unavailable?");
+            throw new NotSupportedException("This class does not have a special ability!");
         }
 
         public virtual void Block()

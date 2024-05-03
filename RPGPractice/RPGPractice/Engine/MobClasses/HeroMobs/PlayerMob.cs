@@ -93,6 +93,8 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
 
             CompileTargetLists(allyTargetList, enemyTargetList, args);
 
+            
+            System.Diagnostics.Debug.WriteLine($"Player Turn Event raised for {Name}");
             PlayerTurn.Invoke(this, args);
         }
         #endregion

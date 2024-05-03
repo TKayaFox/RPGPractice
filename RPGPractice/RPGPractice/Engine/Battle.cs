@@ -25,8 +25,6 @@ namespace RPGPractice.Engine
         private Mob[] heroes;
         private Mob currentTurn;
         private Initiative initiative;
-        private Random random;
-        private int combatLevel;
         private Dictionary<int, Mob> mobDictionary;
 
         //=========================================
@@ -38,8 +36,6 @@ namespace RPGPractice.Engine
             //Populate hero and enemies for battle
             this.heroes = encounter.Heroes;
             this.enemies = encounter.Enemies;
-            this.combatLevel = combatLevel;
-            this.random = random;
         }
 
         public async Task Start(EventManager eventManager)
@@ -99,12 +95,14 @@ namespace RPGPractice.Engine
         /// </summary>
         private void TakeTurn()
         {
+            System.Diagnostics.Debug.WriteLine("Building target lists");
             //Make lists of all targetable mobs on both sides
             List<MobData> heroTargetList = new List<MobData>();
             List<MobData> enemyTargetList = new List<MobData>();
             GetTargetableMobs(heroTargetList, enemyTargetList);
 
             //take turn
+            System.Diagnostics.Debug.WriteLine($"{currentTurn}'s action:");
             currentTurn.StartTurn(heroTargetList, enemyTargetList);
         }
 
@@ -158,8 +156,8 @@ namespace RPGPractice.Engine
             }
             else
             {
-                //raise turn end logic and start next turn
-                OnTurnEnd(turnData);
+                //start next turn
+                NextTurn();
             }
         }
 
@@ -321,7 +319,11 @@ namespace RPGPractice.Engine
 
             turnEndData.TurnSummary += turnSummary;
 
-            //if game is over, start endgame logic, otherwise invoke TurnEnd
+            //relay event
+
+            OnTurnEnd(turnEndData);
+
+            //if game is over, start endgame logic, otherwise start
             IsBattleEnd(turnEndData);
         }
 
@@ -345,6 +347,7 @@ namespace RPGPractice.Engine
                         currentTurn.Block();
                         break;
                     case MobActions.Attack:
+                        //Ensure theres a target to attack
                         if (playerAction.TargetID != -1)
                         {
                             Mob target = mobDictionary[playerAction.TargetID];
@@ -352,9 +355,12 @@ namespace RPGPractice.Engine
                         }
                         break;
                     case MobActions.Special:
+                        //Ensure theres a target to attack
                         if (playerAction.TargetID != -1)
                         {
+
                             Mob target = mobDictionary[playerAction.TargetID];
+                            System.Diagnostics.Debug.WriteLine($"Special Action attempted by {currentTurn.Name}");
                             currentTurn.Special(target.MobData);
                         }
                         break;

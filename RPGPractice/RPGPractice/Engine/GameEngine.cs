@@ -54,9 +54,9 @@ namespace RPGPractice.Engine
         {
             Mob[] heroes = new Mob[NUM_HEROES];
 
-            heroes[0] = new Warrior("Warrior");
-            heroes[1] = new Mage("Mage");
-            heroes[2] = new Cleric("Cleric");
+            heroes[0] = new Cleric("Cleric");
+            heroes[1] = new Warrior("Warrior");
+            heroes[2] = new Mage("Mage");
 
             // give each hero a uniqueId and publish them to eventmanager
             for (int i = 0; i < 3; i++)
