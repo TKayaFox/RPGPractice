@@ -24,7 +24,6 @@ namespace RPGPractice.Core
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler BattleStart;
         public event EventHandler NewGame;
-        public event EventHandler Death;
 
         //===========================================
         //              Managers
@@ -71,13 +70,11 @@ namespace RPGPractice.Core
         private void ManageMob(Mob target, bool addMe)
         {
             //Unsubscribe target first to prevent double subscription.
-            target.Death -= OnDeath_Relay;
             target.PlayerTurn -= OnPlayerTurn_Relay;
 
             //Only add new subscriptons if addMe = true
             if (addMe)
             {
-                target.Death += OnDeath_Relay;
                 target.PlayerTurn += OnPlayerTurn_Relay;
             }
         }
@@ -199,10 +196,6 @@ namespace RPGPractice.Core
         public void OnBattleStart_Relay(object sender, EventArgs e)
         {
             BattleStart.Invoke(sender, e);
-        }
-        public void OnDeath_Relay(object sender, EventArgs e)
-        {
-            Death?.Invoke(sender, e);
         }
         public void OnBattleResult_Relay(object sender, BattleResultEventArgs e)
         {

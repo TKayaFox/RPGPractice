@@ -273,10 +273,11 @@ namespace RPGPractice.Engine.MobClasses
             data.UniqueID = uniqueID;
             data.IsNPC = (this is Enemy); //if this object falls under NPC (MobID subclass)
             data.IsAlive = IsAlive;
+            data.HitPoints = HitPoints;
             data.SpecialActionString = SpecialActionString;
 
-            //subscibe Mob to Death events
-            Death += data.OnDeath_Handler;
+            //subscibe MobData to MobUpdate events
+            MobUpdate += data.OnMobUpdate_Handler;
         }
 
         /// <summary>
@@ -427,7 +428,7 @@ namespace RPGPractice.Engine.MobClasses
         //                  Events
         //=========================================
         public event EventHandler<TurnEndEventArgs> TurnEnd;
-        public event EventHandler Death;
+        public event EventHandler MobUpdate;
         public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
 
         #region Event Invokers
@@ -455,7 +456,7 @@ namespace RPGPractice.Engine.MobClasses
         protected void OnDeath()
         {
             //Raise a death event stating that MobID has died
-            Death.Invoke(this, EventArgs.Empty);
+            MobUpdate.Invoke(this, EventArgs.Empty);
         }
 
 

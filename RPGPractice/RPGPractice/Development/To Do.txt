@@ -1,4 +1,6 @@
 RPG Project to do:
+	rebalance mobs
+
 	Modify encounter generation so rather than looping until a valid number was randomly generated, 
 		simply make the list up to the max then stop adding.
 		Possibly find a way to randomize mob assignment order when assigning to list
@@ -52,6 +54,36 @@ RPG Project to do:
 					seperate attack for ALL targets
 
 Future ideas:
+	Add explicit DeInitialize methods for ALL classes.
+		Battle
+			Call DeInitialize for all mobs
+			clear all lists
+			UnManageObject all mobs
+			UnManageObject self
+		Mob
+			unsubscribe mobData from Update event
+			set mobData = null
+		BattleField
+			(Already set up, just optimize it probably)
+	Have X/close button for program save data? Or warn user that exiting now will lose data?
+			
+	eventManager
+		Figure out a way to pass events to objects for subscription
+			Perhaps store on the EventManager side 
+				when OnManageObject event occurs, but add them to the appropriate list. 
+					ex: Core and Battle
+					seperate lists can make sure events are subscribed in correct order
+						Gui first, then battle, then core. Opposite order than you would think
+							want the GUI to finish updating before trying to do more battle logic.
+							want the battle to finish updating before doing core logic, to avoid weird issues such as a old instance being kept loaded because of unresolved events
+				Then have simple Methods to run subscriptions when ready
+					LoadGUI()
+					UnLoadGUI()
+					LoadBattle()
+					UnLoadBattle()
+					LoadCore()
+					UnLoadCore()
+	async tasks to make things process faster. Especially useful once the above is done.
 	for EncounterData return whether Mob is treated as a Boss
 		(first interaction should be)
 		modify encounterdata to handle differently if adding a boss

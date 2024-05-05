@@ -14,8 +14,12 @@ namespace RPGPractice.GUI
         private PictureBox? pictureBox;
         private string? name;
         private bool isNPC;
-        private bool isAlive;
         private string specialAction = "";
+
+        //Updatable values
+        private bool isAlive;
+        private int hitPoints;
+        private int mana;
 
         /// <summary>
         /// Override ToString so object is identified by name
@@ -23,7 +27,7 @@ namespace RPGPractice.GUI
         /// <returns></returns>
         public override string ToString()
         {
-            if (name == null) { name = ""; }
+            string stringReturn = $"{name} [{HitPoints}]";
             return name;
         }
 
@@ -35,6 +39,8 @@ namespace RPGPractice.GUI
         public bool IsNPC { get => isNPC; set => isNPC = value; }
         public string SpecialActionString { get => specialAction; set => specialAction = value; }
         public bool IsAlive { get => isAlive; set => isAlive = value; }
+        public int HitPoints { get => hitPoints; set => hitPoints = value; }
+        public int Mana { get => mana; set => mana = value; }
 
         /// <summary>
         /// Property but when PictureBox is set, Sprite is already applied to the PictureBox
@@ -59,9 +65,9 @@ namespace RPGPractice.GUI
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        internal void OnDeath_Handler(object sender, EventArgs e)
+        internal void OnMobUpdate_Handler(object sender, EventArgs e)
         {
-            isAlive = false;
+            IsAlive1 = false;
             if (pictureBox != null)
             {
                 pictureBox.Image = null;
@@ -86,6 +92,7 @@ namespace RPGPractice.GUI
                 }
             }
         }
+
 
         /// <summary>
         /// Called by Selected to turn on picturebox border
