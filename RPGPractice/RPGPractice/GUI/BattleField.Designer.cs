@@ -50,6 +50,7 @@ namespace RPGPractice
             targetCBox = new ComboBox();
             TargetButt = new Button();
             battleSummaryTBox = new TextBox();
+            BattleStartButt = new Button();
             ActionButtBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)heroSprite5).BeginInit();
             BatleArenaGroupBox.SuspendLayout();
@@ -124,7 +125,6 @@ namespace RPGPractice
             // 
             // BatleArenaGroupBox
             // 
-            BatleArenaGroupBox.BackgroundImage = Properties.Resources.game_background_1;
             BatleArenaGroupBox.BackgroundImageLayout = ImageLayout.Stretch;
             BatleArenaGroupBox.Controls.Add(enemySprite4);
             BatleArenaGroupBox.Controls.Add(heroSprite4);
@@ -309,10 +309,22 @@ namespace RPGPractice
             battleSummaryTBox.TabIndex = 5;
             battleSummaryTBox.TextAlign = HorizontalAlignment.Center;
             // 
+            // BattleStartButt
+            // 
+            BattleStartButt.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            BattleStartButt.Location = new Point(3, 428);
+            BattleStartButt.Name = "BattleStartButt";
+            BattleStartButt.Size = new Size(727, 183);
+            BattleStartButt.TabIndex = 6;
+            BattleStartButt.Text = "Start Battle";
+            BattleStartButt.UseVisualStyleBackColor = true;
+            BattleStartButt.Click += BattleStartButt_Click;
+            // 
             // BattleField
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(BattleStartButt);
             Controls.Add(battleSummaryTBox);
             Controls.Add(ActionMenuGroup);
             Controls.Add(BatleArenaGroupBox);
@@ -361,5 +373,6 @@ namespace RPGPractice
         private Label TurnLabel;
         private GroupBox BatleArenaGroupBox;
         private TextBox battleSummaryTBox;
+        private Button BattleStartButt;
     }
 }

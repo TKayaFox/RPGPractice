@@ -29,8 +29,8 @@ namespace RPGPractice.Engine
         private Dictionary<int, Mob> mobDictionary;
 
         #region Events
-        public event EventHandler<BattleStartEventArgs> BattleStart;
-        public event EventHandler<BattleResultEventArgs> BattleEnd;
+        public event EventHandler<BattleInitializeEventArgs> BattleInitialize;
+        public event EventHandler<BattleResultEventArgs> BattleResult;
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler<EventManagerEventArgs> ManageObject;
         #endregion
@@ -58,7 +58,7 @@ namespace RPGPractice.Engine
             AddToDictionary(enemies, mobDictionary);
 
             //Start Gui logic
-            OnBattleStart();
+            OnBattleInitialize();
 
             //Register all mobs with EventManager
             OnManageMobs(true);
@@ -95,7 +95,7 @@ namespace RPGPractice.Engine
             bool battleEnd = loss || AreMobsDead(enemies);
             if (battleEnd)
             {
-                OnBattleEnd(!loss); //OnBattleEnd uses victory not loss, so reverse the boolean
+                OnBattleResult(!loss); //OnBattleResult uses victory not loss, so reverse the boolean
             }
             else
             {
@@ -193,9 +193,9 @@ namespace RPGPractice.Engine
         //=========================================
 
         #region Event Invokers
-        public void OnBattleStart()
+        public void OnBattleInitialize()
         {
-            BattleStartEventArgs args = new BattleStartEventArgs();
+            BattleInitializeEventArgs args = new BattleInitializeEventArgs();
 
             //Package only needed MobID data into Data object for sending to Gui
             Mob[] mobs;
@@ -205,14 +205,14 @@ namespace RPGPractice.Engine
 
             args.MobDataList = mobDataList;
 
-            BattleStart?.Invoke(this, args);
+            BattleInitialize?.Invoke(this, args);
         }
 
         /// <summary>
         /// Called when either all heroes, or all villains have died.
         /// </summary>
         /// <param name="victory"></param>
-        public void OnBattleEnd(bool victory)
+        public void OnBattleResult(bool victory)
         {
             //UnManage Mobs (Cannot unmanage self from within the class without interfering with BattleResult
             OnManageMobs(false);
@@ -220,7 +220,7 @@ namespace RPGPractice.Engine
             //Invoke event
             BattleResultEventArgs args = new BattleResultEventArgs();
             args.Victory = victory;
-            BattleEnd?.Invoke(this, args);
+            BattleResult?.Invoke(this, args);
         }
 
         public void OnTurnEnd(TurnEndEventArgs turnData)
@@ -345,6 +345,16 @@ namespace RPGPractice.Engine
                 TakeTurn();
             }
 
+        }
+
+        /// <summary>
+        /// Called when Gui is ready and user selects NextTurn() button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void OnBattleStart_Handler(object sender, EventArgs e)
+        {
+            NextTurn();
         }
 
         private void PlayerAction(PlayerActionEventArgs playerAction, MobActions action)

@@ -31,6 +31,8 @@ namespace RPGPractice
         private int currentTurnID;
 
 
+        public event EventHandler<PlayerActionEventArgs> PlayerAction;
+        public event EventHandler BattleStart;
         //TODO: Add a "Cancel" button in case user changes mind.
 
         //=========================================
@@ -46,7 +48,7 @@ namespace RPGPractice
             DefendButt.Tag = MobActions.Block;
             SpecialButt.Tag = MobActions.Special;
         }
-            
+
         public void Populate(List<MobData> mobDataList)
         {
             //show user that a new battle has started
@@ -206,7 +208,6 @@ namespace RPGPractice
         //=========================================
         //                Events
         //=========================================
-        public event EventHandler<PlayerActionEventArgs> PlayerAction;
 
         #region Events
 
@@ -264,6 +265,12 @@ namespace RPGPractice
             //re-show ActionButtBox
             ActionButtBox.Visible = true;
         }
+        private void BattleStartButt_Click(object sender, EventArgs e)
+        {
+            //Hide button and raise BattleInitialize event
+            BattleStartButt.Visible = false;
+            OnBattleStart();
+        }
 
 
         /// <summary>
@@ -288,6 +295,10 @@ namespace RPGPractice
             PlayerAction.Invoke(this, actionData);
         }
 
+        private OnBattleStart()
+        {
+            BattleStart.Invoke(this, EventArgs.Empty);
+        }
         #endregion
 
         //=========================================
@@ -362,5 +373,6 @@ namespace RPGPractice
         }
 
         #endregion
+
     }
 }

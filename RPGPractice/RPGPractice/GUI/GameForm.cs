@@ -128,9 +128,9 @@ namespace RPGPractice
         #endregion
 
         #region Event Handlers
-        public void OnBattleStart_Handler(object? sender, BattleStartEventArgs args)
+        public void OnBattleInitialize_Handler(object? sender, BattleInitializeEventArgs args)
         {
-            //unpack relevent data from BattleStartEventArgs
+            //unpack relevent data from BattleInitializeEventArgs
             List<MobData> mobDataList = args.MobDataList;
 
             //Send to appropriate Method

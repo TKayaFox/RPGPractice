@@ -8,7 +8,7 @@ using RPGPractice.GUI;
 
 namespace RPGPractice.Core.Events
 {
-    public class BattleStartEventArgs : EventArgs
+    public class BattleInitializeEventArgs : EventArgs
     {
         List<MobData> mobDataList;
 
