@@ -136,17 +136,23 @@ namespace RPGPractice
             //unpack relevent data from NewBattleEventArgs
             List<MobData> mobDataList = args.MobDataList;
 
+            //get rid of old battle information
+            UnloadBattleField();
+
             //Send to appropriate Method
             NewBattle(mobDataList);
         }
 
-        public void OnBattleResult_Handler(object sender, BattleResultEventArgs e)
+        private void UnloadBattleField()
         {
-            //unload BattleField
-            OnManageObject(battlefield, false);
-            battlefield.Unload();
-            Controls.Remove(battlefield);
-            battlefield = null;
+            if (battlefield != null)
+            {
+                //unload BattleField
+                OnManageObject(battlefield, false);
+                battlefield.Unload();
+                Controls.Remove(battlefield);
+                battlefield = null;
+            }
         }
         #endregion
     }

@@ -146,7 +146,6 @@ namespace RPGPractice.Core
             target.ManageObject -= OnManageObject_Handler;
             target.NewGame -= OnNewGame_Relay;
             NewBattle -= target.OnNewBattle_Handler;
-            BattleResult -= target.OnBattleResult_Handler;
 
             //Only add new subscriptons if addMe = true
             if (addMe)
@@ -154,7 +153,6 @@ namespace RPGPractice.Core
                 target.ManageObject += OnManageObject_Handler;
                 target.NewGame += OnNewGame_Relay;
                 NewBattle += target.OnNewBattle_Handler;
-                BattleResult += target.OnBattleResult_Handler;
             }
         }
 
