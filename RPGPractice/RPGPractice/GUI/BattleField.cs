@@ -125,7 +125,7 @@ namespace RPGPractice
                 {
                     identified = true;
 
-                    //add PictureBox to MobData (automatically changes Sprite)
+                    //add PictureBox to Data (automatically changes Sprite)
                     data.PictureBox = pictureBox;
                 }
                 i++;
@@ -154,7 +154,7 @@ namespace RPGPractice
         private void InitializeTargetSelectMenu()
         {
             //Populate targetCBox with all potential targets
-            //add MobData to ComboBox.
+            //add Data to ComboBox.
             //  Note: non-Strings added to Combobox will display their toString()
             //  This makes it easy to know what targetedAbilityQueue the user selects.
             switch (action)
@@ -246,7 +246,7 @@ namespace RPGPractice
         /// <param name="e"></param>
         private void TargetButt_Click(object sender, EventArgs e)
         {
-            //Get TargetList from ComboBox. interestingly comboBox is populated with MobData objects
+            //Get TargetList from ComboBox. interestingly comboBox is populated with Data objects
             MobData data;
 
             if (targetCBox.SelectedItem is MobData)
@@ -257,7 +257,8 @@ namespace RPGPractice
             }
             else
             {
-                //edit: If targetedAbilityQueue is NOT selected, provide error telling user to select a targetedAbilityQueue
+                //provide error telling user to select a target
+                MessageBox.Show("You must select a target!");
             }
 
             //re-show ActionButtBox
@@ -278,17 +279,12 @@ namespace RPGPractice
             actionData.Action = action;
             actionData.AttackerID = currentTurnID;
 
-            //Hide action menu until next player turn
-            HideActionMenu();
-
             //Unhighlight player
             MobData attacker = mobDictionary[currentTurnID];
             attacker.Selected = false;
 
-            //Raise PlayerAction event
-            System.Diagnostics.Debug.WriteLine($"battleField: {attacker.Name} action: {action}\r\nEvent Raised");
-
-
+            //Hide action menu until next player turn
+            HideActionMenu();
             PlayerAction.Invoke(this, actionData);
         }
 
@@ -298,41 +294,28 @@ namespace RPGPractice
         //             Event Handlers
         //=========================================
         #region Event Handlers
-        /// <summary>
-        /// Publishes MobData and subscribes to all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void ManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            PlayerAction += eventManager.OnPlayerAction_Aggregator;
-
-            //Subscribe to any needed events
-            eventManager.PlayerTurn += OnPlayerTurn_Handler;
-            eventManager.TurnEnd += OnTurnEnd_Handler;
-        }
 
         /// <summary>
-        /// UnPublishes MobData and unsubscribes from all events
+        /// UnPublishes Data and unsubscribes from all events
         /// </summary>
         /// <param name="eventManager"></param>
         public void UnManageEvents(EventManager eventManager)
         {
             //publish events to eventManager
-            PlayerAction -= eventManager.OnPlayerAction_Aggregator;
+            PlayerAction -= eventManager.OnPlayerAction_Relay;
 
             //unSubscribe to any needed events
             eventManager.PlayerTurn -= OnPlayerTurn_Handler;
             eventManager.TurnEnd -= OnTurnEnd_Handler;
         }
 
-        private void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnData)
+        public void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnData)
         {
             //Unpack turnSummary and append to battleSummaryTBox
             BattleUpdate(turnData.TurnSummary);
         }
 
-        private void OnPlayerTurn_Handler(object sender, PlayerTurnEventArgs args)
+        public void OnPlayerTurn_Handler(object sender, PlayerTurnEventArgs args)
         {
             //find mobData using MobID
             int mobID = args.MobID;

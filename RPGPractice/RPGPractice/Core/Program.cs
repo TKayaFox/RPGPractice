@@ -14,7 +14,7 @@ namespace RPGPractice.Core
             //Start EventManager to handle Event relay between engine and Gui
             EventManager eventManager = new EventManager();
 
-            //start GameEngine to run the actual game
+            //start GameEngine (Game logic handler)
             GameEngine gameEngine = new GameEngine(eventManager);
 
             // Start GameForm GUI for display

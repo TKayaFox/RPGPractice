@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGPractice.Core.Events
 {
-    public class TargetedAbility
+    public class TargetedAbility : EventArgs
     {
         private MobData attacker;
         private MobData target;

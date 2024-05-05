@@ -1,4 +1,11 @@
 RPG Project to do:
+	EventManager
+		Make sure all classes are getting unsubscribed when closed
+	Revisit access for all methods/objects. For instance most Invokers are public and should be made private or protected.
+	EventManager
+		setup to receive Registration events
+			determine type of object and subscribe appropriate events
+	Incorporate Async tasks when able.
 	Create custom exception for invalid mob action.
 	Store Mobs in List instead of array
 	Dragon special attacks

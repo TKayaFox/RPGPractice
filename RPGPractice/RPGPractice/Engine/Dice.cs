@@ -53,6 +53,13 @@ namespace RPGPractice.Engine
             //Determine damage Roll (strength + 1d8)
             int damage = Roll(8); //roll 1d8
             damage += modifier;
+
+            //Make sure the roll is not below minimum (at least 1 damage)
+            if (damage <1)
+            {
+                damage = 1;
+            }
+
             return damage;
         }
 
@@ -69,6 +76,7 @@ namespace RPGPractice.Engine
             {
                 roll += Roll(numSides);
             }
+
             return roll;
         }
         public static int Roll(int numSides)

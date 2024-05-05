@@ -78,7 +78,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
 
             //Build a new TargetedAction object and add to Queue
             TargetedAbility attack = new TargetedAbility();
-            attack.Attacker = MobData;
+            attack.Attacker = Data;
             attack.Target = target;
             attack.AttackRoll = attackRoll;
             attack.Damage = damage;

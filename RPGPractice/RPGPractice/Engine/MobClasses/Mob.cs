@@ -27,6 +27,7 @@ namespace RPGPractice.Engine.MobClasses
         private string specialActionString;
         private int uniqueID;
         private MobActions specialAction;
+        private MobData data;
         private System.Drawing.Bitmap sprite;
         Queue<TargetedAbility> targetedAbilityQueue;
 
@@ -110,7 +111,7 @@ namespace RPGPractice.Engine.MobClasses
 
             //Build a new TargetedAction object and add to Queue
             TargetedAbility attack = new TargetedAbility();
-            attack.Attacker = MobData;
+            attack.Attacker = Data;
             attack.Target = target;
             attack.AttackRoll = attackRoll;
             attack.Damage = damage;
@@ -247,26 +248,35 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
-        /// Builds a GUI specific MobData object which holds only the information needed for MobData
+        /// Builds a GUI specific Data object which holds only the information needed for Data
         /// Refactor: Can eventually subscribe it to a MobUpdate event which allows the MobID object to update it's GUI counterpart directly
         /// </summary>
-        public virtual MobData MobData
+        public virtual MobData Data
         {
             get
             {
-                MobData data = new MobData();
-                data.Sprite = sprite;
-                data.Name = name;
-                data.UniqueID = uniqueID;
-                data.IsNPC = (this is Enemy); //if this object falls under NPC (MobID subclass)
-                data.IsAlive = IsAlive;
-                data.SpecialActionString = SpecialActionString;
-
-                //subscibe Mob to Death events
-                Death += data.OnDeath_Handler;
+                //if MobData object not yet created, create it
+                if (data == null)
+                {
+                    BuildData();
+                }
 
                 return data;
             }
+        }
+
+        private void BuildData()
+        {
+            data = new MobData();
+            data.Sprite = sprite;
+            data.Name = name;
+            data.UniqueID = uniqueID;
+            data.IsNPC = (this is Enemy); //if this object falls under NPC (MobID subclass)
+            data.IsAlive = IsAlive;
+            data.SpecialActionString = SpecialActionString;
+
+            //subscibe Mob to Death events
+            Death += data.OnDeath_Handler;
         }
 
         /// <summary>
@@ -294,7 +304,7 @@ namespace RPGPractice.Engine.MobClasses
 
             hitPoints -= damage;
 
-            result = ($"{Name} took {damage} damage");
+            result = ($"{Name} took {damage} damage   [HP {HitPoints}]");
 
 
             //Check for death
@@ -315,6 +325,20 @@ namespace RPGPractice.Engine.MobClasses
         #endregion
 
         #region Protected Methods
+
+        protected virtual void CompileTargetLists(List<MobData> allyTargetList, List<MobData> enemyTargetList, PlayerTurnEventArgs args)
+        {
+            //Make lists of viable targets
+            args.AttackTargetList = enemyTargetList;
+
+            //Unless overriden provide a list of all possible targets for Special Action
+            //  combine both lists
+            List<MobData> FullTargetList = new List<MobData>();
+            FullTargetList.AddRange(allyTargetList);
+            FullTargetList.AddRange(enemyTargetList);
+
+            args.SpecialTargetList = FullTargetList;
+        }
 
         /// <summary>
         /// Handles end logic for Block family of methods
@@ -404,6 +428,7 @@ namespace RPGPractice.Engine.MobClasses
         //=========================================
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler Death;
+        public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
 
         #region Event Invokers
 
@@ -417,11 +442,11 @@ namespace RPGPractice.Engine.MobClasses
             //This data will always be stored in args
             TurnEndEventArgs args = new TurnEndEventArgs();
             args.TargetedAbilityQueue = TargetedAbilityQueue;
-            args.Attacker = MobData;
+            args.Attacker = Data;
             args.TurnSummary = TurnSummary;
 
             //invoke method
-            TurnEnd?.Invoke(this, args);
+            TurnEnd.Invoke(this, args);
         }
 
         /// <summary>
@@ -433,26 +458,21 @@ namespace RPGPractice.Engine.MobClasses
             Death.Invoke(this, EventArgs.Empty);
         }
 
-        #endregion
-        #region Event Managers
-        /// <summary>
-        /// Publishes MobData and subscribes to all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public virtual void ManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            Death += eventManager.OnDeath_Aggregator;
-        }
 
         /// <summary>
-        /// UnPublishes MobData and unsubscribes from all events
+        /// Tells the GUI to setup for players turn.
         /// </summary>
-        /// <param name="eventManager"></param>
-        public virtual void UnManageEvents(EventManager eventManager)
+        public void OnPlayerTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
         {
-            //publish events to eventManager
-            TurnEnd -= eventManager.OnTurnEnd_Aggregator;
+            //setup event arguments
+            PlayerTurnEventArgs args = new PlayerTurnEventArgs();
+            args.MobID = UniqueID;
+
+            CompileTargetLists(allyTargetList, enemyTargetList, args);
+
+
+            System.Diagnostics.Debug.WriteLine($"\tPlayer Turn Event raised for {Name}");
+            PlayerTurn?.Invoke(this, args);
         }
         #endregion
     }

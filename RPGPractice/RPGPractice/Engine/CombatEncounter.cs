@@ -10,7 +10,7 @@ using RPGPractice.Core;
 
 namespace RPGPractice.Engine
 {
-    public class Encounter
+    public class CombatEncounter
     {
         private const int MIN_ENEMIES = 1;
         private Mob[] heroes;
@@ -24,20 +24,11 @@ namespace RPGPractice.Engine
 
         /// <summary>
         /// Constructor
+        ///     Initializes an array of Mobs for a combat CombatEncounter
         /// </summary>
         /// <param name="maxEnemies">Maximum number of enemies in encounter</param>
         /// <param name="random">Randomizer for encounter variation</param>
-        public Encounter(int maxEnemies, Random random)
-        {
-            this.maxEnemies = maxEnemies;
-            this.random = random;
-        }
-
-        /// <summary>
-        /// Initializes an array of Mobs for a combat encounter
-        /// </summary>
-        /// <returns>MobID[] array of enemies/NPCs</returns>
-        public void GenerateEncounter(EventManager eventManager, int combatLevel)
+        public CombatEncounter(int maxEnemies,int combatLevel, Random random)
         {
             List<Mob> enemyList = new List<Mob>();
             int numBandits = 0;
@@ -56,7 +47,7 @@ namespace RPGPractice.Engine
                 //get the minumum and maximum number of that mob for the encounter level
                 //  then randomly generate a number
                 (min, max) = Bandit.EncounterData(combatLevel);
-                numBandits = random.Next(min, max+1);
+                numBandits = random.Next(min, max + 1);
                 (min, max) = Ogre.EncounterData(combatLevel);
                 numOgres = random.Next(min, max + 1);
                 (min, max) = Dragon.EncounterData(combatLevel);
@@ -70,17 +61,20 @@ namespace RPGPractice.Engine
             for (int i = 0; i < numBandits; i++)
             {
                 Mob enemy = new Bandit("Bandit");
-                BuildMob(eventManager, enemyList, i, enemy);
+                enemyList.Add(enemy);
+                enemy.UniqueID = i + 100;
             }
             for (int i = 0; i < numOgres; i++)
             {
                 Mob enemy = new Ogre("Ogre");
-                BuildMob(eventManager, enemyList, i, enemy);
+                enemyList.Add(enemy);
+                enemy.UniqueID = i + 100;
             }
             for (int i = 0; i < numDragons; i++)
             {
                 Mob enemy = new Dragon("Dragon");
-                BuildMob(eventManager, enemyList, i, enemy);
+                enemyList.Add(enemy);
+                enemy.UniqueID = i + 100;
             }
 
             //convert list to array
@@ -101,11 +95,8 @@ namespace RPGPractice.Engine
         /// <param name="enemyList"></param>
         /// <param name="i"></param>
         /// <param name="mob"></param>
-        private static void BuildMob<T>(EventManager eventManager, List<Mob> enemyList, int i, T mob) where T : Mob
+        private void BuildMob<T>(List<Mob> enemyList, int i, T mob) where T : Mob
         {
-            enemyList.Add(mob);
-            mob.ManageEvents(eventManager);
-            mob.UniqueID = i + 100;
         }
     }
 }

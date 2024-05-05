@@ -28,18 +28,25 @@ namespace RPGPractice.Engine
         private Initiative initiative;
         private Dictionary<int, Mob> mobDictionary;
 
+        #region Events
+        public event EventHandler<BattleStartEventArgs> BattleStart;
+        public event EventHandler<BattleEndEventArgs> BattleEnd;
+        public event EventHandler<TurnEndEventArgs> TurnEnd;
+        public event EventHandler<EventManagerEventArgs> ManageObject;
+        #endregion
+
         //=========================================
         //              Main Methods
         //=========================================
 
-        public Battle(Encounter encounter)
+        public Battle(CombatEncounter encounter)
         {
             //Populate hero and enemies for battle
             this.heroes = encounter.Heroes;
             this.enemies = encounter.Enemies;
         }
 
-        public async Task Start(EventManager eventManager)
+        public async Task Start()
         {
             initiative = new Initiative(heroes, enemies);
 
@@ -50,24 +57,29 @@ namespace RPGPractice.Engine
             AddToDictionary(heroes, mobDictionary);
             AddToDictionary(enemies, mobDictionary);
 
-            //subscribe to Events
-            ManageEvents(eventManager);
-
             //Start Gui logic
             OnBattleStart();
+
+            //Register all mobs with EventManager
+            OnManageMobs(true);
         }
 
         /// <summary>
-        /// Adds an array of mobs to dictionary using uniqueID 
+        /// Adds an array of mobs to dictionary using uniqueID
+        ///     Also sets mob to be managed by eventManager
         /// </summary>
         /// <param name="mobArr"></param>
         /// <param name="dictionary"></param>
-        private static void AddToDictionary(Mob[] mobArr, Dictionary<int, Mob> dictionary)
+        private void AddToDictionary(Mob[] mobArr, Dictionary<int, Mob> dictionary)
         {
             //add each mobID to dictionary using uniqueID for index
             foreach (Mob mob in mobArr)
             {
                 dictionary.Add(mob.UniqueID, mob);
+
+                //subscribe to their TurnEnd method locally
+                //(EventManager subscriptions will be handled elsewhere)
+                mob.TurnEnd+= OnTurnEnd_Handler;
             }
         }
 
@@ -132,12 +144,12 @@ namespace RPGPractice.Engine
                     //Add to enemyTargetList if an NPC
                     if (mob is Enemy)
                     {
-                        enemyTargetList.Add(mob.MobData);
+                        enemyTargetList.Add(mob.Data);
                     }
                     //Otherwise add to heroTargetList
                     else
                     {
-                        heroTargetList.Add(mob.MobData);
+                        heroTargetList.Add(mob.Data);
                     }
                 }
             }
@@ -164,7 +176,7 @@ namespace RPGPractice.Engine
         {
             foreach (Mob mob in mobs)
             {
-                MobData data = mob.MobData;
+                MobData data = mob.Data;
                 mobDataList.Add(data);
             }
         }
@@ -179,62 +191,13 @@ namespace RPGPractice.Engine
         //=========================================
         //                Events
         //=========================================
-        public event EventHandler<BattleStartEventArgs> BattleStart;
-        public event EventHandler<BattleEndEventArgs> BattleEnd;
-        public event EventHandler<TurnEndEventArgs> TurnEnd;
-        #region Event Managers
-
-        /// <summary>
-        /// Publishes MobData and subscribes to all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void ManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            BattleStart += eventManager.OnBattleStart_Aggregator;
-            BattleEnd += eventManager.OnBattleEnd_Aggregator;
-            TurnEnd += eventManager.OnTurnEnd_Aggregator;
-
-            //Subscribe to events from eventManager
-            eventManager.PlayerAction += OnPlayerAction_handler;
-
-            //subscribe to all mob TurnEnd events
-            foreach (Mob mob in mobDictionary.Values)
-            {
-                mob.TurnEnd += OnTurnEnd_Handler;
-            }
-        }
-
-        /// <summary>
-        /// UnPublishes MobData and unsubscribes from all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void UnManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            BattleStart -= eventManager.OnBattleStart_Aggregator;
-            BattleEnd -= eventManager.OnBattleEnd_Aggregator;
-            TurnEnd -= eventManager.OnTurnEnd_Aggregator;
-
-            //unsubscribe events from eventManager
-            eventManager.PlayerAction -= OnPlayerAction_handler;
-
-
-            //unsubscribe all mob TurnEnd events
-            foreach (Mob mob in mobDictionary.Values)
-            {
-                mob.TurnEnd -= OnTurnEnd_Handler;
-            }
-        }
-
-        #endregion
 
         #region Event Invokers
         public void OnBattleStart()
         {
             BattleStartEventArgs args = new BattleStartEventArgs();
 
-            //Package only needed MobID data into MobData object for sending to Gui
+            //Package only needed MobID data into Data object for sending to Gui
             Mob[] mobs;
             List<MobData> mobDataList = new List<MobData>();
             CompileMobData(heroes, mobDataList);
@@ -242,10 +205,8 @@ namespace RPGPractice.Engine
 
             args.MobDataList = mobDataList;
 
-            BattleStart.Invoke(this, args);
+            BattleStart?.Invoke(this, args);
         }
-        #endregion
-
 
         /// <summary>
         /// Called when either all heroes, or all villains have died.
@@ -253,6 +214,10 @@ namespace RPGPractice.Engine
         /// <param name="victory"></param>
         public void OnBattleEnd(bool victory)
         {
+            //UnManage Mobs (Cannot unmanage self from within the class without interfering with BattleEnd
+            OnManageMobs(false);
+
+            //Invoke event
             BattleEndEventArgs args = new BattleEndEventArgs();
             args.Victory = victory;
             BattleEnd?.Invoke(this, args);
@@ -265,10 +230,50 @@ namespace RPGPractice.Engine
             NextTurn();
         }
 
-        //=========================================
-        //                Event Handlers
-        //=========================================
+        /// <summary>
+        /// Unsubscribes all target and eventManager relationships for Mobs
+        ///     If isActive is true, then re-subscribe to all relationships
+        ///     Automatically prevents dual subscription
+        /// </summary>
+        /// <param name="target">Object that is to be Managed</param>
+        /// <param name="isActive">
+        /// - If true, subscription relationships between target and EventManager will be added/live/active
+        /// - If false, the relationship will be severed/unsubscribed
+        ///</param>
+        public void OnManageMobs(bool isActive)
+        {
+            EventManagerEventArgs args = new EventManagerEventArgs();
 
+            //Add Enemies and Heroes
+            args.AddTargetArr = Enemies;
+            args.AddTargetArr = Heroes;
+
+            //Store whether values are being subscrubed or unsubscribed
+            args.IsActive = isActive;
+            ManageObject?.Invoke(this, args);
+        }
+        /// <summary>
+        /// Unsubscribes all target and eventManager relationships for self
+        ///     If isActive is true, then re-subscribe to all relationships
+        ///     Automatically prevents dual subscription
+        /// </summary>
+        /// <param name="target">Object that is to be Managed</param>
+        /// <param name="isActive">
+        /// - If true, subscription relationships between target and EventManager will be added/live/active
+        /// - If false, the relationship will be severed/unsubscribed
+        ///</param>
+        public void OnManageMe(bool isActive)
+        {
+            EventManagerEventArgs args = new EventManagerEventArgs();
+
+            //Store whether values are being subscrubed or unsubscribed
+            args.AddTarget = this;
+            args.IsActive = isActive;
+            ManageObject.Invoke(this, args);
+        }
+        #endregion
+
+        #region Event Handlers
         /// <summary>
         /// At end of each turn, start the next turn
         /// </summary>
@@ -363,7 +368,7 @@ namespace RPGPractice.Engine
                     //Ensure theres a target
                     if (validTarget)
                     {
-                        turnHolder.Attack(target.MobData);
+                        turnHolder.Attack(target.Data);
                     }
                     else //throw exception telling user to re-try theit action
                     {
@@ -375,7 +380,7 @@ namespace RPGPractice.Engine
                     if (validTarget)
                     {
                         System.Diagnostics.Debug.WriteLine($"\t{turnHolder.Name} using Special");
-                        turnHolder.Attack(target.MobData);
+                        turnHolder.Special(target.Data);
                     }
                     else //throw exception telling user to re-try theit action
                     {
@@ -384,5 +389,6 @@ namespace RPGPractice.Engine
                     break;
             }
         }
+        #endregion
     }
 }

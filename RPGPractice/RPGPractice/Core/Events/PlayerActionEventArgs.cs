@@ -7,7 +7,7 @@ using RPGPractice.Core.Enumerations;
 
 namespace RPGPractice.Core.Events
 {
-    public class PlayerActionEventArgs
+    public class PlayerActionEventArgs : EventArgs
     {
         private int attackerID = -1;
         private int targetID = -1;

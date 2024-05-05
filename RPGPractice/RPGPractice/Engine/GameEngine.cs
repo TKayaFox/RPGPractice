@@ -28,7 +28,10 @@ namespace RPGPractice.Engine
 
         private string name;
         private int numWins;
+        #endregion
 
+        #region Invokable Events
+        public event EventHandler<EventManagerEventArgs> ManageObject;
         #endregion
 
         //=========================================
@@ -42,10 +45,9 @@ namespace RPGPractice.Engine
         public GameEngine(EventManager eventManager)
         {
             random = new Random();
-            this.eventManager = eventManager;
 
-            //subscribe to events
-            ManageEvents();
+            //Subscribe to eventManager (handles relaying and subscribing to events)
+            eventManager.ManageObjectSort(this,true);
         }
 
         /// <summary>
@@ -63,9 +65,7 @@ namespace RPGPractice.Engine
             for (int i = 0; i < 3; i++)
             {
                 heroes[i].UniqueID = i + 1;
-
-                //Subscribe and add to array
-                heroes[i].ManageEvents(eventManager);
+                //Note: Heroes not subscribed into eventManager until Battle
             }
 
             return heroes;
@@ -83,7 +83,7 @@ namespace RPGPractice.Engine
         /// <summary>
         /// When a battle has ended, stop event managing for battle and save game data
         /// </summary>
-        private void EndGame(bool victory)
+        private void BattleEnd(bool victory)
         {
             //IF result of battle was player victory, keep looping
             if (victory)
@@ -97,12 +97,24 @@ namespace RPGPractice.Engine
             }
             else
             {
-                //TODO: End game logic
-                //  save result to leaderboard, etc
+                //Display Game over and start wrap up process (ClearGameData handles all Game over logic)
                 MessageBox.Show("Game Over");
+                ClearGameData();
             }
 
             //TODO: Save game data
+        }
+
+        /// <summary>
+        /// Resets GameEngine data for reinitialization Doesnt actually
+        /// </summary>
+        private void ClearGameData()
+        {
+            //TODO: save game status to file
+            //TODO: Update leaderboard if game finished (Game over)
+
+            //If battle is instantiated, make sure to unmanage it
+            UnManageBattle();
         }
 
         /// <summary>
@@ -114,25 +126,34 @@ namespace RPGPractice.Engine
             //TODO: Revive all heroes
 
             //Initialize a new encounter and Battle object
-            Encounter encounter = new Encounter(MAX_ENEMIES, random);
-            encounter.GenerateEncounter(eventManager, numWins);
+            CombatEncounter encounter = new CombatEncounter(MAX_ENEMIES, numWins, random);
             encounter.Heroes = heroes;
 
-            //Reinitialize Battle
-            if (battle != null)
-            {
-                battle.UnManageEvents(eventManager); // Ensure to unsubscribe from all events
-            }
+            //Re-initialize Battle
             battle = new Battle(encounter);
 
-            //Actually Start Battle logic
-            await battle.Start(eventManager);
+            OnManageObject(battle, true);
 
-            //let GUI catch up and dispaly
+            //TODO: Revisit task logic. Is it necessary/can it be improved
+
+            //Actually Start Battle logic
+            await battle.Start();
+
+
+            //let GUI catch up and display
             await Task.Delay(2000);
 
             //Start turns
             battle.NextTurn();
+        }
+
+        private void UnManageBattle()
+        {
+            if (battle != null)
+            {
+                battle.OnManageMobs(false); //Battle needs to do this itself
+                OnManageObject(battle, false);
+            }
         }
 
         #endregion
@@ -142,19 +163,18 @@ namespace RPGPractice.Engine
         //              Events
         //=========================================
         #region Events
-        #endregion
 
-        #region Event Manager
+
         /// <summary>
-        /// Publishes MobData and subscribes to all events
-        /// TODO: refactor: Remove if not in use
+        /// Raises event telling EventManager to setup all subscriptions for this class
         /// </summary>
-        /// <param name="eventManager"></param>
-        public void ManageEvents()
+        /// <param name="subscriber"></param>
+        public void OnManageObject(Object target, bool isActive)
         {
-            //Subscribe to any needed events
-            eventManager.BattleEnd += OnBattleEnd_Handler;
-            eventManager.NewGame += OnNewGame_Handler;
+            EventManagerEventArgs args = new EventManagerEventArgs();
+            args.IsActive = isActive;
+            args.AddTarget = target;
+            ManageObject.Invoke(target, args);
         }
         #endregion
 
@@ -168,7 +188,7 @@ namespace RPGPractice.Engine
         /// <param name="args"></param>
         public void OnBattleEnd_Handler(object sender, BattleEndEventArgs args)
         {
-            EndGame(args.Victory);
+            BattleEnd(args.Victory);
         }
 
         /// <summary>
@@ -178,6 +198,8 @@ namespace RPGPractice.Engine
         /// <param name="args"></param>
         public void OnNewGame_Handler(object sender, EventArgs args)
         {
+            //Reset GameEngine so it is ready for new game then start new game
+            ClearGameData();
             NewGame();
         }
 

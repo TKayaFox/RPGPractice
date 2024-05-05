@@ -8,7 +8,7 @@ using RPGPractice.GUI;
 
 namespace RPGPractice.Core.Events
 {
-    public class PlayerTurnEventArgs
+    public class PlayerTurnEventArgs : EventArgs
     {
         int mobID;
         List<MobData> attackTargetList = new List<MobData>();

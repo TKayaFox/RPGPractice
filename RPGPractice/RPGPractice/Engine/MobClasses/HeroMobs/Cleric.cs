@@ -73,7 +73,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
 
             //Build a new TargetedAction object and add to Queue
             TargetedAbility heal = new TargetedAbility();
-            heal.Attacker = MobData;
+            heal.Attacker = Data;
             heal.Target = target;
             heal.Damage = healValue; ;
             heal.Damage = healValue; ;
