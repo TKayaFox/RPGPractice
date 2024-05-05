@@ -1,6 +1,6 @@
 RPG Project to do:
+	Prioritize ToDo list
 	rebalance mobs
-
 	Modify encounter generation so rather than looping until a valid number was randomly generated, 
 		simply make the list up to the max then stop adding.
 		Possibly find a way to randomize mob assignment order when assigning to list
@@ -52,6 +52,12 @@ RPG Project to do:
 						attack hardest hitter
 				swipe attack:  (targets all)
 					seperate attack for ALL targets
+		Refactor Mob and Mobdata such that Mob is no longer storing the MobData object.
+			The main reason I was doing this was because MobData was getting rebuilt on multiple occasions, causing multiple event subscriptions and other weirdness.
+			However, does MobData even need used except for the Battlefield object?
+				Might be because MobData is given to the battlefield through the PlayerTurb method.
+					Perhaps instead pass list of uniqueIDs and then on battlefield side store the MobData for each id by using the mobdictionary
+					then just store all MobData objects once.
 
 Future ideas:
 	Add explicit DeInitialize methods for ALL classes.
