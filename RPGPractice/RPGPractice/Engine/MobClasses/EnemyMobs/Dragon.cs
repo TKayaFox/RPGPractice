@@ -16,7 +16,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
         protected override void Initialize()
         {
             Sprite = Properties.Resources.Dragon;
-            MaxHitPoints = 40;
+            MaxHitPoints = 30;
             Initiative = -1;
             Intelligence = 3;
             Strength = 3;

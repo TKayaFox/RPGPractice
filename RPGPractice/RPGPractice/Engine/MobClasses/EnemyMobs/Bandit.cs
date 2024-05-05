@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 
@@ -42,19 +43,25 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
                 //Dragon introduction
                 case 4: 
                     max = 0;
+                    min = 0;
                     break;
                 //Ogre introduction
                 case 2:
                     max = 0;
+                    min = 0;
                     break;
-
-                //scale up by combatLevel
-                case > 1:
+                //5 Bandits only
+                case 3:
                     max = 5;
                     break;
+                //3 Bandits only
                 case 1:
                     max = 3;
-                    min = 3; //make sure theres exactly 3
+                    min = 3;
+                    break;
+                case > 3:
+                    max = 5;
+                    min = 0;
                     break;
             }
 

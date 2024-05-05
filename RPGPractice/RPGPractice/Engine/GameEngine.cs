@@ -46,9 +46,6 @@ namespace RPGPractice.Engine
         {
             random = new Random();
 
-            //TEMPORARY TODO: REMOVE
-            numWins = 2;
-
             //Subscribe to eventManager (handles relaying and subscribing to events)
             eventManager.ManageObjectSort(this,true);
         }

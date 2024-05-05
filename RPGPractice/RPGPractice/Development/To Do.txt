@@ -1,4 +1,8 @@
 RPG Project to do:
+	Modify encounter generation so rather than looping until a valid number was randomly generated, 
+		simply make the list up to the max then stop adding.
+		Possibly find a way to randomize mob assignment order when assigning to list
+		Or when generating check the current mob count, and reduce max to match.
 	EventManager
 		Make sure all classes are getting unsubscribed when closed
 	Revisit access for all methods/objects. For instance most Invokers are public and should be made private or protected.
