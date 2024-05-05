@@ -19,7 +19,6 @@ namespace RPGPractice.GUI
         //Updatable values
         private bool isAlive;
         private int hitPoints;
-        private int mana;
 
         /// <summary>
         /// Override ToString so object is identified by name
@@ -38,9 +37,22 @@ namespace RPGPractice.GUI
         public string? Name { get => name; set => name = value; }
         public bool IsNPC { get => isNPC; set => isNPC = value; }
         public string SpecialActionString { get => specialAction; set => specialAction = value; }
-        public bool IsAlive { get => isAlive; set => isAlive = value; }
         public int HitPoints { get => hitPoints; set => hitPoints = value; }
-        public int Mana { get => mana; set => mana = value; }
+
+        public bool IsAlive 
+        {
+            get => isAlive;
+            set
+            {
+                isAlive = value;
+                
+                //reflect death in sprites
+                if(!value && pictureBox != null)
+                {
+                        pictureBox.Image = null;
+                }
+            }
+        }
 
         /// <summary>
         /// Property but when PictureBox is set, Sprite is already applied to the PictureBox
@@ -58,22 +70,6 @@ namespace RPGPractice.GUI
                 }
             }
         }
-
-        /// <summary>
-        /// Updates isAlive to false and changes PictureBox to show death
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        internal void OnMobUpdate_Handler(object sender, EventArgs e)
-        {
-            IsAlive1 = false;
-            if (pictureBox != null)
-            {
-                pictureBox.Image = null;
-            }
-        }
-
 
         /// <summary>
         /// Turn on and off Picture Border depending on boolean

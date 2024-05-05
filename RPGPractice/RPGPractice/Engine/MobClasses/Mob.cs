@@ -7,6 +7,7 @@ using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
 using RPGPractice.GUI;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RPGPractice.Engine.MobClasses
@@ -31,8 +32,6 @@ namespace RPGPractice.Engine.MobClasses
         private System.Drawing.Bitmap sprite;
         Queue<TargetedAbility> targetedAbilityQueue;
 
-        //TODO: Move Mana related items to interface.
-        //          Not all Mobs need mana
         //Game specific stats
         private int maxHitPoints;
         private int hitPoints;
@@ -81,7 +80,6 @@ namespace RPGPractice.Engine.MobClasses
             TargetedAbilityQueue = new Queue<TargetedAbility>();
 
             //Stop defending
-            System.Diagnostics.Debug.WriteLine($"was blocking? {isBlocking}");
             isBlocking = false;
 
             //Run subClass specific Turn Logic.
@@ -143,11 +141,13 @@ namespace RPGPractice.Engine.MobClasses
                 int initialHP = hitPoints;
 
                 hitPoints += damage;
+                data.HitPoints = hitPoints;
 
                 //prevent over-healing
                 if (hitPoints >= MaxHitPoints)
                 {
                     hitPoints = MaxHitPoints;
+                    data.HitPoints = hitPoints;
                     result = $"Has reached full health! {maxHitPoints}";
                 }
 
@@ -160,6 +160,7 @@ namespace RPGPractice.Engine.MobClasses
         {
             //if not specified, heal all
             hitPoints = MaxHitPoints;
+            data.HitPoints = hitPoints;
             return $"{name} healed to full health";
         }
 
@@ -271,13 +272,10 @@ namespace RPGPractice.Engine.MobClasses
             data.Sprite = sprite;
             data.Name = name;
             data.UniqueID = uniqueID;
-            data.IsNPC = (this is Enemy); //if this object falls under NPC (MobID subclass)
             data.IsAlive = IsAlive;
+            data.IsNPC = (this is Enemy); //if this object falls under NPC (MobID subclass)
             data.HitPoints = HitPoints;
             data.SpecialActionString = SpecialActionString;
-
-            //subscibe MobData to MobUpdate events
-            MobUpdate += data.OnMobUpdate_Handler;
         }
 
         /// <summary>
@@ -304,6 +302,7 @@ namespace RPGPractice.Engine.MobClasses
             string result;
 
             hitPoints -= damage;
+            data.HitPoints = HitPoints;
 
             result = ($"{Name} took {damage} damage   [HP {HitPoints}]");
 
@@ -312,7 +311,7 @@ namespace RPGPractice.Engine.MobClasses
             if (!IsAlive)
             {
                 result += ($"\r\n{Name} has Died!");
-                OnDeath();
+                data.IsAlive = IsAlive;
             }
 
             //return string stating result
@@ -428,7 +427,6 @@ namespace RPGPractice.Engine.MobClasses
         //                  Events
         //=========================================
         public event EventHandler<TurnEndEventArgs> TurnEnd;
-        public event EventHandler MobUpdate;
         public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
 
         #region Event Invokers
@@ -448,15 +446,6 @@ namespace RPGPractice.Engine.MobClasses
 
             //invoke method
             TurnEnd.Invoke(this, args);
-        }
-
-        /// <summary>
-        /// When MobID HP is reduced below 0HP they are dead.
-        /// </summary>
-        protected void OnDeath()
-        {
-            //Raise a death event stating that MobID has died
-            MobUpdate.Invoke(this, EventArgs.Empty);
         }
 
 
