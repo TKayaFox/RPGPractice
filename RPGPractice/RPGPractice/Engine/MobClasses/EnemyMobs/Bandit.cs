@@ -44,7 +44,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
                     max = 0;
                     break;
                 //Ogre introduction
-                case 2: 
+                case 2:
                     max = 0;
                     break;
 
@@ -52,8 +52,9 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
                 case > 1:
                     max = 5;
                     break;
-                case > 0:
+                case 1:
                     max = 3;
+                    min = 3; //make sure theres exactly 3
                     break;
             }
 

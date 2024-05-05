@@ -57,8 +57,13 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
             switch (combatLevel)
             {
                 //Dragon introduction
-                case 4: 
+                case 4:
                     max = 0;
+                    break;
+                //Ogre introduction
+                case 2:
+                    max = 1;
+                    min = 1;
                     break;
 
                 //if not situational, then scale up by combatLevel
@@ -68,7 +73,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
                 case > 4:
                     max = 5;
                     break;
-                case > 1:
+                case > 2:
                     max = 1;
                     break;
             }

@@ -68,13 +68,13 @@ namespace RPGPractice.Engine
             {
                 Mob enemy = new Ogre("Ogre");
                 enemyList.Add(enemy);
-                enemy.UniqueID = i + 100;
+                enemy.UniqueID = i + 200;
             }
             for (int i = 0; i < numDragons; i++)
             {
                 Mob enemy = new Dragon("Dragon");
                 enemyList.Add(enemy);
-                enemy.UniqueID = i + 100;
+                enemy.UniqueID = i + 300;
             }
 
             //convert list to array
