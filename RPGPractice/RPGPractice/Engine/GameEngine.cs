@@ -83,7 +83,7 @@ namespace RPGPractice.Engine
         /// <summary>
         /// When a battle has ended, stop event managing for battle and save game data
         /// </summary>
-        private void BattleEnd(bool victory)
+        private void BattleResult(bool victory)
         {
             //IF result of battle was player victory, keep looping
             if (victory)
@@ -186,9 +186,9 @@ namespace RPGPractice.Engine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        public void OnBattleEnd_Handler(object sender, BattleEndEventArgs args)
+        public void OnBattleEnd_Handler(object sender, BattleResultEventArgs args)
         {
-            BattleEnd(args.Victory);
+            BattleResult(args.Victory);
         }
 
         /// <summary>

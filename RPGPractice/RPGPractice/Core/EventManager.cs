@@ -20,7 +20,7 @@ namespace RPGPractice.Core
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler Death;
         public event EventHandler<BattleStartEventArgs> BattleStart;
-        public event EventHandler<BattleEndEventArgs> BattleEnd;
+        public event EventHandler<BattleResultEventArgs> BattleEnd;
         public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
         public event EventHandler<PlayerActionEventArgs> PlayerAction;
         public event EventHandler NewGame;
@@ -195,7 +195,7 @@ namespace RPGPractice.Core
         {
             Death?.Invoke(sender, e);
         }
-        public void OnBattleEnd_Relay(object sender, BattleEndEventArgs e)
+        public void OnBattleEnd_Relay(object sender, BattleResultEventArgs e)
         {
             BattleEnd.Invoke(sender, e);
         }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RPGPractice.Core.Events
 {
-    public class BattleEndEventArgs : EventArgs
+    public class BattleResultEventArgs : EventArgs
     {
         private bool victory;
 

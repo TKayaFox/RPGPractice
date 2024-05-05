@@ -30,7 +30,7 @@ namespace RPGPractice.Engine
 
         #region Events
         public event EventHandler<BattleStartEventArgs> BattleStart;
-        public event EventHandler<BattleEndEventArgs> BattleEnd;
+        public event EventHandler<BattleResultEventArgs> BattleEnd;
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler<EventManagerEventArgs> ManageObject;
         #endregion
@@ -214,11 +214,11 @@ namespace RPGPractice.Engine
         /// <param name="victory"></param>
         public void OnBattleEnd(bool victory)
         {
-            //UnManage Mobs (Cannot unmanage self from within the class without interfering with BattleEnd
+            //UnManage Mobs (Cannot unmanage self from within the class without interfering with BattleResult
             OnManageMobs(false);
 
             //Invoke event
-            BattleEndEventArgs args = new BattleEndEventArgs();
+            BattleResultEventArgs args = new BattleResultEventArgs();
             args.Victory = victory;
             BattleEnd?.Invoke(this, args);
         }
