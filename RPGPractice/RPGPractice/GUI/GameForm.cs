@@ -51,6 +51,9 @@ namespace RPGPractice
             if (battlefield != null)
             {
                 OnManageObject(battlefield, false);
+                battlefield.Unload();
+                Controls.Remove(battlefield);
+                battlefield = null;
             }
 
             //Initialize battleField then add it to eventManager
@@ -128,13 +131,22 @@ namespace RPGPractice
         #endregion
 
         #region Event Handlers
-        public void OnBattleInitialize_Handler(object? sender, BattleInitializeEventArgs args)
+        public void OnNewBattle_Handler(object? sender, NewBattleEventArgs args)
         {
-            //unpack relevent data from BattleInitializeEventArgs
+            //unpack relevent data from NewBattleEventArgs
             List<MobData> mobDataList = args.MobDataList;
 
             //Send to appropriate Method
             NewBattle(mobDataList);
+        }
+
+        public void OnBattleResult_Handler(object sender, BattleResultEventArgs e)
+        {
+            //unload BattleField
+            OnManageObject(battlefield, false);
+            battlefield.Unload();
+            Controls.Remove(battlefield);
+            battlefield = null;
         }
         #endregion
     }

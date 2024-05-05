@@ -17,9 +17,9 @@ namespace RPGPractice.Core
         //=========================================
         //  Remember to add an aggregator below as well to relay the event, and target in appropriate method
 
-        public event EventHandler<BattleInitializeEventArgs> BattleInitialize;
+        public event EventHandler<NewBattleEventArgs> NewBattle;
         public event EventHandler<PlayerActionEventArgs> PlayerAction;
-        public event EventHandler<BattleResultEventArgs> BattleEnd;
+        public event EventHandler<BattleResultEventArgs> BattleResult;
         public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler BattleStart;
@@ -86,8 +86,8 @@ namespace RPGPractice.Core
         {
             //Unsubscribe first to prevent double subscription.
             target.ManageObject -= OnManageObject_Handler;
-            target.BattleInitialize  -= OnBattleInitialize_Relay;
-            target.BattleResult    -= OnBattleEnd_Relay;
+            target.NewBattle  -= OnNewBattle_Relay;
+            target.BattleResult    -= OnBattleResult_Relay;
             target.TurnEnd      -= OnTurnEnd_Relay;
             PlayerAction        -= target.OnPlayerAction_handler;
             BattleStart -= target.OnBattleStart_Handler;
@@ -96,8 +96,8 @@ namespace RPGPractice.Core
             if (addMe)
             {
                 target.ManageObject += OnManageObject_Handler;
-                target.BattleInitialize  += OnBattleInitialize_Relay;
-                target.BattleResult    += OnBattleEnd_Relay;
+                target.NewBattle  += OnNewBattle_Relay;
+                target.BattleResult    += OnBattleResult_Relay;
                 target.TurnEnd      += OnTurnEnd_Relay;
                 PlayerAction        += target.OnPlayerAction_handler;
                 BattleStart += target.OnBattleStart_Handler;
@@ -109,14 +109,14 @@ namespace RPGPractice.Core
         {
             //Unsubscribe first to prevent double subscription.
             target.ManageObject -= OnManageObject_Handler;
-            BattleEnd -= target.OnBattleEnd_Handler;
+            BattleResult -= target.OnBattleResult_Handler;
             NewGame -= target.OnNewGame_Handler;
 
             //Only add new subscriptons if addMe = true
             if (addMe)
             {
                 target.ManageObject += OnManageObject_Handler;
-                BattleEnd +-= target.OnBattleEnd_Handler;
+                BattleResult += target.OnBattleResult_Handler;
                 NewGame += target.OnNewGame_Handler;
             }
         }
@@ -145,14 +145,16 @@ namespace RPGPractice.Core
             //Unsubscribe first to prevent double subscription.
             target.ManageObject -= OnManageObject_Handler;
             target.NewGame -= OnNewGame_Relay;
-            BattleInitialize -= target.OnBattleInitialize_Handler;
+            NewBattle -= target.OnNewBattle_Handler;
+            BattleResult -= target.OnBattleResult_Handler;
 
             //Only add new subscriptons if addMe = true
             if (addMe)
             {
                 target.ManageObject += OnManageObject_Handler;
                 target.NewGame += OnNewGame_Relay;
-                BattleInitialize += target.OnBattleInitialize_Handler;
+                NewBattle += target.OnNewBattle_Handler;
+                BattleResult += target.OnBattleResult_Handler;
             }
         }
 
@@ -204,13 +206,13 @@ namespace RPGPractice.Core
         {
             Death?.Invoke(sender, e);
         }
-        public void OnBattleEnd_Relay(object sender, BattleResultEventArgs e)
+        public void OnBattleResult_Relay(object sender, BattleResultEventArgs e)
         {
-            BattleEnd.Invoke(sender, e);
+            BattleResult.Invoke(sender, e);
         }
-        public void OnBattleInitialize_Relay(object sender, BattleInitializeEventArgs e)
+        public void OnNewBattle_Relay(object sender, NewBattleEventArgs e)
         {
-            BattleInitialize.Invoke(sender, e);
+            NewBattle.Invoke(sender, e);
         }
         public void OnNewGame_Relay(object sender, EventArgs e)
         {

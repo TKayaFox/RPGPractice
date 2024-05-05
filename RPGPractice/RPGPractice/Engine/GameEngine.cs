@@ -129,7 +129,7 @@ namespace RPGPractice.Engine
             CombatEncounter encounter = new CombatEncounter(MAX_ENEMIES, numWins, random);
             encounter.Heroes = heroes;
 
-            //Re-initialize Battle
+            //initialize Battle
             battle = new Battle(encounter);
 
             OnManageObject(battle, true);
@@ -138,17 +138,16 @@ namespace RPGPractice.Engine
 
             //Actually Start Battle logic
             await battle.Start();
-
-
-            //let GUI catch up and display
-            await Task.Delay(2000);
         }
 
         private void UnManageBattle()
         {
             if (battle != null)
             {
-                battle.OnManageMobs(false); //Battle needs to do this itself
+                //unload all mobs
+                battle.OnManageMobs(false);
+                
+                //unload self
                 OnManageObject(battle, false);
             }
         }
@@ -183,8 +182,12 @@ namespace RPGPractice.Engine
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="args"></param>
-        public void OnBattleEnd_Handler(object sender, BattleResultEventArgs args)
+        public void OnBattleResult_Handler(object sender, BattleResultEventArgs args)
         {
+            //unload Battle
+            UnManageBattle();
+
+            //run game over logic
             BattleEnd(args.Victory);
         }
 
@@ -196,7 +199,6 @@ namespace RPGPractice.Engine
         public void OnNewGame_Handler(object sender, EventArgs args)
         {
             //Reset GameEngine so it is ready for new game then start new game
-            ClearGameData();
             NewGame();
         }
 

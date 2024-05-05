@@ -82,6 +82,23 @@ namespace RPGPractice
             }
         }
 
+        /// <summary>
+        /// Called to ensure BattleField is properly cleared for garbage collection
+        /// </summary>
+        public void Unload()
+        {
+            //Clear dictionary
+            mobDictionary?.Clear();
+            ClearTargetCBox();
+            attackTargetList?.Clear();
+            specialTargetList?.Clear();
+            mobDictionary?.Clear();
+
+            //clear all pictureboxes
+            enemySprites = null;
+            heroSprites = null;
+        }
+
         #endregion
 
         #region Private Methods
@@ -183,10 +200,15 @@ namespace RPGPractice
             MobData data = (MobData)targetCBox.SelectedItem;
 
             //Empty Targets to prevent redundant items
+            ClearTargetCBox();
+            return data;
+        }
+
+        private void ClearTargetCBox()
+        {
             targetCBox.SelectedIndex = -1;
             targetCBox.SelectedItem = null;
             targetCBox.DataSource = null;
-            return data;
         }
 
         /// <summary>
@@ -267,7 +289,7 @@ namespace RPGPractice
         }
         private void BattleStartButt_Click(object sender, EventArgs e)
         {
-            //Hide button and raise BattleInitialize event
+            //Hide button and raise NewBattle event
             BattleStartButt.Visible = false;
             OnBattleStart();
         }
@@ -295,7 +317,10 @@ namespace RPGPractice
             PlayerAction.Invoke(this, actionData);
         }
 
-        private OnBattleStart()
+        /// <summary>
+        /// When Form is initialized and user has selected Start button, raise event
+        /// </summary>
+        private void OnBattleStart()
         {
             BattleStart.Invoke(this, EventArgs.Empty);
         }
@@ -305,20 +330,6 @@ namespace RPGPractice
         //             Event Handlers
         //=========================================
         #region Event Handlers
-
-        /// <summary>
-        /// UnPublishes Data and unsubscribes from all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void UnManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            PlayerAction -= eventManager.OnPlayerAction_Relay;
-
-            //unSubscribe to any needed events
-            eventManager.PlayerTurn -= OnPlayerTurn_Handler;
-            eventManager.TurnEnd -= OnTurnEnd_Handler;
-        }
 
         public void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnData)
         {

@@ -29,7 +29,7 @@ namespace RPGPractice.Engine
         private Dictionary<int, Mob> mobDictionary;
 
         #region Events
-        public event EventHandler<BattleInitializeEventArgs> BattleInitialize;
+        public event EventHandler<NewBattleEventArgs> NewBattle;
         public event EventHandler<BattleResultEventArgs> BattleResult;
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler<EventManagerEventArgs> ManageObject;
@@ -57,8 +57,8 @@ namespace RPGPractice.Engine
             AddToDictionary(heroes, mobDictionary);
             AddToDictionary(enemies, mobDictionary);
 
-            //Start Gui logic
-            OnBattleInitialize();
+            //Start Gui battleForm logic
+            OnNewBattle();
 
             //Register all mobs with EventManager
             OnManageMobs(true);
@@ -76,10 +76,6 @@ namespace RPGPractice.Engine
             foreach (Mob mob in mobArr)
             {
                 dictionary.Add(mob.UniqueID, mob);
-
-                //subscribe to their TurnEnd method locally
-                //(EventManager subscriptions will be handled elsewhere)
-                mob.TurnEnd+= OnTurnEnd_Handler;
             }
         }
 
@@ -193,9 +189,9 @@ namespace RPGPractice.Engine
         //=========================================
 
         #region Event Invokers
-        public void OnBattleInitialize()
+        public void OnNewBattle()
         {
-            BattleInitializeEventArgs args = new BattleInitializeEventArgs();
+            NewBattleEventArgs args = new NewBattleEventArgs();
 
             //Package only needed MobID data into Data object for sending to Gui
             Mob[] mobs;
@@ -205,7 +201,7 @@ namespace RPGPractice.Engine
 
             args.MobDataList = mobDataList;
 
-            BattleInitialize?.Invoke(this, args);
+            NewBattle?.Invoke(this, args);
         }
 
         /// <summary>
@@ -227,7 +223,6 @@ namespace RPGPractice.Engine
         {
             //raise event then start next turn
             TurnEnd?.Invoke(this, turnData);
-            NextTurn();
         }
 
         /// <summary>
@@ -248,7 +243,26 @@ namespace RPGPractice.Engine
             args.AddTargetArr = Enemies;
             args.AddTargetArr = Heroes;
 
-            //Store whether values are being subscrubed or unsubscribed
+            //Direct subscription/unsubscription to TurnEnd
+            foreach (Mob mob in heroes)
+            {
+                mob.TurnEnd -= OnTurnEnd_Handler;
+                if (isActive)
+                {
+                    mob.TurnEnd += OnTurnEnd_Handler;
+                }
+            }
+            //Direct subscription/unsubscription to TurnEnd
+            foreach (Mob mob in enemies)
+            {
+                mob.TurnEnd -= OnTurnEnd_Handler;
+                if (isActive)
+                {
+                    mob.TurnEnd += OnTurnEnd_Handler;
+                }
+            }
+
+            //Store whether values are being subscribed or unsubscribed
             args.IsActive = isActive;
             ManageObject?.Invoke(this, args);
         }
