@@ -45,8 +45,8 @@ namespace RPGPractice
             enemySprite5 = new PictureBox();
             enemySprite1 = new PictureBox();
             ActionMenuGroup = new GroupBox();
+            TargetCancelButt = new Button();
             TurnLabel = new Label();
-            ActionTargetBox = new GroupBox();
             targetCBox = new ComboBox();
             TargetButt = new Button();
             battleSummaryTBox = new TextBox();
@@ -64,7 +64,6 @@ namespace RPGPractice
             ((System.ComponentModel.ISupportInitialize)enemySprite5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)enemySprite1).BeginInit();
             ActionMenuGroup.SuspendLayout();
-            ActionTargetBox.SuspendLayout();
             SuspendLayout();
             // 
             // ActionButtBox
@@ -72,19 +71,19 @@ namespace RPGPractice
             ActionButtBox.Controls.Add(SpecialButt);
             ActionButtBox.Controls.Add(DefendButt);
             ActionButtBox.Controls.Add(AttackButt);
-            ActionButtBox.Location = new Point(182, 0);
+            ActionButtBox.Location = new Point(194, 6);
             ActionButtBox.Name = "ActionButtBox";
             ActionButtBox.Padding = new Padding(0);
-            ActionButtBox.Size = new Size(404, 56);
+            ActionButtBox.Size = new Size(531, 45);
             ActionButtBox.TabIndex = 1;
             ActionButtBox.TabStop = false;
             // 
             // SpecialButt
             // 
             SpecialButt.Font = new Font("Microsoft Sans Serif", 15.75F);
-            SpecialButt.Location = new Point(137, 13);
+            SpecialButt.Location = new Point(135, 8);
             SpecialButt.Name = "SpecialButt";
-            SpecialButt.Size = new Size(129, 35);
+            SpecialButt.Size = new Size(129, 32);
             SpecialButt.TabIndex = 2;
             SpecialButt.Text = "Special";
             SpecialButt.UseVisualStyleBackColor = true;
@@ -93,9 +92,9 @@ namespace RPGPractice
             // DefendButt
             // 
             DefendButt.Font = new Font("Microsoft Sans Serif", 15.75F);
-            DefendButt.Location = new Point(270, 13);
+            DefendButt.Location = new Point(268, 8);
             DefendButt.Name = "DefendButt";
-            DefendButt.Size = new Size(129, 35);
+            DefendButt.Size = new Size(129, 32);
             DefendButt.TabIndex = 1;
             DefendButt.Text = "Defend";
             DefendButt.UseVisualStyleBackColor = true;
@@ -104,9 +103,9 @@ namespace RPGPractice
             // AttackButt
             // 
             AttackButt.Font = new Font("Microsoft Sans Serif", 15.75F);
-            AttackButt.Location = new Point(5, 13);
+            AttackButt.Location = new Point(3, 8);
             AttackButt.Name = "AttackButt";
-            AttackButt.Size = new Size(129, 35);
+            AttackButt.Size = new Size(129, 32);
             AttackButt.TabIndex = 0;
             AttackButt.Text = "Attack";
             AttackButt.UseVisualStyleBackColor = true;
@@ -116,7 +115,7 @@ namespace RPGPractice
             // 
             heroSprite5.BackColor = Color.Transparent;
             heroSprite5.BackgroundImageLayout = ImageLayout.Stretch;
-            heroSprite5.Location = new Point(38, 71);
+            heroSprite5.Location = new Point(38, 78);
             heroSprite5.Name = "heroSprite5";
             heroSprite5.Size = new Size(100, 100);
             heroSprite5.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -125,6 +124,7 @@ namespace RPGPractice
             // 
             // BatleArenaGroupBox
             // 
+            BatleArenaGroupBox.BackgroundImage = Properties.Resources.game_background_1;
             BatleArenaGroupBox.BackgroundImageLayout = ImageLayout.Stretch;
             BatleArenaGroupBox.Controls.Add(enemySprite4);
             BatleArenaGroupBox.Controls.Add(heroSprite4);
@@ -136,9 +136,9 @@ namespace RPGPractice
             BatleArenaGroupBox.Controls.Add(enemySprite5);
             BatleArenaGroupBox.Controls.Add(heroSprite5);
             BatleArenaGroupBox.Controls.Add(enemySprite1);
-            BatleArenaGroupBox.Location = new Point(0, 5);
+            BatleArenaGroupBox.Location = new Point(3, 3);
             BatleArenaGroupBox.Name = "BatleArenaGroupBox";
-            BatleArenaGroupBox.Size = new Size(730, 418);
+            BatleArenaGroupBox.Size = new Size(722, 420);
             BatleArenaGroupBox.TabIndex = 3;
             BatleArenaGroupBox.TabStop = false;
             // 
@@ -146,7 +146,7 @@ namespace RPGPractice
             // 
             enemySprite4.BackColor = Color.Transparent;
             enemySprite4.BackgroundImageLayout = ImageLayout.Stretch;
-            enemySprite4.Location = new Point(617, 282);
+            enemySprite4.Location = new Point(607, 289);
             enemySprite4.Name = "enemySprite4";
             enemySprite4.Size = new Size(100, 100);
             enemySprite4.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -157,7 +157,7 @@ namespace RPGPractice
             // 
             heroSprite4.BackColor = Color.Transparent;
             heroSprite4.BackgroundImageLayout = ImageLayout.Stretch;
-            heroSprite4.Location = new Point(78, 282);
+            heroSprite4.Location = new Point(78, 289);
             heroSprite4.Name = "heroSprite4";
             heroSprite4.Size = new Size(100, 100);
             heroSprite4.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -168,7 +168,7 @@ namespace RPGPractice
             // 
             heroSprite2.BackColor = Color.Transparent;
             heroSprite2.BackgroundImageLayout = ImageLayout.Stretch;
-            heroSprite2.Location = new Point(54, 177);
+            heroSprite2.Location = new Point(54, 184);
             heroSprite2.Name = "heroSprite2";
             heroSprite2.Size = new Size(100, 100);
             heroSprite2.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -179,7 +179,7 @@ namespace RPGPractice
             // 
             enemySprite2.BackColor = Color.Transparent;
             enemySprite2.BackgroundImageLayout = ImageLayout.Stretch;
-            enemySprite2.Location = new Point(592, 177);
+            enemySprite2.Location = new Point(592, 184);
             enemySprite2.Name = "enemySprite2";
             enemySprite2.Size = new Size(100, 100);
             enemySprite2.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -190,7 +190,7 @@ namespace RPGPractice
             // 
             heroSprite3.BackColor = Color.Transparent;
             heroSprite3.BackgroundImageLayout = ImageLayout.Stretch;
-            heroSprite3.Location = new Point(160, 127);
+            heroSprite3.Location = new Point(160, 134);
             heroSprite3.Name = "heroSprite3";
             heroSprite3.Size = new Size(100, 100);
             heroSprite3.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -201,7 +201,7 @@ namespace RPGPractice
             // 
             enemySprite3.BackColor = Color.Transparent;
             enemySprite3.BackgroundImageLayout = ImageLayout.Stretch;
-            enemySprite3.Location = new Point(465, 127);
+            enemySprite3.Location = new Point(465, 134);
             enemySprite3.Name = "enemySprite3";
             enemySprite3.Size = new Size(100, 100);
             enemySprite3.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -212,7 +212,7 @@ namespace RPGPractice
             // 
             heroSprite1.BackColor = Color.Transparent;
             heroSprite1.BackgroundImageLayout = ImageLayout.Stretch;
-            heroSprite1.Location = new Point(182, 236);
+            heroSprite1.Location = new Point(182, 243);
             heroSprite1.Name = "heroSprite1";
             heroSprite1.Size = new Size(100, 100);
             heroSprite1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -223,7 +223,7 @@ namespace RPGPractice
             // 
             enemySprite5.BackColor = Color.Transparent;
             enemySprite5.BackgroundImageLayout = ImageLayout.Stretch;
-            enemySprite5.Location = new Point(577, 71);
+            enemySprite5.Location = new Point(577, 78);
             enemySprite5.Name = "enemySprite5";
             enemySprite5.Size = new Size(100, 100);
             enemySprite5.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -234,7 +234,7 @@ namespace RPGPractice
             // 
             enemySprite1.BackColor = Color.Transparent;
             enemySprite1.BackgroundImageLayout = ImageLayout.Stretch;
-            enemySprite1.Location = new Point(486, 236);
+            enemySprite1.Location = new Point(486, 243);
             enemySprite1.Name = "enemySprite1";
             enemySprite1.Size = new Size(100, 100);
             enemySprite1.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -243,9 +243,11 @@ namespace RPGPractice
             // 
             // ActionMenuGroup
             // 
-            ActionMenuGroup.Controls.Add(TurnLabel);
             ActionMenuGroup.Controls.Add(ActionButtBox);
-            ActionMenuGroup.Controls.Add(ActionTargetBox);
+            ActionMenuGroup.Controls.Add(TargetCancelButt);
+            ActionMenuGroup.Controls.Add(TurnLabel);
+            ActionMenuGroup.Controls.Add(targetCBox);
+            ActionMenuGroup.Controls.Add(TargetButt);
             ActionMenuGroup.Location = new Point(0, 563);
             ActionMenuGroup.Margin = new Padding(3, 2, 3, 2);
             ActionMenuGroup.Name = "ActionMenuGroup";
@@ -253,6 +255,17 @@ namespace RPGPractice
             ActionMenuGroup.Size = new Size(730, 56);
             ActionMenuGroup.TabIndex = 4;
             ActionMenuGroup.TabStop = false;
+            // 
+            // TargetCancelButt
+            // 
+            TargetCancelButt.Font = new Font("Microsoft Sans Serif", 15.75F);
+            TargetCancelButt.Location = new Point(630, 14);
+            TargetCancelButt.Name = "TargetCancelButt";
+            TargetCancelButt.Size = new Size(93, 32);
+            TargetCancelButt.TabIndex = 7;
+            TargetCancelButt.Text = "Cancel";
+            TargetCancelButt.UseVisualStyleBackColor = true;
+            TargetCancelButt.Click += TargetCancelButt_Click;
             // 
             // TurnLabel
             // 
@@ -263,33 +276,22 @@ namespace RPGPractice
             TurnLabel.TabIndex = 8;
             TurnLabel.TextAlign = ContentAlignment.MiddleRight;
             // 
-            // ActionTargetBox
-            // 
-            ActionTargetBox.Controls.Add(targetCBox);
-            ActionTargetBox.Controls.Add(TargetButt);
-            ActionTargetBox.Location = new Point(182, 0);
-            ActionTargetBox.Name = "ActionTargetBox";
-            ActionTargetBox.Padding = new Padding(0);
-            ActionTargetBox.Size = new Size(404, 56);
-            ActionTargetBox.TabIndex = 7;
-            ActionTargetBox.TabStop = false;
-            // 
             // targetCBox
             // 
-            targetCBox.Font = new Font("Microsoft Sans Serif", 14F);
+            targetCBox.Font = new Font("Microsoft Sans Serif", 15.75F);
             targetCBox.FormattingEnabled = true;
             targetCBox.Items.AddRange(new object[] { "- Select Target -" });
-            targetCBox.Location = new Point(5, 14);
+            targetCBox.Location = new Point(194, 14);
             targetCBox.Name = "targetCBox";
-            targetCBox.Size = new Size(260, 32);
+            targetCBox.Size = new Size(321, 33);
             targetCBox.TabIndex = 4;
             // 
             // TargetButt
             // 
-            TargetButt.Font = new Font("Microsoft Sans Serif", 20.25F);
-            TargetButt.Location = new Point(270, 14);
+            TargetButt.Font = new Font("Microsoft Sans Serif", 15.75F);
+            TargetButt.Location = new Point(521, 14);
             TargetButt.Name = "TargetButt";
-            TargetButt.Size = new Size(129, 35);
+            TargetButt.Size = new Size(104, 32);
             TargetButt.TabIndex = 0;
             TargetButt.Text = "Attack";
             TargetButt.UseVisualStyleBackColor = true;
@@ -311,9 +313,9 @@ namespace RPGPractice
             // BattleStartButt
             // 
             BattleStartButt.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            BattleStartButt.Location = new Point(3, 428);
+            BattleStartButt.Location = new Point(778, 313);
             BattleStartButt.Name = "BattleStartButt";
-            BattleStartButt.Size = new Size(727, 183);
+            BattleStartButt.Size = new Size(719, 185);
             BattleStartButt.TabIndex = 6;
             BattleStartButt.Text = "Start Battle";
             BattleStartButt.UseVisualStyleBackColor = true;
@@ -323,12 +325,12 @@ namespace RPGPractice
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(BattleStartButt);
             Controls.Add(battleSummaryTBox);
             Controls.Add(ActionMenuGroup);
             Controls.Add(BatleArenaGroupBox);
-            Controls.Add(BattleStartButt);
             Name = "BattleField";
-            Size = new Size(737, 625);
+            Size = new Size(1245, 625);
             ActionButtBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)heroSprite5).EndInit();
             BatleArenaGroupBox.ResumeLayout(false);
@@ -342,7 +344,6 @@ namespace RPGPractice
             ((System.ComponentModel.ISupportInitialize)enemySprite5).EndInit();
             ((System.ComponentModel.ISupportInitialize)enemySprite1).EndInit();
             ActionMenuGroup.ResumeLayout(false);
-            ActionTargetBox.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -365,7 +366,6 @@ namespace RPGPractice
         private PictureBox enemySprite5;
         private PictureBox enemySprite1;
         private GroupBox ActionMenuGroup;
-        private GroupBox ActionTargetBox;
         private ComboBox targetCBox;
         private Button TargetButt;
         private TextBox textBox1;
@@ -373,5 +373,6 @@ namespace RPGPractice
         private GroupBox BatleArenaGroupBox;
         private TextBox battleSummaryTBox;
         private Button BattleStartButt;
+        private Button TargetCancelButt;
     }
 }

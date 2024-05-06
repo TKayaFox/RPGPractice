@@ -48,7 +48,7 @@ namespace RPGPractice
             DefendButt.Tag = MobActions.Block;
             SpecialButt.Tag = MobActions.Special;
 
-            
+
         }
 
         public void Populate(List<MobData> mobDataList)
@@ -381,5 +381,9 @@ namespace RPGPractice
 
         #endregion
 
+        private void TargetCancelButt_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
