@@ -144,7 +144,7 @@ namespace RPGPractice.Engine.MobClasses
                 }
 
                 //return string stating result
-                result = $"{Name} gained {hitPoints - initialHP} health!\t[HP={hitPoints}]";
+                result = $"\r\n\t{Name} gained {hitPoints - initialHP} health!\t[HP={hitPoints}]\r\n";
             }
 
             return result;

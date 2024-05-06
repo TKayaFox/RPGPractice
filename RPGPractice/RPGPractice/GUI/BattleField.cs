@@ -296,6 +296,11 @@ namespace RPGPractice
             OnBattleStart();
         }
 
+        private void TargetCancelButt_Click(object sender, EventArgs e)
+        {
+            //re-show ActionButtBox
+            ActionButtBox.Visible = true;
+        }
 
         /// <summary>
         /// raise the PlayerAction event
@@ -350,7 +355,7 @@ namespace RPGPractice
             mobDictionary[mobID].Selected = true;
 
             //Show Hero name in Action Menu
-            TurnLabel.Text = mobData.Name;
+            TurnLabel.Text = mobData.ToString();
 
             //Setup Special Button to show what SpecialActionString ability current mob has.
             UpdateSpecialAction(mobData);
@@ -381,9 +386,5 @@ namespace RPGPractice
 
         #endregion
 
-        private void TargetCancelButt_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

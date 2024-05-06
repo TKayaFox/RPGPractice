@@ -73,7 +73,7 @@ namespace RPGPractice.Engine
                     returnString += $" Mana: {ManaString}";
                 }
 
-                returnString = $" [HitPoints: {HitPointString}{returnString}]";
+                returnString = $" [HP: {HitPointString}{returnString}]";
             }
             return $"{Name}{returnString}";
         }
