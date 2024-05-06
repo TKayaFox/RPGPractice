@@ -1,5 +1,4 @@
 ﻿using RPGPractice.Engine.MobClasses;
-using RPGPractice.GUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;

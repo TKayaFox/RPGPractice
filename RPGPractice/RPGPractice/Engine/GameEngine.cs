@@ -7,7 +7,7 @@ using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
 using RPGPractice.Engine.MobClasses.HeroMobs;
-using RPGPractice.GUI;
+using RPGPractice;
 
 namespace RPGPractice.Engine
 {

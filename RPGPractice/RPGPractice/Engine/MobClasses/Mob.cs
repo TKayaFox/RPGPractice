@@ -272,7 +272,6 @@ namespace RPGPractice.Engine.MobClasses
             data = new MobData();
             data.Sprite = sprite;
             data.Name = name;
-            data.HitPointString = hitPoints;
             data.UniqueID = uniqueID;
             data.IsNPC = (this is EnemyMob); //if this object falls under NPC (MobID subclass)
             data.IsAlive = IsAlive;

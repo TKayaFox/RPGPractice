@@ -41,13 +41,16 @@ namespace RPGPractice.Engine
                 isAlive = value;
 
                 //reflect alive status  in sprites (hide pictureBox if dead)
-                if (!value && pictureBox != null)
+                if (pictureBox != null)
                 {
-                    pictureBox.Visible = false;
-                }
-                else
-                {
-                    pictureBox.Visible = true;
+                    if (!value)
+                    {
+                        pictureBox.Visible = false;
+                    }
+                    else
+                    {
+                        pictureBox.Visible = true;
+                    }
                 }
             }
         }

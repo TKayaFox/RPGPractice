@@ -1,7 +1,3 @@
-C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.dll
-C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.exe
-C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.deps.json
-C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.runtimeconfig.json
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.BattleField.resources
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.GameForm.resources
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.Properties.Resources.resources
@@ -11,9 +7,13 @@ C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPG
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.AssemblyInfo.cs
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.csproj.CoreCompileInputs.cache
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.sourcelink.json
+C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.exe
+C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.deps.json
+C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.runtimeconfig.json
+C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.dll
+C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.pdb
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.dll
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\refint\RPGPractice.dll
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.pdb
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\RPGPractice.genruntimeconfig.cache
-C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\bin\Debug\net8.0-windows\RPGPractice.pdb
 C:\Users\Tkaya\Documents\Documents\Projects\Programs\RPGPractice\RPGPractice\RPGPractice\obj\Debug\net8.0-windows\ref\RPGPractice.dll

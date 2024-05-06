@@ -23,11 +23,6 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
         protected virtual int Mana { get => mana; set => mana = value; }
 
-        protected override void BuildData()
-        {
-            Data.ManaString = mana;
-            base.BuildData();
-        }
         protected CasterMob(string name) : base(name)
         {
             mana = maxMana;
@@ -35,7 +30,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         }
 
 
-        private override void UpdateData()
+        protected override void UpdateData()
         {
             Data.ManaString = $"{Mana}/{MaxMana}";
             base.UpdateData();
