@@ -45,6 +45,8 @@ namespace RPGPractice.Engine
         {
             random = new Random();
 
+            numWins = 4;
+
             //Subscribe to eventManager (handles relaying and subscribing to events)
             eventManager.ManageObjectSort(this,true);
         }

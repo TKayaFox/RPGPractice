@@ -96,11 +96,11 @@ namespace RPGPractice.Engine.MobClasses
         /// <returns></returns>
         public virtual void Attack(MobData target)
         {
-            //Determine healValue and Attack Rolls (attackMod + 1d20)
+            //Determine damage and Attack Rolls (attackMod + 1d20)
             (int attackRoll,int damage) = Dice.RollAttack(attackMod, strength);
 
             //add ability roll to turn summary
-            AppendTurnSummary($"{name} Attacks {target.Name}.\r\n\t[Attack roll: {attackRoll} Damage {damage}]");
+            AppendTurnSummary($"{name} attacks {target.Name}.\r\n\t[Attack roll: {attackRoll} Damage {damage}]");
 
             //Build a new TargetedAction object and add to Queue
             TargetedAbility attack = new TargetedAbility();

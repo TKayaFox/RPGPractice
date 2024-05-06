@@ -53,9 +53,13 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
             int min = 0;
             int max = 0;
 
-            //use combatLevel to determine max. min is always 1 since this is easiest mob
+            //use combatLevel to determine max.
             switch (combatLevel)
             {
+                //Bandits only
+                case 5:
+                    max = 0;
+                    break;
                 //Dragon introduction
                 case 4:
                     max = 0;

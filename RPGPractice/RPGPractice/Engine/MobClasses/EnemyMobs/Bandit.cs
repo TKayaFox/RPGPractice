@@ -50,9 +50,10 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
                     max = 0;
                     min = 0;
                     break;
-                //5 Bandits only
+                //4 Bandits only
                 case 3:
-                    max = 5;
+                    max = 4;
+                    min = 4;
                     break;
                 //3 Bandits only
                 case 1:

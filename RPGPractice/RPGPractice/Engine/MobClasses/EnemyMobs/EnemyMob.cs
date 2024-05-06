@@ -11,7 +11,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
     public abstract class EnemyMob : Mob
     {
-        Random random;
+        protected Random random;
 
         /// <summary>
         /// Constructor
@@ -31,19 +31,18 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
         /// <param name="enemyTargetList"></param>
         protected override void TakeTurn(List<MobData> heroTargetList, List<MobData> enemyTargetList)
         {
-            //set a targetedAbilityQueue from available targets
+            //set a target from available targets
             MobData target = SetTarget(heroTargetList);
             Attack(target);
         }
 
-        private MobData SetTarget(List<MobData> heroes)
+        protected virtual MobData SetTarget(List<MobData> heroes)
         {
             MobData target;
 
-            //cycle through targetedAbilityQueue to find a target, skipping dead targets
+            //Randomly choose a target skipping dead targets
             do
             {
-                //Generate a random number matching an index entry
                 int index = random.Next(heroes.Count);
                 target = heroes[index];
             } while (!target.IsAlive);

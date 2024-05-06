@@ -1,22 +1,6 @@
 RPG Project to do:
-	rebalance mobs
-	Do a temporary Branch for "submission" version, without old documents.
-	Clear all TODO notes from project before submission.
-		Resolve if possible, if not put here.
-	Modify encounter generation so rather than looping until a valid number was randomly generated, 
-		simply make the list up to the max then stop adding.
-		Possibly find a way to randomize mob assignment order when assigning to list
-		Or when generating check the current mob count, and reduce max to match.
-	EventManager
-		Make sure all classes are getting unsubscribed when closed
-	Revisit access for all methods/objects. For instance most Invokers are public and should be made private or protected.
-	EventManager
-		setup to receive Registration events
-			determine type of object and subscribe appropriate events
-	Incorporate Async tasks when able.
-	Create custom exception for invalid mob action.
-	Store Mobs in List instead of array
-	Dragon special attacks
+
+MUST DO:
 	GameEngine
 		endgame
 			game over
@@ -27,41 +11,41 @@ RPG Project to do:
 					just update save data before each battle
 					new file for each game
 				start a new battle
-		after battle
-			heal all Heroes
 	Refactor:
 		Setup comments with consistent layout
 			Use XML tags
 				Add explanations for parameters and returns
-			Look into other XML tags and see if theres other ways to add clarity
-		Put in more data validation rather than assumptions
-			make sure numbers are in range (for instance > 0 for Roll class)
-			check for Null
 		Clear all yellow warnings if possible
 		Break large methods down into smaller parts
-			some methods got kidn of big.
+			some methods got kinda of big.
 		Set consistent Method organization across classes
 		redo indenting
-	Enemy decision making
-		Orc
-			attack whoever attacked last, otherwise attack random.
-		Dragon
-			decide type of attack:
-				breath attack: (targets one)
-					if high on health
-						attack random
-					if below half health
-						attack hardest hitter
-				swipe attack:  (targets all)
-					seperate attack for ALL targets
+		Clear all TODO notes from project before submission.
+			Resolve if possible, if not put here.
+	
+Ideal to do:
+	Break Classes down into smaller parts?
+	rebalance mobs
+	Revisit access for all methods/objects. For instance most Invokers are public and should be made private or protected.
+	Store Mobs in List instead of array
+	Modify encounter generation so rather than looping until a valid number was randomly generated, 
+		simply make the list up to the max then stop adding.
+		Possibly find a way to randomize mob assignment order when assigning to list
+		Or when generating check the current mob count, and reduce max to match.
+		
+If Able
+	Orc
+		attack whoever attacked last, otherwise attack random.
+	EventManager
+		Make sure all classes are getting unsubscribed when closed
+	Incorporate Async tasks when able.
+	Create custom exception for invalid mob action.
 	Refactor Mob and Mobdata such that Mob is no longer storing the MobData object.
-	The main reason I was doing this was because MobData was getting rebuilt on multiple occasions, causing multiple event subscriptions and other weirdness.
-	However, does MobData even need used except for the Battlefield object?
-		Might be because MobData is given to the battlefield through the PlayerTurb method.
-			Perhaps instead pass list of uniqueIDs and then on battlefield side store the MobData for each id by using the mobdictionary
-			then just store all MobData objects once.
+	
+	
 
 Future ideas:
+	Find a better way of doing encounter logic, or at least laying out Mobs EncounterData method
 	Add explicit DeInitialize methods for ALL classes.
 		Battle
 			Call DeInitialize for all mobs

@@ -1,7 +1,9 @@
-﻿using System;
+﻿using RPGPractice.Core.Events;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
@@ -18,21 +20,89 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
             Sprite = Properties.Resources.Dragon;
             MaxHitPoints = 30;
             Initiative = -1;
-            Intelligence = 3;
+            Intelligence = 4;
             Strength = 3;
             AttackMod = 3;
             Defense = 16;
             MagicDefense = 16;
         }
 
-        //public void TakeTurn()
-        //{
-        //    //TODO: Insert turn decision logic
-        //    //      IF really crazy, have dragon keep track of who last attacked and who is currently at most health and actually set decision tree
-        //}
+        /// <summary>
+        /// Automate a turn for the Mob
+        /// by default, attacks a random targetedAbilityQueue
+        /// </summary>
+        /// <param name="heroTargetList"></param>
+        /// <param name="enemyTargetList"></param>
+        protected override void TakeTurn(List<MobData> heroTargetList, List<MobData> enemyTargetList)
+        {
+            //Determine Attack type by rolling 1d2 (flipping a coin)
+            if (Dice.Roll(2) == 1)
+            {
+                //choose a target
+                MobData target = SetTarget(heroTargetList);
+                FireBreath(target);
+            }
+            else
+            {
+                //Swipe attack targets ALL heroes
+                SwipeAttack(heroTargetList);
+            }
+        }
 
-        //TODO: Add Breath attack (Targets one Hero, does magic damage)
-        //TODO: Add Swipe Attack (Targets all heroes)
+        /// <summary>
+        /// Initiates Dragon's Breath attack on a single target
+        /// </summary>
+        /// <param name="target">The poor soul being targeted</param>
+        private void FireBreath(MobData target)
+        {
+            //Determine damage and Attack Rolls (attackMod + 1d20)
+            (int attackRoll, int damage) = Dice.RollAttack(Intelligence, Intelligence);
+
+            //add attack roll to turn summary
+            AppendTurnSummary($"{Name} breathes fire on {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
+
+            //Build a new TargetedAction object and add to Queue
+            TargetedAbility attack = new TargetedAbility();
+            attack.Attacker = Data;
+            attack.Target = target;
+            attack.AttackRoll = attackRoll;
+            attack.Damage = damage;
+            attack.DamageType = DamageType.Magic;
+            TargetedAbilityQueue.Enqueue(attack);
+
+            //end turn
+            OnTurnEnd();
+        }
+
+        public void SwipeAttack(List<MobData> heroTargetList)
+        {
+            //Determine damage and Attack Rolls (attackMod + 1d20)
+            (int attackRoll, int damage) = Dice.RollAttack(AttackMod, Strength);
+
+            //add ability roll to turn summary
+            AppendTurnSummary($"{Name} swipes at all targets with it's Claws!\r\n\t[Attack roll: {attackRoll} Damage {damage}]");
+
+            //Build a new TargetedAction object and add to Queue
+            //  Most this data will remain the same
+            TargetedAbility attack = new TargetedAbility();
+            attack.Attacker = Data;
+            attack.AttackRoll = attackRoll;
+            attack.Damage = damage;
+            attack.DamageType = DamageType.Physical;
+
+
+            //Add all targets to the Queue so they are handled properly
+            foreach (MobData target in heroTargetList)
+            {
+                //change target
+                attack.Target = target;
+                TargetedAbilityQueue.Enqueue(attack);
+            }
+
+            //end turn
+            OnTurnEnd();
+
+        }
 
         // Static Methods
         /// <summary>
@@ -46,7 +116,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
             int min = 0;
             int max = 0;
 
-            //use combatLevel to determine max. min is always 1 since this is easiest mob
+            //use combatLevel to determine max.
             switch (combatLevel)
             {
                 //Dragon introduction
@@ -55,19 +125,19 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
                     min = 1;
                     break;
 
-                case > 15:
+                case > 20:
                     max = 5;
                     break;
-                case > 12:
+                case > 18:
                     max = 4;
                     break;
-                case > 9:
+                case > 16:
                     max = 3;
                     break;
-                case > 6:
+                case > 12:
                     max = 2;
                     break;
-                case > 4:
+                case > 7:
                     max = 1;
                     break;
             }
