@@ -1,4 +1,7 @@
 RPG Project to do:
+	Do a temporary Branch for "submission" version, without old documents.
+	Clear all TODO notes from project before submission.
+		Resolve if possible, if not put here.
 	Modify encounter generation so rather than looping until a valid number was randomly generated, 
 		simply make the list up to the max then stop adding.
 		Possibly find a way to randomize mob assignment order when assigning to list
@@ -52,12 +55,19 @@ RPG Project to do:
 					seperate attack for ALL targets
 
 Future ideas:
+	I feel like theres a way to get rid of Hero and enemy subclasses, but keep functionality.
+		Ideally should be able to create a Warrior Mob that is an enemy for instance, or a Bandit that is a hero.
+		Could merge the TakeTurn methods and use the isPlayerControlled bool i originally planned, though that's a bit messy and ideally I want LESS in the main Mob class not more
+		Maybe have some sort of class that they hold instead? Like PlayerToken, or NPCToken?
+	Make a Caster Mob subclass with all mana logic.
 	for EncounterData return whether Mob is treated as a Boss
 		(first interaction should be)
 		modify encounterdata to handle differently if adding a boss
 			perhaps also pass max number of minions?
 			OR generate a new encounter with the minions first (maxMobs -1 so theres room for boss), but add in the Boss?
 			or something else?		
+		Would definitely want to be able to use CasterMob for other classes, but I want to be able to explicitly write the logic so an Interface wont work.
+			Or will it?
 	make instructions for creating a new Mob/Enemy/Hero class somehow (stuff not already covered by abstract)
 		add the new class to the appropriate enum for instance
 		explain any existing interfaces/abstract subclasses
@@ -131,3 +141,53 @@ ONLY AFTER SUBMITTING FINAL Project
 	Add story?
 	Add dungeon navigation
 	Add leveling system
+
+
+
+Old ScopeCreep ideas:
+	
+Easier to implement
+	show healthbar and mana bar
+	have an action to regenerate mana?
+	get player name
+	Customize Party
+		Select 3 party members
+			set class
+			set character name
+			select sprite
+	Save game
+		save party, number of victories all other data to file
+	Load Game
+		load data from file
+	Experience tracking
+		vary experience gained by what was defeated
+		store experienced gained on CHARACTERS
+	Spell selection
+		different spells have different effects
+		different characters have different spells
+	Hide Action Menu after character turn
+		hide or disable action buttons
+		resize battle display?
+			
+Harder to implement
+		Dynamically generate action menu
+			receives an event, generates a list of buttons, each button calls a specified event.
+			So instead of everyone having the same action menu, it is customized to what each character can do.
+				Opens up the ability to do things like different heroes having different spells.
+			OR
+			Simply use comboboxes to list possible actions, and have events populate that on turn start?
+		Encounter scaling
+			Difficulty of encounters scales with how long game has been going (Not just what encounters, but buffs monsters)
+		Leveling
+			characters can level up
+			OR
+			Player levels up, and it affects all characters?
+		Items
+			healing items
+		Mid-battle screen
+			Heal party members
+			level up party members
+			Change party configuration?
+			Encounter selection
+				Allow player to choose next encounter from a list of possible encounters
+		
