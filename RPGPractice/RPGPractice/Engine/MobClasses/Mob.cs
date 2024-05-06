@@ -100,7 +100,7 @@ namespace RPGPractice.Engine.MobClasses
             (int attackRoll,int damage) = Dice.RollAttack(attackMod, strength);
 
             //add ability roll to turn summary
-            AppendTurnSummary($"{name} Attacks {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
+            AppendTurnSummary($"{name} Attacks {target.Name}.\r\n\t[Attack roll: {attackRoll} Damage {damage}]");
 
             //Build a new TargetedAction object and add to Queue
             TargetedAbility attack = new TargetedAbility();
@@ -144,7 +144,7 @@ namespace RPGPractice.Engine.MobClasses
                 }
 
                 //return string stating result
-                result = $"\r\n\t{Name} gained {hitPoints - initialHP} health!\t[HP={hitPoints}]\r\n";
+                result = $"\r\n\t{Name} gained {hitPoints - initialHP} health!";
             }
 
             return result;
@@ -304,13 +304,13 @@ namespace RPGPractice.Engine.MobClasses
 
             hitPoints -= damage;
 
-            result = ($"{Name} took {damage} damage   [HP {HitPoints}]");
+            result = ($"\r\n\t{Name} took {damage} damage");
 
 
             //Check for death
             if (!IsAlive)
             {
-                result += ($"\r\n{Name} has Died!");
+                result += ($"\r\n\t{Name} has Died!");
             }
 
             //return string stating result
@@ -359,7 +359,7 @@ namespace RPGPractice.Engine.MobClasses
                 bool blockPrevents = ((defense + BlockingBonus) > attackRoll);
                 if (isBlocking && blockPrevents)
                 {
-                    turnSummary = ($"{name} was able to deflect the attack! [Blocking]");
+                    turnSummary = ($"{name} was able to deflect the attack!\r\n\t[Blocking prevented Damage!]");
                 }
                 else
                 {
@@ -375,7 +375,7 @@ namespace RPGPractice.Engine.MobClasses
             }
             else
             {
-                turnSummary = ($"{name} avoided the attack. \t[{attackRoll} < {defense}]");
+                turnSummary = ($"{name} avoided the attack. \r\n\t[{attackRoll} < {defense}]");
             }
 
             return turnSummary;

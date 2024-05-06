@@ -53,8 +53,13 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             //Increment ManaString if manaRegen reaches the appropriate value
             if (manaRegen > MANA_REGEN_THRESHOLD)
             {
-                mana++;
-                AppendTurnSummary($"\t{Name} regained 1 Mana!  [Mana {mana}]");
+                //Attempt to regenerate Mana up to max
+                if (mana < maxMana)
+                {
+                    mana++;
+                }
+
+                AppendTurnSummary($"\t{Name} regained 1 Mana!\r\n\t[Mana {mana}]");
             }
 
             //Follow normal Turn Logic

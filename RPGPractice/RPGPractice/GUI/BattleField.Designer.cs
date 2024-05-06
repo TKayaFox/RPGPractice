@@ -71,7 +71,7 @@ namespace RPGPractice
             ActionButtBox.Controls.Add(SpecialButt);
             ActionButtBox.Controls.Add(DefendButt);
             ActionButtBox.Controls.Add(AttackButt);
-            ActionButtBox.Location = new Point(6, 8);
+            ActionButtBox.Location = new Point(753, 246);
             ActionButtBox.Name = "ActionButtBox";
             ActionButtBox.Padding = new Padding(0);
             ActionButtBox.Size = new Size(719, 45);
@@ -243,7 +243,6 @@ namespace RPGPractice
             // 
             // ActionMenuGroup
             // 
-            ActionMenuGroup.Controls.Add(ActionButtBox);
             ActionMenuGroup.Controls.Add(TargetCancelButt);
             ActionMenuGroup.Controls.Add(targetCBox);
             ActionMenuGroup.Controls.Add(TargetButt);
@@ -289,6 +288,7 @@ namespace RPGPractice
             // 
             // TurnLabel
             // 
+            TurnLabel.BorderStyle = BorderStyle.FixedSingle;
             TurnLabel.Font = new Font("Microsoft Sans Serif", 15.75F);
             TurnLabel.Location = new Point(3, 540);
             TurnLabel.Name = "TurnLabel";
@@ -312,7 +312,7 @@ namespace RPGPractice
             // BattleStartButt
             // 
             BattleStartButt.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            BattleStartButt.Location = new Point(4, 429);
+            BattleStartButt.Location = new Point(751, 52);
             BattleStartButt.Name = "BattleStartButt";
             BattleStartButt.Size = new Size(721, 185);
             BattleStartButt.TabIndex = 6;
@@ -324,13 +324,14 @@ namespace RPGPractice
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(ActionButtBox);
             Controls.Add(BattleStartButt);
             Controls.Add(battleSummaryTBox);
             Controls.Add(TurnLabel);
             Controls.Add(ActionMenuGroup);
             Controls.Add(BatleArenaGroupBox);
             Name = "BattleField";
-            Size = new Size(730, 625);
+            Size = new Size(1321, 625);
             ActionButtBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)heroSprite5).EndInit();
             BatleArenaGroupBox.ResumeLayout(false);
