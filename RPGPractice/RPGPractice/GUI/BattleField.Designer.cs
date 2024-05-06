@@ -276,12 +276,12 @@ namespace RPGPractice
             // 
             // targetCBox
             // 
-            targetCBox.Font = new Font("Microsoft Sans Serif", 20.25F);
+            targetCBox.Font = new Font("Microsoft Sans Serif", 14F);
             targetCBox.FormattingEnabled = true;
             targetCBox.Items.AddRange(new object[] { "- Select Target -" });
             targetCBox.Location = new Point(5, 14);
             targetCBox.Name = "targetCBox";
-            targetCBox.Size = new Size(260, 39);
+            targetCBox.Size = new Size(260, 32);
             targetCBox.TabIndex = 4;
             // 
             // TargetButt
@@ -323,10 +323,10 @@ namespace RPGPractice
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(BattleStartButt);
             Controls.Add(battleSummaryTBox);
             Controls.Add(ActionMenuGroup);
             Controls.Add(BatleArenaGroupBox);
+            Controls.Add(BattleStartButt);
             Name = "BattleField";
             Size = new Size(737, 625);
             ActionButtBox.ResumeLayout(false);

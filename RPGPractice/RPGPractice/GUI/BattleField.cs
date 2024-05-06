@@ -47,6 +47,8 @@ namespace RPGPractice
             AttackButt.Tag = MobActions.Attack;
             DefendButt.Tag = MobActions.Block;
             SpecialButt.Tag = MobActions.Special;
+
+            
         }
 
         public void Populate(List<MobData> mobDataList)

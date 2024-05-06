@@ -276,6 +276,7 @@ namespace RPGPractice.Engine.MobClasses
             data.IsNPC = (this is EnemyMob); //if this object falls under NPC (MobID subclass)
             data.IsAlive = IsAlive;
             data.SpecialActionString = SpecialActionString;
+            UpdateData();
         }
 
         /// <summary>

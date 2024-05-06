@@ -64,15 +64,18 @@ namespace RPGPractice.Engine
             if (name == null) { name = ""; }
             string returnString = "";
 
-            //check if ManaString holds actual data
-            if (!manaString.Equals(""))
+            //Only try to append HP and Mana if HP has a value. Just showing Mana would be confusing
+            if (!hpString.Equals(""))
             {
-                returnString += $" Mana: {ManaString}";
+                //check if ManaString holds actual data
+                if (!manaString.Equals(""))
+                {
+                    returnString += $" Mana: {ManaString}";
+                }
+
+                returnString = $" [HitPoints: {HitPointString}{returnString}]";
             }
-
-            returnString += $"[HitPoints: {HitPointString}{returnString}]";
-
-            return $"{Name} [{returnString}";
+            return $"{Name}{returnString}";
         }
 
 
