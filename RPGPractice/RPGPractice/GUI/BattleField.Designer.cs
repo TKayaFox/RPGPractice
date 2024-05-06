@@ -49,8 +49,8 @@ namespace RPGPractice
             targetCBox = new ComboBox();
             TargetButt = new Button();
             TurnLabel = new Label();
-            battleSummaryTBox = new TextBox();
             BattleStartButt = new Button();
+            battleSummaryTBox = new TextBox();
             ActionButtBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)heroSprite5).BeginInit();
             BatleArenaGroupBox.SuspendLayout();
@@ -71,17 +71,18 @@ namespace RPGPractice
             ActionButtBox.Controls.Add(SpecialButt);
             ActionButtBox.Controls.Add(DefendButt);
             ActionButtBox.Controls.Add(AttackButt);
-            ActionButtBox.Location = new Point(753, 246);
+            ActionButtBox.Location = new Point(8, 460);
+            ActionButtBox.Margin = new Padding(0);
             ActionButtBox.Name = "ActionButtBox";
             ActionButtBox.Padding = new Padding(0);
-            ActionButtBox.Size = new Size(719, 45);
+            ActionButtBox.Size = new Size(323, 120);
             ActionButtBox.TabIndex = 1;
             ActionButtBox.TabStop = false;
             // 
             // SpecialButt
             // 
             SpecialButt.Font = new Font("Microsoft Sans Serif", 15.75F);
-            SpecialButt.Location = new Point(429, 8);
+            SpecialButt.Location = new Point(94, 6);
             SpecialButt.Name = "SpecialButt";
             SpecialButt.Size = new Size(129, 32);
             SpecialButt.TabIndex = 2;
@@ -92,7 +93,7 @@ namespace RPGPractice
             // DefendButt
             // 
             DefendButt.Font = new Font("Microsoft Sans Serif", 15.75F);
-            DefendButt.Location = new Point(298, 8);
+            DefendButt.Location = new Point(94, 82);
             DefendButt.Name = "DefendButt";
             DefendButt.Size = new Size(129, 32);
             DefendButt.TabIndex = 1;
@@ -103,7 +104,7 @@ namespace RPGPractice
             // AttackButt
             // 
             AttackButt.Font = new Font("Microsoft Sans Serif", 15.75F);
-            AttackButt.Location = new Point(167, 8);
+            AttackButt.Location = new Point(94, 44);
             AttackButt.Name = "AttackButt";
             AttackButt.Size = new Size(129, 32);
             AttackButt.TabIndex = 0;
@@ -246,20 +247,20 @@ namespace RPGPractice
             ActionMenuGroup.Controls.Add(TargetCancelButt);
             ActionMenuGroup.Controls.Add(targetCBox);
             ActionMenuGroup.Controls.Add(TargetButt);
-            ActionMenuGroup.Location = new Point(0, 563);
+            ActionMenuGroup.Location = new Point(8, 449);
             ActionMenuGroup.Margin = new Padding(3, 2, 3, 2);
             ActionMenuGroup.Name = "ActionMenuGroup";
             ActionMenuGroup.Padding = new Padding(3, 2, 3, 2);
-            ActionMenuGroup.Size = new Size(730, 56);
+            ActionMenuGroup.Size = new Size(323, 131);
             ActionMenuGroup.TabIndex = 4;
             ActionMenuGroup.TabStop = false;
             // 
             // TargetCancelButt
             // 
             TargetCancelButt.Font = new Font("Microsoft Sans Serif", 15.75F);
-            TargetCancelButt.Location = new Point(527, 14);
+            TargetCancelButt.Location = new Point(160, 50);
             TargetCancelButt.Name = "TargetCancelButt";
-            TargetCancelButt.Size = new Size(93, 32);
+            TargetCancelButt.Size = new Size(104, 32);
             TargetCancelButt.TabIndex = 7;
             TargetCancelButt.Text = "Cancel";
             TargetCancelButt.UseVisualStyleBackColor = true;
@@ -269,16 +270,16 @@ namespace RPGPractice
             // 
             targetCBox.Font = new Font("Microsoft Sans Serif", 15.75F);
             targetCBox.FormattingEnabled = true;
-            targetCBox.Items.AddRange(new object[] { "- Select Target -" });
-            targetCBox.Location = new Point(91, 14);
+            targetCBox.Items.AddRange(new object[] { "DragonMob [HP: 100/100 Mana: 100/100]" });
+            targetCBox.Location = new Point(10, 11);
             targetCBox.Name = "targetCBox";
-            targetCBox.Size = new Size(321, 33);
+            targetCBox.Size = new Size(304, 33);
             targetCBox.TabIndex = 4;
             // 
             // TargetButt
             // 
             TargetButt.Font = new Font("Microsoft Sans Serif", 15.75F);
-            TargetButt.Location = new Point(418, 14);
+            TargetButt.Location = new Point(50, 50);
             TargetButt.Name = "TargetButt";
             TargetButt.Size = new Size(104, 32);
             TargetButt.TabIndex = 0;
@@ -290,48 +291,49 @@ namespace RPGPractice
             // 
             TurnLabel.BorderStyle = BorderStyle.FixedSingle;
             TurnLabel.Font = new Font("Microsoft Sans Serif", 15.75F);
-            TurnLabel.Location = new Point(3, 540);
+            TurnLabel.Location = new Point(6, 428);
             TurnLabel.Name = "TurnLabel";
-            TurnLabel.Size = new Size(722, 34);
+            TurnLabel.Size = new Size(326, 34);
             TurnLabel.TabIndex = 8;
             TurnLabel.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // battleSummaryTBox
-            // 
-            battleSummaryTBox.BackColor = SystemColors.ActiveCaption;
-            battleSummaryTBox.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            battleSummaryTBox.Location = new Point(3, 428);
-            battleSummaryTBox.Margin = new Padding(3, 2, 3, 2);
-            battleSummaryTBox.Multiline = true;
-            battleSummaryTBox.Name = "battleSummaryTBox";
-            battleSummaryTBox.ReadOnly = true;
-            battleSummaryTBox.ScrollBars = ScrollBars.Vertical;
-            battleSummaryTBox.Size = new Size(722, 110);
-            battleSummaryTBox.TabIndex = 5;
             // 
             // BattleStartButt
             // 
             BattleStartButt.Font = new Font("Segoe UI", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            BattleStartButt.Location = new Point(751, 52);
+            BattleStartButt.Location = new Point(4, 411);
             BattleStartButt.Name = "BattleStartButt";
-            BattleStartButt.Size = new Size(721, 185);
+            BattleStartButt.Size = new Size(721, 169);
             BattleStartButt.TabIndex = 6;
             BattleStartButt.Text = "Start Battle";
             BattleStartButt.UseVisualStyleBackColor = true;
             BattleStartButt.Click += BattleStartButt_Click;
             // 
+            // battleSummaryTBox
+            // 
+            battleSummaryTBox.BackColor = Color.MediumTurquoise;
+            battleSummaryTBox.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            battleSummaryTBox.Location = new Point(334, 423);
+            battleSummaryTBox.Margin = new Padding(3, 2, 3, 2);
+            battleSummaryTBox.Multiline = true;
+            battleSummaryTBox.Name = "battleSummaryTBox";
+            battleSummaryTBox.ReadOnly = true;
+            battleSummaryTBox.ScrollBars = ScrollBars.Vertical;
+            battleSummaryTBox.Size = new Size(391, 154);
+            battleSummaryTBox.TabIndex = 5;
+            // 
             // BattleField
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            Controls.Add(ActionButtBox);
+            BackColor = SystemColors.ControlDarkDark;
             Controls.Add(BattleStartButt);
-            Controls.Add(battleSummaryTBox);
             Controls.Add(TurnLabel);
+            Controls.Add(ActionButtBox);
+            Controls.Add(battleSummaryTBox);
             Controls.Add(ActionMenuGroup);
             Controls.Add(BatleArenaGroupBox);
             Name = "BattleField";
-            Size = new Size(1321, 625);
+            Size = new Size(731, 587);
             ActionButtBox.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)heroSprite5).EndInit();
             BatleArenaGroupBox.ResumeLayout(false);
@@ -372,8 +374,8 @@ namespace RPGPractice
         private TextBox textBox1;
         private Label TurnLabel;
         private GroupBox BatleArenaGroupBox;
-        private TextBox battleSummaryTBox;
         private Button BattleStartButt;
         private Button TargetCancelButt;
+        private TextBox battleSummaryTBox;
     }
 }

@@ -42,7 +42,7 @@
             menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem, helpToolStripMenuItem });
             menuStrip1.Location = new Point(0, 0);
             menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(738, 24);
+            menuStrip1.Size = new Size(734, 24);
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
@@ -76,9 +76,9 @@
             // 
             // statusStrip1
             // 
-            statusStrip1.Location = new Point(0, 616);
+            statusStrip1.Location = new Point(0, 599);
             statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(738, 22);
+            statusStrip1.Size = new Size(734, 22);
             statusStrip1.TabIndex = 1;
             statusStrip1.Text = "statusStrip1";
             // 
@@ -86,12 +86,13 @@
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(738, 638);
+            ClientSize = new Size(734, 621);
             Controls.Add(statusStrip1);
             Controls.Add(menuStrip1);
             MainMenuStrip = menuStrip1;
             Margin = new Padding(3, 2, 3, 2);
             Name = "GameForm";
+            ShowInTaskbar = false;
             Text = "Game";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();

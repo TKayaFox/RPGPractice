@@ -85,7 +85,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             else
             {
                 //throw exception telling caller to try again
-                throw new NotSupportedException("Out of Mana!");
+                throw new NotSupportedException("Out of Mana!\r\nMana regenerates when using not magic abilities!");
             }
         }
 

@@ -54,9 +54,9 @@ namespace RPGPractice
         public void Populate(List<MobData> mobDataList)
         {
             //show user that a new battle has started
-            BattleUpdate("\r\n=========================================\r\n" +
-                                     "New Battle!" +
-                        "\r\n=========================================\r\n");
+            BattleUpdate("==================================\r\n" +
+                             "\t\tNew Battle!" +
+                     "\r\n==================================\r\n");
 
             mobDictionary = new Dictionary<int, MobData>();
 
