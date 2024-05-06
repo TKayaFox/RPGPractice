@@ -8,6 +8,7 @@ using RPGPractice.Engine.MobClasses;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
 using RPGPractice.Engine.MobClasses.HeroMobs;
 using RPGPractice;
+using RPGPractice.Core;
 
 namespace RPGPractice.Engine
 {
@@ -44,6 +45,7 @@ namespace RPGPractice.Engine
         public GameEngine(EventManager eventManager)
         {
             random = new Random();
+            MessageBox.Show("Please enter your name.")
 
             numWins = 4;
 
@@ -89,21 +91,43 @@ namespace RPGPractice.Engine
             //IF result of battle was player victory, keep looping
             if (victory)
             {
-                //Increment victory count
-                numWins++;
-                MessageBox.Show("Victory!");
-
-                //Start a new battle
-                NewBattle();
+                Victory();
             }
             else
             {
                 //Display Game over and start wrap up process (ClearGameData handles all Game over logic)
                 MessageBox.Show("Game Over");
+                UpdateLeaderBoard();
                 ClearGameData();
             }
+        }
 
-            //TODO: Save game data
+        private void UpdateLeaderBoard()
+        {
+            //Get todays date
+            string today = DateTime.Today.ToString("MM-dd-yyyy");
+
+            //Get all game data together and save to leaderboard
+            string gameResult;
+            gameResult = $"{today} | Rounds won: {numWins}";
+
+            FileManager.AddToLeaderBoard(gameResult);
+        }
+
+        private void Victory()
+        {
+            //Slightly heal party (but not fully)
+            foreach (Mob hero in heroes)
+            {
+                hero.Heal(5);
+            }
+
+            //Increment victory count
+            numWins++;
+            MessageBox.Show("Victory!");
+
+            //Start a new battle
+            NewBattle();
         }
 
         /// <summary>

@@ -1,6 +1,9 @@
+using RPGPractice.Core;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RPGPractice
 {
@@ -10,8 +13,6 @@ namespace RPGPractice
         //              Variables
         //=========================================
         #region Variables
-        private const string ABOUT = "About.txt";
-
         private BattleField battlefield;
         #endregion
 
@@ -61,27 +62,6 @@ namespace RPGPractice
             Controls.Add(battlefield); battlefield.Visible = true;
         }
 
-        /// <summary>
-        /// Read in txt file and displays it as a MessageBox
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <returns></returns>
-        private void TxtToMessageBox(string fileName, string header)
-        {
-
-            String data = "";
-
-            StreamReader reader = new StreamReader(fileName);
-
-            while (!reader.EndOfStream)
-            {
-                data += reader.ReadLine() + "\n";
-            }
-
-            //Display information in messagebox
-            MessageBox.Show(data, header, MessageBoxButtons.OK);
-        }
-
         #endregion
 
         //=========================================
@@ -106,8 +86,11 @@ namespace RPGPractice
         /// <param name="e"></param>
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //read data from about and display in message box
-            TxtToMessageBox(ABOUT, "About");
+            //Get About txt as a string
+            FileManager.GetAbout();
+
+            //Display information in messagebox
+            MessageBox.Show(aboutTxt);
         }
         #endregion
 

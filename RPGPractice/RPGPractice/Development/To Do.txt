@@ -24,6 +24,8 @@ MUST DO:
 			Resolve if possible, if not put here.
 	
 Ideal to do:
+	Get users name for the save to add to the leaderboard
+		Save more stats
 	Break Classes down into smaller parts?
 	rebalance mobs
 	Revisit access for all methods/objects. For instance most Invokers are public and should be made private or protected.
@@ -47,6 +49,7 @@ If Able
 	
 
 Future ideas:
+	actually save progess as game is going, and load previous saves
 	Find a better way of doing encounter logic, or at least laying out Mobs EncounterData method
 	Add explicit DeInitialize methods for ALL classes.
 		Battle
