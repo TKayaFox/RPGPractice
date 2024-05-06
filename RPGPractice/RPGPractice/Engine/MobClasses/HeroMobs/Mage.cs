@@ -21,7 +21,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         {
             Sprite = Properties.Resources.Mage;
             MaxHitPoints = 16;
-            MaxMana = 5; //Only casters get Mana
+            MaxMana = 5; //Only casters get ManaString
             Mana = MaxMana;
             Initiative = 2;
             Intelligence = 3;
@@ -40,7 +40,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         /// <param name="target"></param>
         protected override void CastSpell(MobData target)
         {
-            //Reduce Mana
+            //Reduce ManaString
             Mana--;
 
             //Determine damage and Attack Rolls (attackMod + 1d20)

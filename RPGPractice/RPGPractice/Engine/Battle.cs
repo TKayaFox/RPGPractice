@@ -109,7 +109,6 @@ namespace RPGPractice.Engine
                 int uniqueID = initiative.NextTurn();
                 turnHolder = mobDictionary[uniqueID];
                 isAlive = turnHolder.IsAlive;
-                System.Diagnostics.Debug.WriteLine($"Current Turn: {turnHolder.Name} [{isAlive}]");
             }
         }
 
@@ -118,14 +117,12 @@ namespace RPGPractice.Engine
         /// </summary>
         private void TakeTurn()
         {
-            System.Diagnostics.Debug.WriteLine("Building target lists");
             //Make lists of all targetable mobs on both sides
             List<MobData> heroTargetList = new List<MobData>();
             List<MobData> enemyTargetList = new List<MobData>();
             GetTargetableMobs(heroTargetList, enemyTargetList);
 
             //take turn
-            System.Diagnostics.Debug.WriteLine($"{turnHolder.Name}'s Turn");
             turnHolder.StartTurn(heroTargetList, enemyTargetList);
         }
 
@@ -402,7 +399,6 @@ namespace RPGPractice.Engine
                     //Ensure theres a target
                     if (validTarget)
                     {
-                        System.Diagnostics.Debug.WriteLine($"\t{turnHolder.Name} using Special");
                         turnHolder.Special(target.Data);
                     }
                     else //throw exception telling user to re-try theit action

@@ -20,7 +20,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         {
             Sprite = Properties.Resources.Cleric;
             MaxHitPoints = 25;
-            MaxMana = 5; //Only casters get Mana
+            MaxMana = 5; //Only casters get ManaString
             Mana = MaxMana;
             Initiative = 0;
             Intelligence = 2;
@@ -39,7 +39,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         /// <param name="target"></param>
         protected override void CastSpell(MobData target)
         {
-            //Reduce Mana
+            //Reduce ManaString
             Mana--;
 
             //Roll for heal

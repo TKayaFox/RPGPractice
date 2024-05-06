@@ -21,8 +21,6 @@ namespace RPGPractice.Engine
         {
             index = 0;
 
-            System.Diagnostics.Debug.WriteLine($"Building Initiative");
-
             //Make Initiative list
             foreach (Mob mob in heroes)
             {
@@ -32,7 +30,6 @@ namespace RPGPractice.Engine
             {
                 AddMob(mob);
             }
-            System.Diagnostics.Debug.WriteLine($"Initiative Built");
         }
 
         /// <summary>
@@ -44,7 +41,6 @@ namespace RPGPractice.Engine
             //If at end of initiative, restart
             if (currentNode == null || currentNode.Next == null)
             {
-                System.Diagnostics.Debug.WriteLine($"Top of Initiative!");
                 currentNode = head;
             }
             //else return next in initiative
@@ -60,8 +56,6 @@ namespace RPGPractice.Engine
         {
             //make node
             Node newNode = new Node(mob);
-
-            System.Diagnostics.Debug.WriteLine($"Adding {mob.Name} \r\n\tID: {mob.UniqueID} \r\n\tInitiative: {mob.Initiative}");
 
             // Check if newNode should become the new head
             if (head == null || HasHigherInitiative(head, newNode))
@@ -98,8 +92,6 @@ namespace RPGPractice.Engine
             //get initiatives and determine if newNode has higher initiative
             int initiative1 = placedNode.Initiative;
             int initiative2 = newNode.Initiative;
-
-            System.Diagnostics.Debug.WriteLine($"Replace {initiative1} with {initiative2}? {initiative2 > initiative1}");
 
             return (initiative2 > initiative1);
         }

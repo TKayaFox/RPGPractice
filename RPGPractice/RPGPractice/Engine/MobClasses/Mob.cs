@@ -30,8 +30,6 @@ namespace RPGPractice.Engine.MobClasses
         private System.Drawing.Bitmap sprite;
         Queue<TargetedAbility> targetedAbilityQueue;
 
-        //TODO: Move Mana related items to interface.
-        //          Not all Mobs need mana
         //Game specific stats
         private int maxHitPoints;
         private int hitPoints;
@@ -44,9 +42,6 @@ namespace RPGPractice.Engine.MobClasses
         private int blockingBonus;
         private bool isBlocking;
         #endregion
-
-        //TODO: Implement Block Logic
-        //TODO: Implement Special Attack Logic
 
         //=========================================
         //              Main Methods
@@ -80,7 +75,6 @@ namespace RPGPractice.Engine.MobClasses
             TargetedAbilityQueue = new Queue<TargetedAbility>();
 
             //Stop defending
-            System.Diagnostics.Debug.WriteLine($"was blocking? {isBlocking}");
             isBlocking = false;
 
             //Run subClass specific Turn Logic.
@@ -102,7 +96,7 @@ namespace RPGPractice.Engine.MobClasses
         /// <returns></returns>
         public virtual void Attack(MobData target)
         {
-            //Determine damage and Attack Rolls (attackMod + 1d20)
+            //Determine healValue and Attack Rolls (attackMod + 1d20)
             (int attackRoll,int damage) = Dice.RollAttack(attackMod, strength);
 
             //add ability roll to turn summary
@@ -126,9 +120,9 @@ namespace RPGPractice.Engine.MobClasses
         /// Heals hitpoints
         /// If no inputs provided, heals Mob to full health
         /// </summary>
-        /// <param name="damage"></param>
+        /// <param name="healValue"></param>
         /// <param name="healer"></param>
-        public virtual string Heal(int damage)
+        public virtual string Heal(int healValue)
         {
             string result;
 
@@ -140,8 +134,7 @@ namespace RPGPractice.Engine.MobClasses
             else
             {
                 int initialHP = hitPoints;
-
-                hitPoints += damage;
+                HitPoints += healValue;
 
                 //prevent over-healing
                 if (hitPoints >= MaxHitPoints)
@@ -153,8 +146,19 @@ namespace RPGPractice.Engine.MobClasses
                 //return string stating result
                 result = $"{Name} gained {hitPoints - initialHP} health!\t[HP={hitPoints}]";
             }
+
             return result;
         }
+
+        /// <summary>
+        /// Updates MobData fields (hpString, isAlive)
+        /// </summary>
+        protected virtual void UpdateData()
+        {
+            data.HitPointString = $"{hitPoints}/{maxHitPoints}";
+            data.IsAlive = IsAlive;
+        }
+
         public virtual string Heal()
         {
             //if not specified, heal all
@@ -216,7 +220,6 @@ namespace RPGPractice.Engine.MobClasses
         public virtual void Special(MobData target)
         {
             //throw exception telling caller to try again
-            System.Diagnostics.Debug.WriteLine($"{this.Name} Atttempting Special Ability that is unavailable?");
             throw new NotSupportedException("This class does not have a special ability!");
         }
 
@@ -264,18 +267,16 @@ namespace RPGPractice.Engine.MobClasses
             }
         }
 
-        private void BuildData()
+        protected virtual void BuildData()
         {
             data = new MobData();
             data.Sprite = sprite;
             data.Name = name;
+            data.HitPointString = hitPoints;
             data.UniqueID = uniqueID;
             data.IsNPC = (this is EnemyMob); //if this object falls under NPC (MobID subclass)
             data.IsAlive = IsAlive;
             data.SpecialActionString = SpecialActionString;
-
-            //subscibe Mob to Death events
-            Death += data.OnDeath_Handler;
         }
 
         /// <summary>
@@ -310,7 +311,6 @@ namespace RPGPractice.Engine.MobClasses
             if (!IsAlive)
             {
                 result += ($"\r\n{Name} has Died!");
-                OnDeath();
             }
 
             //return string stating result
@@ -341,20 +341,20 @@ namespace RPGPractice.Engine.MobClasses
 
         /// <summary>
         /// Handles end logic for Block family of methods
-        ///     Assigns damage as needed and returns turnSummary
+        ///     Assigns healValue as needed and returns turnSummary
         /// </summary>
         /// <param name="attackRoll"></param>
         /// <param name="dodgeValue"></param>
         /// <param name="damage"></param>
         /// <returns>string describing what occurred during this turn</returns>
-        private string DefendResult(int attackRoll, int defense, int defenseMod, int damage)
+        protected string DefendResult(int attackRoll, int defense, int defenseMod, int damage)
         {
             string turnSummary = "";
 
-            //If ability hits, take damage. Update turnSummary with what happened either way
+            //If ability hits, take healValue. Update turnSummary with what happened either way
             if (attackRoll > defense)
             {
-                //check if Blocking prevented damage
+                //check if Blocking prevented healValue
                 bool blockPrevents = ((defense + BlockingBonus) > attackRoll);
                 if (isBlocking && blockPrevents)
                 {
@@ -365,7 +365,7 @@ namespace RPGPractice.Engine.MobClasses
                     turnSummary += Hurt(damage); 
                 }
             }
-            //If ability meets, then take half damage (rounded down, so integer is not a problem)
+            //If ability meets, then take half healValue (rounded down, so integer is not a problem)
             else if (attackRoll == defense)
             {
                 int halfDamage = damage / 2;
@@ -426,7 +426,6 @@ namespace RPGPractice.Engine.MobClasses
         //                  Events
         //=========================================
         public event EventHandler<TurnEndEventArgs> TurnEnd;
-        public event EventHandler Death;
         public event EventHandler<PlayerTurnEventArgs> PlayerTurn;
 
         #region Event Invokers
@@ -438,6 +437,9 @@ namespace RPGPractice.Engine.MobClasses
         /// <param name="target">Optional parameter if attacking a target</param>
         protected virtual void OnTurnEnd()
         {
+            //update MobData
+            UpdateData();
+
             //This data will always be stored in args
             TurnEndEventArgs args = new TurnEndEventArgs();
             args.TargetedAbilityQueue = TargetedAbilityQueue;
@@ -449,16 +451,6 @@ namespace RPGPractice.Engine.MobClasses
         }
 
         /// <summary>
-        /// When MobID HP is reduced below 0HP they are dead.
-        /// </summary>
-        protected void OnDeath()
-        {
-            //Raise a death event stating that MobID has died
-            Death.Invoke(this, EventArgs.Empty);
-        }
-
-
-        /// <summary>
         /// Tells the GUI to setup for players turn.
         /// </summary>
         public void OnPlayerTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
@@ -468,9 +460,6 @@ namespace RPGPractice.Engine.MobClasses
             args.MobID = UniqueID;
 
             CompileTargetLists(allyTargetList, enemyTargetList, args);
-
-
-            System.Diagnostics.Debug.WriteLine($"\tPlayer Turn Event raised for {Name}");
             PlayerTurn?.Invoke(this, args);
         }
         #endregion

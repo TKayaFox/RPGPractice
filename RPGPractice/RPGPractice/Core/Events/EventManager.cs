@@ -1,8 +1,7 @@
-﻿using RPGPractice.Core.Events;
-using RPGPractice.Engine;
+﻿using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
 
-namespace RPGPractice.Core
+namespace RPGPractice.Core.Events
 {
     /// <summary>
     /// Subscriber Data tracks all Objects and what evens they may raise.
@@ -24,7 +23,6 @@ namespace RPGPractice.Core
         public event EventHandler<TurnEndEventArgs> TurnEnd;
         public event EventHandler BattleStart;
         public event EventHandler NewGame;
-        public event EventHandler Death;
 
         //===========================================
         //              Managers
@@ -71,13 +69,11 @@ namespace RPGPractice.Core
         private void ManageMob(Mob target, bool addMe)
         {
             //Unsubscribe target first to prevent double subscription.
-            target.Death -= OnDeath_Relay;
             target.PlayerTurn -= OnPlayerTurn_Relay;
 
             //Only add new subscriptons if addMe = true
             if (addMe)
             {
-                target.Death += OnDeath_Relay;
                 target.PlayerTurn += OnPlayerTurn_Relay;
             }
         }
@@ -86,20 +82,20 @@ namespace RPGPractice.Core
         {
             //Unsubscribe first to prevent double subscription.
             target.ManageObject -= OnManageObject_Handler;
-            target.NewBattle  -= OnNewBattle_Relay;
-            target.BattleResult    -= OnBattleResult_Relay;
-            target.TurnEnd      -= OnTurnEnd_Relay;
-            PlayerAction        -= target.OnPlayerAction_handler;
+            target.NewBattle -= OnNewBattle_Relay;
+            target.BattleResult -= OnBattleResult_Relay;
+            target.TurnEnd -= OnTurnEnd_Relay;
+            PlayerAction -= target.OnPlayerAction_handler;
             BattleStart -= target.OnBattleStart_Handler;
 
             //Only add new subscriptons if addMe = true
             if (addMe)
             {
                 target.ManageObject += OnManageObject_Handler;
-                target.NewBattle  += OnNewBattle_Relay;
-                target.BattleResult    += OnBattleResult_Relay;
-                target.TurnEnd      += OnTurnEnd_Relay;
-                PlayerAction        += target.OnPlayerAction_handler;
+                target.NewBattle += OnNewBattle_Relay;
+                target.BattleResult += OnBattleResult_Relay;
+                target.TurnEnd += OnTurnEnd_Relay;
+                PlayerAction += target.OnPlayerAction_handler;
                 BattleStart += target.OnBattleStart_Handler;
             }
         }
@@ -199,10 +195,6 @@ namespace RPGPractice.Core
         public void OnBattleStart_Relay(object sender, EventArgs e)
         {
             BattleStart.Invoke(sender, e);
-        }
-        public void OnDeath_Relay(object sender, EventArgs e)
-        {
-            Death?.Invoke(sender, e);
         }
         public void OnBattleResult_Relay(object sender, BattleResultEventArgs e)
         {

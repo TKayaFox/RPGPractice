@@ -4,46 +4,58 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
     public abstract class CasterMob : PlayerMob
     {
-        private int maxMana; //Only casters get Mana
+        private int maxMana; //Only casters get ManaString
         private int mana;
         private int manaRegen;
         /// <summary>
-        /// Point at which Mana regeneration adds to mana
-        ///     Currently set to 1 effectively meaning mana regenerates whenever it wasnt used last turn
+        /// Point at which ManaString regeneration adds to manaString
+        ///     Currently set to 1 effectively meaning manaString regenerates whenever it wasnt used last turn
         /// </summary>
         private const int MANA_REGEN_THRESHOLD = 1;
         private const int MANA_REGEN_RATE = 2;
 
+        protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
+        protected virtual int Mana { get => mana; set => mana = value; }
 
+        protected override void BuildData()
+        {
+            Data.ManaString = mana;
+            base.BuildData();
+        }
         protected CasterMob(string name) : base(name)
         {
             mana = maxMana;
             manaRegen = 0;
         }
 
-        //TODO: Are these needed?
-        protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
-        protected virtual int Mana { get => mana; set => mana = value; }
+
+        private override void UpdateData()
+        {
+            Data.ManaString = $"{Mana}/{MaxMana}";
+            base.UpdateData();
+        }
+
 
 
         /// <summary>
         /// Run actual turn logic
-        ///     Increase Mana every other turn
+        ///     Increase ManaString every other turn
         /// TODO: Refactor: There has to be a better way to do this without overloading TakeTurn.
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
         protected override void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
         {
-            //Regenerate Mana
+            //Regenerate ManaString
             manaRegen++;
 
-            //Increment Mana if manaRegen reaches the appropriate value
+            //Increment ManaString if manaRegen reaches the appropriate value
             if (manaRegen > MANA_REGEN_THRESHOLD)
             {
                 mana++;
@@ -66,7 +78,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             //  Logic for CanUseSpecial is determined by subclass
             if (Mana > 0)
             {
-                //Reset Mana regen to 0 then cast spell
+                //Reset ManaString regen to 0 then cast spell
                 manaRegen = 0;
                 CastSpell(target);
             }

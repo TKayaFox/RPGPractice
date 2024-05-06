@@ -350,8 +350,6 @@ namespace RPGPractice
             //Show Hero name in Action Menu
             TurnLabel.Text = mobData.Name;
 
-            System.Diagnostics.Debug.WriteLine($"battleField (GUI) Received Player Turn event for {mobData}");
-
             //Setup Special Button to show what SpecialActionString ability current mob has.
             UpdateSpecialAction(mobData);
 
@@ -360,15 +358,12 @@ namespace RPGPractice
             specialTargetList = args.SpecialTargetList;
 
             //Show Action Menu
-            System.Diagnostics.Debug.WriteLine($"Displaying Action Menu");
-
             ShowActionMenu();
         }
 
         private void UpdateSpecialAction(MobData mobData)
         {
             string action = mobData.SpecialActionString;
-            System.Diagnostics.Debug.WriteLine($"Updating Special Action Button: {action}");
 
             if (!action.Equals(""))
             {
@@ -378,7 +373,6 @@ namespace RPGPractice
             //Else hide SpecialActionString Button because no specialAction ability
             else
             {
-                System.Diagnostics.Debug.WriteLine("Special Action Empty");
                 SpecialButt.Visible = false;
             }
         }

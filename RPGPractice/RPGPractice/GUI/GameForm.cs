@@ -1,4 +1,3 @@
-using RPGPractice.Core;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
@@ -72,18 +71,11 @@ namespace RPGPractice
 
             String data = "";
 
-            try
-            {
-                StreamReader reader = new StreamReader(fileName);
+            StreamReader reader = new StreamReader(fileName);
 
-                while (!reader.EndOfStream)
-                {
-                    data += reader.ReadLine() + "\n";
-                }
-            }
-            catch (Exception ex)
+            while (!reader.EndOfStream)
             {
-                System.Diagnostics.Debug.WriteLine("MessageBox error: "+ex.Message);
+                data += reader.ReadLine() + "\n";
             }
 
             //Display information in messagebox

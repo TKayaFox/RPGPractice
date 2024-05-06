@@ -1,4 +1,6 @@
 RPG Project to do:
+	Prioritize ToDo list
+	rebalance mobs
 	Do a temporary Branch for "submission" version, without old documents.
 	Clear all TODO notes from project before submission.
 		Resolve if possible, if not put here.
@@ -53,8 +55,44 @@ RPG Project to do:
 						attack hardest hitter
 				swipe attack:  (targets all)
 					seperate attack for ALL targets
+	Refactor Mob and Mobdata such that Mob is no longer storing the MobData object.
+	The main reason I was doing this was because MobData was getting rebuilt on multiple occasions, causing multiple event subscriptions and other weirdness.
+	However, does MobData even need used except for the Battlefield object?
+		Might be because MobData is given to the battlefield through the PlayerTurb method.
+			Perhaps instead pass list of uniqueIDs and then on battlefield side store the MobData for each id by using the mobdictionary
+			then just store all MobData objects once.
 
 Future ideas:
+	Add explicit DeInitialize methods for ALL classes.
+		Battle
+			Call DeInitialize for all mobs
+			clear all lists
+			UnManageObject all mobs
+			UnManageObject self
+		Mob
+			unsubscribe mobData from Update event
+			set mobData = null
+		BattleField
+			(Already set up, just optimize it probably)
+	Have X/close button for program save data? Or warn user that exiting now will lose data?
+
+	eventManager
+		Figure out a way to pass events to objects for subscription
+			Perhaps store on the EventManager side 
+				when OnManageObject event occurs, but add them to the appropriate list. 
+					ex: Core and Battle
+					seperate lists can make sure events are subscribed in correct order
+						Gui first, then battle, then core. Opposite order than you would think
+							want the GUI to finish updating before trying to do more battle logic.
+							want the battle to finish updating before doing core logic, to avoid weird issues such as a old instance being kept loaded because of unresolved events
+				Then have simple Methods to run subscriptions when ready
+					LoadGUI()
+					UnLoadGUI()
+					LoadBattle()
+					UnLoadBattle()
+					LoadCore()
+					UnLoadCore()
+	async tasks to make things process faster. Especially useful once the above is done.
 	I feel like theres a way to get rid of Hero and enemy subclasses, but keep functionality.
 		Ideally should be able to create a Warrior Mob that is an enemy for instance, or a Bandit that is a hero.
 		Could merge the TakeTurn methods and use the isPlayerControlled bool i originally planned, though that's a bit messy and ideally I want LESS in the main Mob class not more

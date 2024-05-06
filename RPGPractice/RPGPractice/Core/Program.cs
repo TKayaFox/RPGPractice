@@ -1,3 +1,4 @@
+using RPGPractice.Core.Events;
 using RPGPractice.Engine;
 
 namespace RPGPractice.Core

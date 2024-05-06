@@ -15,24 +15,9 @@ namespace RPGPractice.Engine
         private string? name;
         private bool isNPC;
         private bool isAlive;
-        private bool isCaster;
         private string specialAction = "";
-
-        /// <summary>
-        /// Override ToString so object is identified by name
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            if (name == null) { name = ""; }
-            string returnString = $"HP: {hitPoints}";
-            if (isCaster)
-            {
-                returnString += $" Mana: {mana}";
-            }
-            return $"{Name} [{returnString}";
-
-        }
+        private string hpString = "";
+        private string manaString = "";
 
 
         // Property setters/getters
@@ -41,7 +26,53 @@ namespace RPGPractice.Engine
         public string? Name { get => name; set => name = value; }
         public bool IsNPC { get => isNPC; set => isNPC = value; }
         public string SpecialActionString { get => specialAction; set => specialAction = value; }
-        public bool IsAlive { get => isAlive; set => isAlive = value; }
+        public string HitPointString { get => hpString; set => hpString = value; }
+        public string ManaString { get => manaString; set => manaString = value; }
+
+        /// <summary>
+        /// Gets or Sets isAlive boolean
+        ///     if setting isAlive, updates pictureBox to match state
+        /// </summary>
+        public bool IsAlive
+        {
+            get => isAlive;
+            set
+            {
+                isAlive = value;
+
+                //reflect alive status  in sprites (hide pictureBox if dead)
+                if (!value && pictureBox != null)
+                {
+                    pictureBox.Visible = false;
+                }
+                else
+                {
+                    pictureBox.Visible = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Override ToString so object is identified by name
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (name == null) { name = ""; }
+            string returnString = "";
+
+            //check if ManaString holds actual data
+            if (!manaString.Equals(""))
+            {
+                returnString += $" Mana: {ManaString}";
+            }
+
+            returnString += $"[HitPoints: {HitPointString}{returnString}]";
+
+            return $"{Name} [{returnString}";
+        }
+
+
 
         /// <summary>
         /// Property but when PictureBox is set, Sprite is already applied to the PictureBox
@@ -61,22 +92,6 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// Updates isAlive to false and changes PictureBox to show death
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        internal void OnDeath_Handler(object sender, EventArgs e)
-        {
-            isAlive = false;
-            if (pictureBox != null)
-            {
-                pictureBox.Image = null;
-            }
-        }
-
-
-        /// <summary>
         /// Turn on and off Picture Border depending on boolean
         /// </summary>
         public bool Selected
@@ -93,6 +108,7 @@ namespace RPGPractice.Engine
                 }
             }
         }
+
 
         /// <summary>
         /// Called by Selected to turn on picturebox border
