@@ -9,3 +9,5 @@ Issues I ran into:
 	
 	-Unfortunately I ran into a bunch of issues with stuff not being properly garbagecollected and unsubscribed from events. So I had a huge issue where old battles were trying to continue after they had already ended, resulting in recursive "Victory" messages.
 		-A lot of why this was happening turned out to be the MobData objects that were being held by the GUI because i directly tied them to their Mob through Death events.
+
+		-I promise I tried to make the GUI look good, but for some reason UI design, I get how to work with the objects but am not very good about the aesthetics.

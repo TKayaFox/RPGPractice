@@ -325,7 +325,7 @@ namespace RPGPractice
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.ControlDarkDark;
+            BackColor = SystemColors.Control;
             Controls.Add(BattleStartButt);
             Controls.Add(TurnLabel);
             Controls.Add(ActionButtBox);

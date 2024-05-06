@@ -1,5 +1,4 @@
 RPG Project to do:
-	Prioritize ToDo list
 	rebalance mobs
 	Do a temporary Branch for "submission" version, without old documents.
 	Clear all TODO notes from project before submission.
