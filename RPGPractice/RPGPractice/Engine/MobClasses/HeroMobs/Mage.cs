@@ -10,13 +10,8 @@ using System.Xml.Linq;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
-    public class Mage : PlayerMob
+    public class Mage : CasterMob
     {
-        private int maxMana; //Only casters get Mana
-        private int mana;
-        protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
-        protected virtual int Mana { get => mana; set => mana = value; }
-
         public Mage(string name) : base(name) { }
 
         /// <summary>
@@ -39,33 +34,12 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         }
 
         /// <summary>
-        /// Special is called when a Mob makes a special ability.
-        ///     Not all Mob types have a special ability
-        /// Only tries to use Special if CanUseSpecial returns true
-        /// </summary>
-        /// <param name="target"></param>
-        public override void Special(MobData target)
-        {
-            //Only attempt Special if CanUseSpecial returns true
-            //  Logic for CanUseSpecial is determined by subclass
-            if (Mana > 0)
-            {
-                UseSpecialAbility(target);
-            }
-            else
-            {
-                //throw exception telling caller to try again
-                throw new NotSupportedException("Out of Mana!");
-            }
-        }
-
-        /// <summary>
         /// Special is called when a Mob makes a special attack.
         ///     Not all Mob types have a special attack
         ///     In this case, Special is a damaging spell
         /// </summary>
         /// <param name="target"></param>
-        protected void UseSpecialAbility(MobData target)
+        protected override void CastSpell(MobData target)
         {
             //Reduce Mana
             Mana--;
@@ -87,23 +61,6 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
 
             //end turn
             OnTurnEnd();
-        }
-
-
-
-        /// <summary>
-        /// Compiles TargetList Lists for OnPlayerTurn
-        ///     Override to alter Special Action behavior
-        /// </summary>
-        /// <param name="allyTargetList"></param>
-        /// <param name="enemyTargetList"></param>
-        /// <param name="args"></param>
-        protected override void CompileTargetLists(List<MobData> allyTargetList, List<MobData> enemyTargetList, PlayerTurnEventArgs args)
-        {
-            //Make lists of viable targets
-            args.AttackTargetList = enemyTargetList;
-
-            args.SpecialTargetList = enemyTargetList;
         }
     }
 }

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
-    internal abstract class CasterMob : PlayerMob
+    public abstract class CasterMob : PlayerMob
     {
         private int maxMana; //Only casters get Mana
         private int mana;

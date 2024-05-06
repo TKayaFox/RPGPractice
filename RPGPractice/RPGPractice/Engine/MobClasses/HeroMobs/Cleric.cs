@@ -8,12 +8,8 @@ using System.Xml.Linq;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
-    public class Cleric : PlayerMob
+    public class Cleric : CasterMob
     {
-        private int maxMana; //Only casters get Mana
-        private int mana;
-        protected virtual int MaxMana { get => maxMana; set => maxMana = value; }
-        protected virtual int Mana { get => mana; set => mana = value; }
 
         public Cleric(string name) : base(name) { }
 
@@ -37,33 +33,12 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         }
 
         /// <summary>
-        /// Special is called when a Mob makes a special ability.
-        ///     Not all Mob types have a special ability
-        /// Only tries to use Special if CanUseSpecial returns true
-        /// </summary>
-        /// <param name="target"></param>
-        public override void Special(MobData target)
-        {
-            //Only attempt Special if CanUseSpecial returns true
-            //  Logic for CanUseSpecial is determined by subclass
-            if (Mana > 0)
-            {
-                UseSpecialAbility(target);
-            }
-            else
-            {
-                //throw exception telling caller to try again
-                throw new NotSupportedException("Out of Mana!");
-            }
-        }
-
-        /// <summary>
         /// Special is called when a Mob makes a special heal.
         ///     Not all Mob types have a special heal
         ///     In this case Special is a heal spell
         /// </summary>
         /// <param name="target"></param>
-        protected void UseSpecialAbility(MobData target)
+        protected override void CastSpell(MobData target)
         {
             //Reduce Mana
             Mana--;
