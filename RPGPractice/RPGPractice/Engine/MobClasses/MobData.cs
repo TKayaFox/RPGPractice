@@ -92,7 +92,7 @@ namespace RPGPractice.Engine
                 {
                     pictureBox = value;
                     pictureBox.Image = sprite;
-                    pictureBox.Visible = true;
+                    pictureBox.Visible = IsAlive;
                 }
             }
         }

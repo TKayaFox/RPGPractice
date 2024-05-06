@@ -314,6 +314,7 @@ namespace RPGPractice.Engine.MobClasses
             }
 
             //return string stating result
+            UpdateData();
             return result;
         }
 

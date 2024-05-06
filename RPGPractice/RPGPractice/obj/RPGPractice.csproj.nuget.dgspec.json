@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice.csproj": {}
+    "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice.csproj": {
+    "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice.csproj",
+        "projectUniqueName": "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice.csproj",
         "projectName": "RPGPractice",
-        "projectPath": "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice.csproj",
+        "projectPath": "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice.csproj",
         "packagesPath": "C:\\Users\\Tkaya\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\obj\\",
+        "outputPath": "C:\\Users\\Tkaya\\Documents\\Documents\\Projects\\Programs\\RPGPractice\\RPGPractice\\RPGPractice\\RPGPractice\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Tkaya\\AppData\\Roaming\\NuGet\\NuGet.Config",
