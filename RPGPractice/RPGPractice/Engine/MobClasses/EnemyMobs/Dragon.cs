@@ -59,7 +59,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
             (int attackRoll, int damage) = Dice.RollAttack(Intelligence, Intelligence);
 
             //add attack roll to turn summary
-            AppendTurnSummary($"{Name} breathes fire on {target.Name}. \t[Attack roll: {attackRoll} Damage {damage}]");
+            AppendTurnSummary($"{Name} breathes fire on {target.Name}. \r\n\t[Attack roll: {attackRoll} Damage {damage}]");
 
             //Build a new TargetedAction object and add to Queue
             TargetedAbility attack = new TargetedAbility();
@@ -82,26 +82,23 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
             //add ability roll to turn summary
             AppendTurnSummary($"{Name} swipes at all targets with it's Claws!\r\n\t[Attack roll: {attackRoll} Damage {damage}]");
 
-            //Build a new TargetedAction object and add to Queue
-            //  Most this data will remain the same
-            TargetedAbility attack = new TargetedAbility();
-            attack.Attacker = Data;
-            attack.AttackRoll = attackRoll;
-            attack.Damage = damage;
-            attack.DamageType = DamageType.Physical;
 
 
             //Add all targets to the Queue so they are handled properly
             foreach (MobData target in heroTargetList)
             {
-                //change target
+                //Build a new TargetedAction object and add to Queue
+                TargetedAbility attack = new TargetedAbility();
+                attack.Attacker = Data;
+                attack.AttackRoll = attackRoll;
+                attack.Damage = damage;
+                attack.DamageType = DamageType.Physical;
                 attack.Target = target;
                 TargetedAbilityQueue.Enqueue(attack);
             }
 
             //end turn
             OnTurnEnd();
-
         }
 
         // Static Methods

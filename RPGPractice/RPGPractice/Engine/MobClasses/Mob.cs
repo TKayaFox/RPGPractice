@@ -304,7 +304,7 @@ namespace RPGPractice.Engine.MobClasses
 
             hitPoints -= damage;
 
-            result = ($"\r\n\t{Name} took {damage} damage");
+            result = ($"\t{Name} took {damage} damage");
 
 
             //Check for death
@@ -370,8 +370,8 @@ namespace RPGPractice.Engine.MobClasses
             else if (attackRoll == defense)
             {
                 int halfDamage = damage / 2;
-                turnSummary += $"Glancing Blow! ";
                 turnSummary += Hurt(halfDamage);
+                turnSummary += $" Glancing Blow! ";
             }
             else
             {

@@ -41,7 +41,9 @@ If Able
 	Incorporate Async tasks when able.
 	Create custom exception for invalid mob action.
 	Refactor Mob and Mobdata such that Mob is no longer storing the MobData object.
-	
+	Modify how TargetedAttackArgs are sent
+		Just queue the different targets, no need to overload the full args
+		No reason to package the args in another set of args with the same data.
 	
 
 Future ideas:

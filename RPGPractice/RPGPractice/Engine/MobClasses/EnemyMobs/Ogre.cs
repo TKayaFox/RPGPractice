@@ -56,7 +56,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
             //use combatLevel to determine max.
             switch (combatLevel)
             {
-                //Bandits only
+                //Multiple bandits only
                 case 5:
                     max = 0;
                     break;
@@ -71,11 +71,14 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
                     break;
 
                 //if not situational, then scale up by combatLevel
+                case > 9:
+                    max = 5;
+                    break;
+                case > 7:
+                    max = 4;
+                    break;
                 case > 5:
                     max = 3;
-                    break;
-                case > 4:
-                    max = 5;
                     break;
                 case > 2:
                     max = 1;
