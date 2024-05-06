@@ -27,6 +27,8 @@ MUST DO:
 		Ideally store more than just numWins
 			Perhaps add exp tracking where different mobs give different exp
 			Perhaps implement a title screen before starting a New Game that collects user name?
+	Extended testing to Make sure no unexpected errors happen
+
 	
 Ideal to do:
 	Stop using MobData for non GUI things, just use the UniqueIDs!
