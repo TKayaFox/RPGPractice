@@ -8,7 +8,6 @@ using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
-using RPGPractice.GUI;
 
 namespace RPGPractice.Engine
 {
@@ -138,7 +137,7 @@ namespace RPGPractice.Engine
                 if (mob.IsAlive)
                 {
                     //Add to enemyTargetList if an NPC
-                    if (mob is Enemy)
+                    if (mob is EnemyMob)
                     {
                         enemyTargetList.Add(mob.Data);
                     }

@@ -1,5 +1,4 @@
 ﻿using RPGPractice.Core.Events;
-using RPGPractice.GUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +17,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         ///     Currently set to 1 effectively meaning mana regenerates whenever it wasnt used last turn
         /// </summary>
         private const int MANA_REGEN_THRESHOLD = 1;
+        private const int MANA_REGEN_RATE = 2;
 
 
         protected CasterMob(string name) : base(name)
@@ -38,7 +38,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
         /// </summary>
         /// <param name="v1"></param>
         /// <param name="v2"></param>
-        protected void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
+        protected override void TakeTurn(List<MobData> allyTargetList, List<MobData> enemyTargetList)
         {
             //Regenerate Mana
             manaRegen++;
@@ -47,6 +47,7 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             if (manaRegen > MANA_REGEN_THRESHOLD)
             {
                 mana++;
+                AppendTurnSummary($"\t{Name} regained 1 Mana!  [Mana {mana}]");
             }
 
             //Follow normal Turn Logic

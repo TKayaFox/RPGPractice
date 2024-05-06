@@ -6,7 +6,6 @@ using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
-using RPGPractice.GUI;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RPGPractice.Engine.MobClasses
@@ -271,7 +270,7 @@ namespace RPGPractice.Engine.MobClasses
             data.Sprite = sprite;
             data.Name = name;
             data.UniqueID = uniqueID;
-            data.IsNPC = (this is Enemy); //if this object falls under NPC (MobID subclass)
+            data.IsNPC = (this is EnemyMob); //if this object falls under NPC (MobID subclass)
             data.IsAlive = IsAlive;
             data.SpecialActionString = SpecialActionString;
 

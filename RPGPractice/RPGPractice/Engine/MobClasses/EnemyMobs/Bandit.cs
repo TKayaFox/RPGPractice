@@ -6,9 +6,9 @@ using System.Text;
 
 namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
-    public class Bandit : Enemy
+    public class Bandit : EnemyMob
     {
-        public Bandit(string name) : base(name) { }
+        public Bandit(string name, Random random) : base(name, random) { }
 
         /// <summary>
         /// Sets All stats for MobID

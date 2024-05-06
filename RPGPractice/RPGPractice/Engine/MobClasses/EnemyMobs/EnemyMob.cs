@@ -1,7 +1,6 @@
 ﻿using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
-using RPGPractice.GUI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +9,19 @@ using System.Threading.Tasks;
 
 namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
-    public abstract class Enemy : Mob
+    public abstract class EnemyMob : Mob
     {
+        Random random;
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="name"></param>
         /// <param name="random"></param>
-        protected Enemy(string name) : base(name) { }
+        protected EnemyMob(string name, Random random) : base(name) 
+        {
+            this.random = random;
+        }
 
         /// <summary>
         /// Automate a turn for the Mob
@@ -37,17 +41,11 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
             MobData target;
 
             //cycle through targetedAbilityQueue to find a target, skipping dead targets
-            int targetIndex = 0;
             do
             {
-                target = heroes[targetIndex];
-                targetIndex++;
-
-                //reset index if outside of bounds
-                if (targetIndex >= heroes.Count)
-                {
-                    targetIndex = 0;
-                }
+                //Generate a random number matching an index entry
+                int index = random.Next(heroes.Count);
+                target = heroes[index];
             } while (!target.IsAlive);
 
             return target;

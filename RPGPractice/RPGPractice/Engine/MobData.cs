@@ -5,16 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using RPGPractice.Core.Enumerations;
 
-namespace RPGPractice.GUI
+namespace RPGPractice.Engine
 {
     public class MobData
     {
         private int uniqueID;
-        private System.Drawing.Bitmap? sprite;
+        private Bitmap? sprite;
         private PictureBox? pictureBox;
         private string? name;
         private bool isNPC;
         private bool isAlive;
+        private bool isCaster;
         private string specialAction = "";
 
         /// <summary>
@@ -24,7 +25,13 @@ namespace RPGPractice.GUI
         public override string ToString()
         {
             if (name == null) { name = ""; }
-            return name;
+            string returnString = $"HP: {hitPoints}";
+            if (isCaster)
+            {
+                returnString += $" Mana: {mana}";
+            }
+            return $"{Name} [{returnString}";
+
         }
 
 
@@ -39,8 +46,8 @@ namespace RPGPractice.GUI
         /// <summary>
         /// Property but when PictureBox is set, Sprite is already applied to the PictureBox
         /// </summary>
-        public PictureBox? PictureBox 
-        { 
+        public PictureBox? PictureBox
+        {
             get => pictureBox;
             set
             {

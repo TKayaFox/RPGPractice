@@ -5,9 +5,9 @@ using System.Text;
 
 namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
-    public class Ogre : Enemy
+    public class Ogre : EnemyMob
     {
-        public Ogre(string name) : base(name) { }
+        public Ogre(string name, Random random) : base(name, random) { }
 
         /// <summary>
         /// Sets All stats for MobID

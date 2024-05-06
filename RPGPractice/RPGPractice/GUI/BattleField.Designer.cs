@@ -307,7 +307,7 @@ namespace RPGPractice
             battleSummaryTBox.ScrollBars = ScrollBars.Vertical;
             battleSummaryTBox.Size = new Size(722, 144);
             battleSummaryTBox.TabIndex = 5;
-            battleSummaryTBox.TextAlign = HorizontalAlignment.Center;
+            battleSummaryTBox.TextAlign = HorizontalAlignment.Left;
             // 
             // BattleStartButt
             // 

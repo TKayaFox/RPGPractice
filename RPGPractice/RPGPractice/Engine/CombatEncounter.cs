@@ -60,19 +60,19 @@ namespace RPGPractice.Engine
             //TODO: Refactor: I'm sure theres a way to do this with a single method using a generics, but i cant make it work
             for (int i = 0; i < numBandits; i++)
             {
-                Mob enemy = new Bandit("Bandit");
+                Mob enemy = new Bandit("Bandit",random);
                 enemyList.Add(enemy);
                 enemy.UniqueID = i + 100;
             }
             for (int i = 0; i < numOgres; i++)
             {
-                Mob enemy = new Ogre("Ogre");
+                Mob enemy = new Ogre("Ogre",random);
                 enemyList.Add(enemy);
                 enemy.UniqueID = i + 200;
             }
             for (int i = 0; i < numDragons; i++)
             {
-                Mob enemy = new Dragon("Dragon");
+                Mob enemy = new Dragon("Dragon", random);
                 enemyList.Add(enemy);
                 enemy.UniqueID = i + 300;
             }

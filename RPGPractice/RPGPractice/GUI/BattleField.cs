@@ -10,8 +10,8 @@ using System.Windows.Forms;
 using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
+using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.GUI;
 
 namespace RPGPractice
 {
