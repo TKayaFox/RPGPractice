@@ -9,6 +9,11 @@ using System.Threading.Tasks;
 
 namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
+    /// <summary>
+    /// EnemyMob Abstract Object Mob subclass
+    /// Developer: Taylor Fox
+    /// Abstract Subclass that adds Logic for Non Player Controlled Mobs (Enemies)
+    /// </summary>
     public abstract class EnemyMob : Mob
     {
         protected Random random;

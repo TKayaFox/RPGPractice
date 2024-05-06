@@ -7,13 +7,19 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace RPGPractice
 {
+
+    /// <summary>
+    /// GameForm Form
+    /// Developer: Taylor Fox
+    /// Works as the Main GUI Form for the RPG Game, with menu components and loading screens as needed
+    /// </summary>
     public partial class GameForm : Form
     {
         //=========================================
         //              Variables
         //=========================================
         #region Variables
-        private BattleField battlefield;
+        private BattleScreen battlefield;
         #endregion
 
         #region Invokable Events
@@ -56,7 +62,7 @@ namespace RPGPractice
             }
 
             //Initialize battleField then add it to eventManager
-            battlefield = new BattleField();
+            battlefield = new BattleScreen();
             OnManageObject(battlefield, true);
             battlefield.Populate(mobDataList);
             Controls.Add(battlefield); battlefield.Visible = true;
@@ -87,7 +93,7 @@ namespace RPGPractice
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
             //Get About txt as a string
-            FileManager.GetAbout();
+            string aboutTxt = FileManager.GetAbout;
 
             //Display information in messagebox
             MessageBox.Show(aboutTxt);
@@ -121,7 +127,7 @@ namespace RPGPractice
         {
             if (battlefield != null)
             {
-                //unload BattleField
+                //unload BattleScreen
                 OnManageObject(battlefield, false);
                 battlefield.Unload();
                 Controls.Remove(battlefield);

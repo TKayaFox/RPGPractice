@@ -8,6 +8,11 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
+    /// <summary>
+    /// CasterMob Abstract Object Mob subclass
+    /// Developer: Taylor Fox
+    /// Subclass that adds logic for Spellcasters that need to manage Mana such as Cleric and Mage
+    /// </summary>
     public abstract class CasterMob : PlayerMob
     {
         private int maxMana; //Only casters get ManaString

@@ -10,6 +10,12 @@ using RPGPractice.Core;
 
 namespace RPGPractice.Engine
 {
+    /// <summary>
+    /// FileManager class
+    /// Developer: Taylor Fox
+    /// Object that generates Encounters and temporarily stores them for implementation
+    ///     Determines how many enemies to add to any encounter
+    /// </summary>
     public class CombatEncounter
     {
         private const int MIN_ENEMIES = 1;

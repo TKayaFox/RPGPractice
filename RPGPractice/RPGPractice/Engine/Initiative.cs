@@ -10,6 +10,13 @@ using System.Windows.Forms;
 
 namespace RPGPractice.Engine
 {
+    /// <summary>
+    /// FileManager class
+    /// Developer: Taylor Fox
+    /// PriorityQueue based object that handles Initiative tracking for users.
+    /// </summary>
+    /// Note: Look, I got frustrated trying to get C#'s native PriorityQueue to work so I made my own.
+    ///     I hope to eventually come back and do a better job, but it does it's job for now!
     public class Initiative
     {
         Node head;

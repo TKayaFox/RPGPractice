@@ -4,12 +4,12 @@
     <Compile Update="GUI\GameForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="GUI\BattleField.cs">
+    <Compile Update="GUI\BattleScreen.cs">
       <SubType>UserControl</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="GUI\BattleField.resx">
+    <EmbeddedResource Update="GUI\BattleScreen.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Update="GUI\GameForm.resx">

@@ -15,7 +15,12 @@ using RPGPractice.Engine.MobClasses;
 
 namespace RPGPractice
 {
-    public partial class BattleField : UserControl
+    /// <summary>
+    /// BattleScreen UserControl Object class
+    /// Developer: Taylor Fox
+    /// Handles the display for Combat Encounters
+    /// </summary>
+    public partial class BattleScreen : UserControl
     {
         //=========================================
         //               Variables
@@ -39,7 +44,7 @@ namespace RPGPractice
         //              Main Methods
         //=========================================
         #region Public Methods
-        public BattleField()
+        public BattleScreen()
         {
             InitializeComponent();
 
@@ -85,7 +90,7 @@ namespace RPGPractice
         }
 
         /// <summary>
-        /// Called to ensure BattleField is properly cleared for garbage collection
+        /// Called to ensure BattleScreen is properly cleared for garbage collection
         /// </summary>
         public void Unload()
         {

@@ -7,6 +7,12 @@ using RPGPractice.Core.Enumerations;
 
 namespace RPGPractice.Engine
 {
+    /// <summary>
+    /// MobData Object Class
+    /// Developer: Taylor Fox
+    /// MobData provides a simpler object for storing MobData when the larger class is not needed. 
+    /// Built mainly for GUI side for better encapsulation.
+    /// </summary>
     public class MobData
     {
         private int uniqueID;

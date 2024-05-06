@@ -12,6 +12,12 @@ using RPGPractice.Core;
 
 namespace RPGPractice.Engine
 {
+    /// <summary>
+    /// GameEngine Object class
+    /// Developer: Taylor Fox
+    /// Handles the core Game Logic for the RPG Game
+    ///     Uses Events to communicate to User Interface
+    /// </summary>
     public class GameEngine
     {
         //=========================================
@@ -45,7 +51,6 @@ namespace RPGPractice.Engine
         public GameEngine(EventManager eventManager)
         {
             random = new Random();
-            MessageBox.Show("Please enter your name.")
 
             numWins = 4;
 

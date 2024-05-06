@@ -11,6 +11,11 @@ using RPGPractice.Engine.MobClasses.EnemyMobs;
 
 namespace RPGPractice.Engine
 {
+    /// <summary>
+     /// FileManager class
+     /// Developer: Taylor Fox
+     /// Handles the Logic during 
+     /// </summary>
     public class Battle
     {
         //=========================================

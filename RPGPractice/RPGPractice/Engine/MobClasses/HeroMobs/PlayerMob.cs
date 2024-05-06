@@ -8,6 +8,11 @@ using System.Threading.Tasks;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
+    /// <summary>
+    /// PlayerMob Abstract Mob Subclass
+    /// Developer: Taylor Fox
+    /// Abstract subclass that adds logic for PlayerControlled Mobs mainly raising PlayerTurn events
+    /// </summary>
     public abstract class PlayerMob : Mob
     {
         /// <summary>
@@ -23,14 +28,5 @@ namespace RPGPractice.Engine.MobClasses.HeroMobs
             //raise PlayerTurn event to capture user's action
             OnPlayerTurn(allyTargetList, enemyTargetList);
         }
-
-
-        /// <summary>
-        /// Compiles TargetList Lists for OnPlayerTurn
-        ///     Override to alter Special Action behavior
-        /// </summary>
-        /// <param name="allyTargetList"></param>
-        /// <param name="enemyTargetList"></param>
-        /// <param name="args"></param>
     }
 }

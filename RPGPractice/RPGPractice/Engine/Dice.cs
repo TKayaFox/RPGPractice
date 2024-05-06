@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 namespace RPGPractice.Engine
 {
     /// <summary>
+    /// FileManager class
+    /// Developer: Taylor Fox
     /// Dice handles randomized values for Mobs to standardize roll behavior
     /// </summary>
     public class Dice

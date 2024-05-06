@@ -4,11 +4,17 @@ using RPGPractice.Engine.MobClasses;
 namespace RPGPractice.Core.Events
 {
     /// <summary>
+    /// FileManager class
+    /// Developer: Taylor Fox
     /// Subscriber Data tracks all Objects and what evens they may raise.
     /// Trying to juggle subscribing to events for every object, and what events should be subscribed to, can be messy.
-    /// 
     /// Public methods allow the program to subscribe to all events that it needs at once.
     /// </summary>
+    /// Note: 
+    ///     Honestly, theres so much that can be done better
+    ///     and I probably spent way more time on getting the EventManager working than I really needed to
+    ///     But I'm pretty proud. I don't know if other programs bother with an eventmanager 
+    ///     but I think it really helps tie the large number of object types together
     public class EventManager
     {
         //=========================================
@@ -50,7 +56,7 @@ namespace RPGPractice.Core.Events
                 case Battle battle:
                     ManageBattle(battle, isActive);
                     break;
-                case BattleField battlefield:
+                case BattleScreen battlefield:
                     ManageBattleField(battlefield, isActive);
                     break;
                 case GameEngine engine:
@@ -118,7 +124,7 @@ namespace RPGPractice.Core.Events
         }
 
 
-        private void ManageBattleField(BattleField target, bool addMe)
+        private void ManageBattleField(BattleScreen target, bool addMe)
         {
             //Unsubscribe first to prevent double subscription.
             target.PlayerAction -= OnPlayerAction_Relay;

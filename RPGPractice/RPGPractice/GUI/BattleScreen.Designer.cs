@@ -1,7 +1,7 @@
 ﻿
 namespace RPGPractice
 {
-    partial class BattleField
+    partial class BattleScreen
     {
         /// <summary> 
         /// Required designer variable.
@@ -321,7 +321,7 @@ namespace RPGPractice
             battleSummaryTBox.Size = new Size(391, 154);
             battleSummaryTBox.TabIndex = 5;
             // 
-            // BattleField
+            // BattleScreen
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;

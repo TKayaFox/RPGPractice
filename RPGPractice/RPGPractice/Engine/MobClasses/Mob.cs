@@ -11,8 +11,10 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 namespace RPGPractice.Engine.MobClasses
 {
     /// <summary>
-    /// MobID represents any creature (Player Character or Non Player Character)
-    /// All mobs should have the same basic functioning and Attributes, these attributes should be limited to 
+    /// Mob Abstract Object class
+    /// Developer: Taylor Fox
+    /// Mob represents any creature (Player Character or Non Player Character)
+    /// Abstract class that handles all of the core functionality of all Mobs
     /// </summary>
     public abstract class Mob
     {
@@ -326,6 +328,13 @@ namespace RPGPractice.Engine.MobClasses
 
         #region Protected Methods
 
+        /// <summary>
+        /// Compiles TargetList Lists for OnPlayerTurn
+        ///     Override to alter Special Action behavior
+        /// </summary>
+        /// <param name="allyTargetList"></param>
+        /// <param name="enemyTargetList"></param>
+        /// <param name="args"></param>
         protected virtual void CompileTargetLists(List<MobData> allyTargetList, List<MobData> enemyTargetList, PlayerTurnEventArgs args)
         {
             //Make lists of viable targets

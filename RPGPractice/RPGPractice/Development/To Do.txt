@@ -22,8 +22,15 @@ MUST DO:
 		redo indenting
 		Clear all TODO notes from project before submission.
 			Resolve if possible, if not put here.
+	Leaderboard
+		Need to store in a recoverable way so can see top scores
+		Ideally store more than just numWins
+			Perhaps add exp tracking where different mobs give different exp
+			Perhaps implement a title screen before starting a New Game that collects user name?
 	
 Ideal to do:
+	Stop using MobData for non GUI things, just use the UniqueIDs!
+
 	Get users name for the save to add to the leaderboard
 		Save more stats
 	Break Classes down into smaller parts?
