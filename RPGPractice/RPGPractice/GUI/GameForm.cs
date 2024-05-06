@@ -1,7 +1,6 @@
 using RPGPractice.Core.Events;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.GUI;
 
 namespace RPGPractice
 {
@@ -14,8 +13,11 @@ namespace RPGPractice
         private const string ABOUT = "About.txt";
 
         private BattleField battlefield;
-        private EventManager eventManager;
+        #endregion
 
+        #region Invokable Events
+        public event EventHandler<EventManagerEventArgs> ManageObject;
+        public event EventHandler NewGame;
         #endregion
 
         //=========================================
@@ -29,11 +31,9 @@ namespace RPGPractice
         public GameForm(EventManager eventManager)
         {
             InitializeComponent();
-            this.eventManager = eventManager;
-            battlefield = new BattleField();
-            battlefield.ManageEvents(eventManager);
 
-            ManageEvents();
+            //Subscribe to eventManager (handles relaying and subscribing to events)
+            eventManager.ManageObjectSort(this, true);
 
             //start Game
             OnNewGame(this, EventArgs.Empty);
@@ -45,7 +45,18 @@ namespace RPGPractice
 
         private void NewBattle(List<MobData> mobDataList)
         {
+            //if battlefield has already been initialized unregister it from eventmanager
+            if (battlefield != null)
+            {
+                OnManageObject(battlefield, false);
+                battlefield.Unload();
+                Controls.Remove(battlefield);
+                battlefield = null;
+            }
+
             //Initialize battleField then add it to eventManager
+            battlefield = new BattleField();
+            OnManageObject(battlefield, true);
             battlefield.Populate(mobDataList);
             Controls.Add(battlefield); battlefield.Visible = true;
         }
@@ -60,18 +71,11 @@ namespace RPGPractice
 
             String data = "";
 
-            try
-            {
-                StreamReader reader = new StreamReader(fileName);
+            StreamReader reader = new StreamReader(fileName);
 
-                while (!reader.EndOfStream)
-                {
-                    data += reader.ReadLine() + "\n";
-                }
-            }
-            catch (Exception ex)
+            while (!reader.EndOfStream)
             {
-                System.Diagnostics.Debug.WriteLine("MessageBox error: "+ex.Message);
+                data += reader.ReadLine() + "\n";
             }
 
             //Display information in messagebox
@@ -83,7 +87,6 @@ namespace RPGPractice
         //=========================================
         //                Events
         //=========================================
-        public event System.EventHandler NewGame;
 
         #region Events
         /// <summary>
@@ -108,32 +111,39 @@ namespace RPGPractice
         }
         #endregion
 
-        //=========================================
-        //             Event Handlers
-        //=========================================
-        #region Event Handlers
-
-        /// <summary>
-        /// Publishes MobData and subscribes to all events
-        /// Refactor: Remove if not in use
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void ManageEvents()
+        #region Event Invokers
+        public void OnManageObject(object target, bool isActive)
         {
-            //publish events to eventManager
-            NewGame += eventManager.OnNewGame_Aggregator;
-
-            //edit: Subscribe to any needed events
-            eventManager.BattleStart += OnBattleStart_Handler;
+            EventManagerEventArgs args = new EventManagerEventArgs();
+            args.AddTarget = target;
+            args.IsActive = isActive;
+            ManageObject.Invoke(this, args);
         }
+        #endregion
 
-        public void OnBattleStart_Handler(object? sender, BattleStartEventArgs args)
+        #region Event Handlers
+        public void OnNewBattle_Handler(object? sender, NewBattleEventArgs args)
         {
-            //unpack relevent data from BattleStartEventArgs
+            //unpack relevent data from NewBattleEventArgs
             List<MobData> mobDataList = args.MobDataList;
+
+            //get rid of old battle information
+            UnloadBattleField();
 
             //Send to appropriate Method
             NewBattle(mobDataList);
+        }
+
+        private void UnloadBattleField()
+        {
+            if (battlefield != null)
+            {
+                //unload BattleField
+                OnManageObject(battlefield, false);
+                battlefield.Unload();
+                Controls.Remove(battlefield);
+                battlefield = null;
+            }
         }
         #endregion
     }

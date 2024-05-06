@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Xml.Linq;
+using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.GUI;
+using RPGPractice.Engine.MobClasses.EnemyMobs;
 
 namespace RPGPractice.Engine
 {
@@ -15,43 +16,37 @@ namespace RPGPractice.Engine
         //=========================================
         //                Variables
         //=========================================
-        
+
         //Some items throw exceptions on purpose and attempt to loop until solved
         //  MAX_EXCEPTIONS prevents infinite loops
         private const int MAX_EXCEPTIONS = 5;
 
         private Mob[] enemies;
         private Mob[] heroes;
-        private Mob currentTurn;
+        private Mob turnHolder;
         private Initiative initiative;
-        private Random random;
-        private int combatLevel;
         private Dictionary<int, Mob> mobDictionary;
 
-        //TODO: Implement Block Logic
-        //TODO: Implement Special Attack Logic
+        #region Events
+        public event EventHandler<NewBattleEventArgs> NewBattle;
+        public event EventHandler<BattleResultEventArgs> BattleResult;
+        public event EventHandler<TurnEndEventArgs> TurnEnd;
+        public event EventHandler<EventManagerEventArgs> ManageObject;
+        #endregion
 
         //=========================================
         //              Main Methods
         //=========================================
-        /// <summary>
-        /// Construtor
-        /// </summary>
-        /// <param name="heroes"></param>
-        /// <param name="combatLevel"></param>
-        public Battle(Mob[] heroes, int combatLevel, Random random)
+
+        public Battle(CombatEncounter encounter)
         {
             //Populate hero and enemies for battle
-            this.heroes = heroes;
-            this.combatLevel = combatLevel;
-            this.random = random;
+            this.heroes = encounter.Heroes;
+            this.enemies = encounter.Enemies;
         }
 
-        public async Task Start(EventManager eventManager)
+        public async Task Start()
         {
-
-            //setup initiative order and enemies
-            enemies = GenerateEncounter(eventManager);
             initiative = new Initiative(heroes, enemies);
 
             //setup MobID dictionary for easy reference
@@ -61,19 +56,20 @@ namespace RPGPractice.Engine
             AddToDictionary(heroes, mobDictionary);
             AddToDictionary(enemies, mobDictionary);
 
-            //subscribe to Events
-            ManageEvents(eventManager);
+            //Start Gui battleForm logic
+            OnNewBattle();
 
-            //Start Gui logic
-            OnBattleStart();
+            //Register all mobs with EventManager
+            OnManageMobs(true);
         }
 
         /// <summary>
-        /// Adds an array of mobs to dictionary using uniqueID 
+        /// Adds an array of mobs to dictionary using uniqueID
+        ///     Also sets mob to be managed by eventManager
         /// </summary>
         /// <param name="mobArr"></param>
         /// <param name="dictionary"></param>
-        private static void AddToDictionary(Mob[] mobArr, Dictionary<int, Mob> dictionary)
+        private void AddToDictionary(Mob[] mobArr, Dictionary<int, Mob> dictionary)
         {
             //add each mobID to dictionary using uniqueID for index
             foreach (Mob mob in mobArr)
@@ -88,41 +84,46 @@ namespace RPGPractice.Engine
         /// <exception cref="NotImplementedException"></exception>
         public void NextTurn()
         {
+            //Check if all heroes or villains are dead.
+            //  Victory is only assured if at least one hero lives
+            bool loss = AreMobsDead(heroes);
+            bool battleEnd = loss || AreMobsDead(enemies);
+            if (battleEnd)
+            {
+                OnBattleResult(!loss); //OnBattleResult uses victory not loss, so reverse the boolean
+            }
+            else
+            {
+                AssignTurnHolder();
+                TakeTurn();
+            }
+        }
+
+        private void AssignTurnHolder()
+        {
             //Determine who is next in initiative, but skip dead mobs.
             bool isAlive = false;
             while (!isAlive)
             {
                 //get next MobID in initiative
                 int uniqueID = initiative.NextTurn();
-                currentTurn = mobDictionary[uniqueID];
-                isAlive = currentTurn.IsAlive;
-                System.Diagnostics.Debug.WriteLine($"Current Turn: {currentTurn.Name} [{isAlive}]");
+                turnHolder = mobDictionary[uniqueID];
+                isAlive = turnHolder.IsAlive;
             }
+        }
 
+        /// <summary>
+        /// Compile list of attackable targets and tell Mob to take its turn
+        /// </summary>
+        private void TakeTurn()
+        {
             //Make lists of all targetable mobs on both sides
             List<MobData> heroTargetList = new List<MobData>();
             List<MobData> enemyTargetList = new List<MobData>();
             GetTargetableMobs(heroTargetList, enemyTargetList);
 
-            //Tell mob to take it's turn
-            //If NotSupportedException is thrown, an invalid selection has been made
-            bool turnCompleted = false;
-            int attempt = 0;
-            do
-            {
-                try
-                {
-                    currentTurn.StartTurn(heroTargetList, enemyTargetList);
-                }
-                catch (NotSupportedException)
-                {
-                    //TODO: implement an error box stating whats wrong
-                }
-                turnCompleted = true;
-                attempt++;
-            } while (!turnCompleted && attempt < MAX_EXCEPTIONS);
-
-            //TODO: If somehow the turn could not be completed notify user
+            //take turn
+            turnHolder.StartTurn(heroTargetList, enemyTargetList);
         }
 
         private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
@@ -133,14 +134,14 @@ namespace RPGPractice.Engine
                 if (mob.IsAlive)
                 {
                     //Add to enemyTargetList if an NPC
-                    if (mob is NPC)
+                    if (mob is EnemyMob)
                     {
-                        enemyTargetList.Add(mob.MobData);
+                        enemyTargetList.Add(mob.Data);
                     }
                     //Otherwise add to heroTargetList
                     else
                     {
-                        heroTargetList.Add(mob.MobData);
+                        heroTargetList.Add(mob.Data);
                     }
                 }
             }
@@ -159,44 +160,6 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// Initializes an array of Mobs for a combat encounter
-        /// </summary>
-        /// <returns>MobID[] array of enemies/NPCs</returns>
-        public Mob[] GenerateEncounter(EventManager eventManager)
-        {
-            //TODO: Implement actuall encounter scaling
-            //      depending on Combat Level
-            Mob[] enemies = new Mob[1];
-
-            for (int i = 0; i < enemies.Length; i++)
-            {
-                Mob enemy = new Bandit($"Bandit {i}", random);
-                enemy.ManageEvents(eventManager);
-                enemy.UniqueID = i + 100;
-                enemies[i] = enemy;
-            }
-            return enemies;
-        }
-
-        /// <summary>
-        /// Checks for Battle end state every time a MobID dies 
-        /// (If all enemies or all heroes are dead)
-        /// </summary>
-        private bool IsBattleEnd()
-        {
-            //Check if all heroes or villains are dead.
-            //  Victory is only assured if at least one hero lives
-            bool loss = AreMobsDead(heroes);
-            bool battleEnd = loss || AreMobsDead(enemies);
-            if (battleEnd)
-            {
-                OnBattleEnd(!loss); //OnBattleEnd uses victory not loss, so reverse the boolean
-            }
-
-            return battleEnd;
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         /// <param name="mobs"></param>
@@ -205,7 +168,7 @@ namespace RPGPractice.Engine
         {
             foreach (Mob mob in mobs)
             {
-                MobData data = mob.MobData;
+                MobData data = mob.Data;
                 mobDataList.Add(data);
             }
         }
@@ -220,62 +183,13 @@ namespace RPGPractice.Engine
         //=========================================
         //                Events
         //=========================================
-        public event EventHandler<BattleStartEventArgs> BattleStart;
-        public event EventHandler<BattleEndEventArgs> BattleEnd;
-        public event EventHandler<TurnEndEventArgs> TurnEnd;
-        #region Event Managers
-
-        /// <summary>
-        /// Publishes MobData and subscribes to all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void ManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            BattleStart += eventManager.OnBattleStart_Aggregator;
-            BattleEnd += eventManager.OnBattleEnd_Aggregator;
-            TurnEnd += eventManager.OnTurnEnd_Aggregator;
-
-            //Subscribe to events from eventManager
-            eventManager.PlayerAction += OnPlayerAction_handler;
-
-            //subscribe to all mob TurnEnd events
-            foreach (Mob mob in mobDictionary.Values)
-            {
-                mob.TurnEnd += OnTurnEnd_Handler;
-            }
-        }
-
-        /// <summary>
-        /// UnPublishes MobData and unsubscribes from all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void UnManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            BattleStart -= eventManager.OnBattleStart_Aggregator;
-            BattleEnd -= eventManager.OnBattleEnd_Aggregator;
-            TurnEnd -= eventManager.OnTurnEnd_Aggregator;
-
-            //unsubscribe events from eventManager
-            eventManager.PlayerAction -= OnPlayerAction_handler;
-
-
-            //unsubscribe all mob TurnEnd events
-            foreach (Mob mob in mobDictionary.Values)
-            {
-                mob.TurnEnd -= OnTurnEnd_Handler;
-            }
-        }
-
-        #endregion
 
         #region Event Invokers
-        public void OnBattleStart()
+        public void OnNewBattle()
         {
-            BattleStartEventArgs args = new BattleStartEventArgs();
+            NewBattleEventArgs args = new NewBattleEventArgs();
 
-            //Package only needed MobID data into MobData object for sending to Gui
+            //Package only needed MobID data into Data object for sending to Gui
             Mob[] mobs;
             List<MobData> mobDataList = new List<MobData>();
             CompileMobData(heroes, mobDataList);
@@ -283,26 +197,93 @@ namespace RPGPractice.Engine
 
             args.MobDataList = mobDataList;
 
-            BattleStart.Invoke(this, args);
+            NewBattle?.Invoke(this, args);
         }
-        #endregion
-
 
         /// <summary>
         /// Called when either all heroes, or all villains have died.
         /// </summary>
         /// <param name="victory"></param>
-        public void OnBattleEnd(bool victory)
+        public void OnBattleResult(bool victory)
         {
-            BattleEndEventArgs args = new BattleEndEventArgs();
+            //UnManage Mobs (Cannot unmanage self from within the class without interfering with BattleResult
+            OnManageMobs(false);
+
+            //Invoke event
+            BattleResultEventArgs args = new BattleResultEventArgs();
             args.Victory = victory;
-            BattleEnd.Invoke(this, args);
+            BattleResult?.Invoke(this, args);
         }
 
-        //=========================================
-        //                Event Handlers
-        //=========================================
+        public void OnTurnEnd(TurnEndEventArgs turnData)
+        {
+            //raise event then start next turn
+            TurnEnd?.Invoke(this, turnData);
+        }
 
+        /// <summary>
+        /// Unsubscribes all target and eventManager relationships for Mobs
+        ///     If isActive is true, then re-subscribe to all relationships
+        ///     Automatically prevents dual subscription
+        /// </summary>
+        /// <param name="target">Object that is to be Managed</param>
+        /// <param name="isActive">
+        /// - If true, subscription relationships between target and EventManager will be added/live/active
+        /// - If false, the relationship will be severed/unsubscribed
+        ///</param>
+        public void OnManageMobs(bool isActive)
+        {
+            EventManagerEventArgs args = new EventManagerEventArgs();
+
+            //Add Enemies and Heroes
+            args.AddTargetArr = Enemies;
+            args.AddTargetArr = Heroes;
+
+            //Direct subscription/unsubscription to TurnEnd
+            foreach (Mob mob in heroes)
+            {
+                mob.TurnEnd -= OnTurnEnd_Handler;
+                if (isActive)
+                {
+                    mob.TurnEnd += OnTurnEnd_Handler;
+                }
+            }
+            //Direct subscription/unsubscription to TurnEnd
+            foreach (Mob mob in enemies)
+            {
+                mob.TurnEnd -= OnTurnEnd_Handler;
+                if (isActive)
+                {
+                    mob.TurnEnd += OnTurnEnd_Handler;
+                }
+            }
+
+            //Store whether values are being subscribed or unsubscribed
+            args.IsActive = isActive;
+            ManageObject?.Invoke(this, args);
+        }
+        /// <summary>
+        /// Unsubscribes all target and eventManager relationships for self
+        ///     If isActive is true, then re-subscribe to all relationships
+        ///     Automatically prevents dual subscription
+        /// </summary>
+        /// <param name="target">Object that is to be Managed</param>
+        /// <param name="isActive">
+        /// - If true, subscription relationships between target and EventManager will be added/live/active
+        /// - If false, the relationship will be severed/unsubscribed
+        ///</param>
+        public void OnManageMe(bool isActive)
+        {
+            EventManagerEventArgs args = new EventManagerEventArgs();
+
+            //Store whether values are being subscrubed or unsubscribed
+            args.AddTarget = this;
+            args.IsActive = isActive;
+            ManageObject.Invoke(this, args);
+        }
+        #endregion
+
+        #region Event Handlers
         /// <summary>
         /// At end of each turn, start the next turn
         /// </summary>
@@ -338,7 +319,7 @@ namespace RPGPractice.Engine
                         result += $"\r\n{target.DefendMagic(attackRoll, damage)}";
                         break;
                     case DamageType.Heal:
-                        result += $"{ target.Heal(damage)} ";
+                        result += $"{target.Heal(damage)} ";
                         break;
                 }
 
@@ -347,17 +328,9 @@ namespace RPGPractice.Engine
 
             turnEndData.TurnSummary += turnSummary;
 
-            TurnEnd?.Invoke(sender, turnEndData);
-
-            //check for game over
-            if (IsBattleEnd())
-            {
-
-            }
-            else
-            {
-                NextTurn();
-            }
+            //relay event then start next turn
+            OnTurnEnd(turnEndData);
+            NextTurn();
         }
 
         /// <summary>
@@ -370,28 +343,71 @@ namespace RPGPractice.Engine
             //Unpack Args
             MobActions action = playerAction.Action;
 
+            //If NotSupportedException is thrown, an invalid selection has been made
+            try
+            {
+                PlayerAction(playerAction, action);
+            }
+            catch (NotSupportedException e)
+            {
+                //Tell user about the error, then allow them to try again
+                MessageBox.Show(e.Message + "\r\nPlease choose another action!");
+                TakeTurn();
+            }
+
+        }
+
+        /// <summary>
+        /// Called when Gui is ready and user selects NextTurn() button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void OnBattleStart_Handler(object sender, EventArgs e)
+        {
+            NextTurn();
+        }
+
+        private void PlayerAction(PlayerActionEventArgs playerAction, MobActions action)
+        {
+            //Check for valid target (see of dictionary contains the key
+            bool validTarget = mobDictionary.ContainsKey(playerAction.TargetID);
+
+            Mob target = null;
+            if (validTarget)
+            {
+                target = mobDictionary[playerAction.TargetID];
+            }
+
             //determine type of action was selected and send the appropriate command
             switch (action)
             {
                 case MobActions.Block:
-                    currentTurn.Block();
+                    turnHolder.Block();
                     break;
                 case MobActions.Attack:
-                    if (playerAction.TargetID != -1)
+                    //Ensure theres a target
+                    if (validTarget)
                     {
-                        Mob target = mobDictionary[playerAction.TargetID];
-                        currentTurn.Attack(target.MobData);
+                        turnHolder.Attack(target.Data);
+                    }
+                    else //throw exception telling user to re-try theit action
+                    {
+                        throw new NotSupportedException("Invalid Target");
                     }
                     break;
                 case MobActions.Special:
-                    if (playerAction.TargetID != -1)
+                    //Ensure theres a target
+                    if (validTarget)
                     {
-                        Mob target = mobDictionary[playerAction.TargetID];
-                        currentTurn.Special(target.MobData);
+                        turnHolder.Special(target.Data);
+                    }
+                    else //throw exception telling user to re-try theit action
+                    {
+                        throw new NotSupportedException("Invalid Target");
                     }
                     break;
             }
-
         }
+        #endregion
     }
 }

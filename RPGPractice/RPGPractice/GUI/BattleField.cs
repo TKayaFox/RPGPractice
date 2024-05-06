@@ -7,10 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
 using RPGPractice.Core.Events;
+using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.GUI;
 
 namespace RPGPractice
 {
@@ -30,6 +31,8 @@ namespace RPGPractice
         private int currentTurnID;
 
 
+        public event EventHandler<PlayerActionEventArgs> PlayerAction;
+        public event EventHandler BattleStart;
         //TODO: Add a "Cancel" button in case user changes mind.
 
         //=========================================
@@ -44,13 +47,16 @@ namespace RPGPractice
             AttackButt.Tag = MobActions.Attack;
             DefendButt.Tag = MobActions.Block;
             SpecialButt.Tag = MobActions.Special;
+
+
         }
-            
+
         public void Populate(List<MobData> mobDataList)
         {
-            battleSummaryTBox.Text = "\r\n=========================================\r\n" +
+            //show user that a new battle has started
+            BattleUpdate("\r\n=========================================\r\n" +
                                      "New Battle!" +
-                                     "\r\n=========================================\r\n";
+                        "\r\n=========================================\r\n");
 
             mobDictionary = new Dictionary<int, MobData>();
 
@@ -76,6 +82,23 @@ namespace RPGPractice
                 heroSprites[i].Image = null;
                 enemySprites[i].Image = null;
             }
+        }
+
+        /// <summary>
+        /// Called to ensure BattleField is properly cleared for garbage collection
+        /// </summary>
+        public void Unload()
+        {
+            //Clear dictionary
+            mobDictionary?.Clear();
+            ClearTargetCBox();
+            attackTargetList?.Clear();
+            specialTargetList?.Clear();
+            mobDictionary?.Clear();
+
+            //clear all pictureboxes
+            enemySprites = null;
+            heroSprites = null;
         }
 
         #endregion
@@ -123,7 +146,7 @@ namespace RPGPractice
                 {
                     identified = true;
 
-                    //add PictureBox to MobData (automatically changes Sprite)
+                    //add PictureBox to Data (automatically changes Sprite)
                     data.PictureBox = pictureBox;
                 }
                 i++;
@@ -152,7 +175,7 @@ namespace RPGPractice
         private void InitializeTargetSelectMenu()
         {
             //Populate targetCBox with all potential targets
-            //add MobData to ComboBox.
+            //add Data to ComboBox.
             //  Note: non-Strings added to Combobox will display their toString()
             //  This makes it easy to know what targetedAbilityQueue the user selects.
             switch (action)
@@ -179,10 +202,29 @@ namespace RPGPractice
             MobData data = (MobData)targetCBox.SelectedItem;
 
             //Empty Targets to prevent redundant items
+            ClearTargetCBox();
+            return data;
+        }
+
+        private void ClearTargetCBox()
+        {
             targetCBox.SelectedIndex = -1;
             targetCBox.SelectedItem = null;
             targetCBox.DataSource = null;
-            return data;
+        }
+
+        /// <summary>
+        /// Appends a string as a new line to battleSummaryTBox and keeps textbox scrolled
+        /// </summary>
+        /// <param name="data"></param>
+        private void BattleUpdate(string data)
+        {
+
+            battleSummaryTBox.Text += $"\r\n{data}";
+
+            // Scroll to the end of the textbox
+            battleSummaryTBox.SelectionStart = battleSummaryTBox.Text.Length;
+            battleSummaryTBox.ScrollToCaret();
         }
 
         #endregion
@@ -190,7 +232,6 @@ namespace RPGPractice
         //=========================================
         //                Events
         //=========================================
-        public event EventHandler<PlayerActionEventArgs> PlayerAction;
 
         #region Events
 
@@ -230,7 +271,7 @@ namespace RPGPractice
         /// <param name="e"></param>
         private void TargetButt_Click(object sender, EventArgs e)
         {
-            //Get TargetList from ComboBox. interestingly comboBox is populated with MobData objects
+            //Get TargetList from ComboBox. interestingly comboBox is populated with Data objects
             MobData data;
 
             if (targetCBox.SelectedItem is MobData)
@@ -241,13 +282,25 @@ namespace RPGPractice
             }
             else
             {
-                //edit: If targetedAbilityQueue is NOT selected, provide error telling user to select a targetedAbilityQueue
+                //provide error telling user to select a target
+                MessageBox.Show("You must select a target!");
             }
 
             //re-show ActionButtBox
             ActionButtBox.Visible = true;
         }
+        private void BattleStartButt_Click(object sender, EventArgs e)
+        {
+            //Hide button and raise NewBattle event
+            BattleStartButt.Visible = false;
+            OnBattleStart();
+        }
 
+        private void TargetCancelButt_Click(object sender, EventArgs e)
+        {
+            //re-show ActionButtBox
+            ActionButtBox.Visible = true;
+        }
 
         /// <summary>
         /// raise the PlayerAction event
@@ -262,62 +315,36 @@ namespace RPGPractice
             actionData.Action = action;
             actionData.AttackerID = currentTurnID;
 
-            //Hide action menu until next player turn
-            HideActionMenu();
-
             //Unhighlight player
             MobData attacker = mobDictionary[currentTurnID];
             attacker.Selected = false;
 
-            //Raise PlayerAction event
+            //Hide action menu until next player turn
+            HideActionMenu();
             PlayerAction.Invoke(this, actionData);
         }
 
+        /// <summary>
+        /// When Form is initialized and user has selected Start button, raise event
+        /// </summary>
+        private void OnBattleStart()
+        {
+            BattleStart.Invoke(this, EventArgs.Empty);
+        }
         #endregion
 
         //=========================================
         //             Event Handlers
         //=========================================
         #region Event Handlers
-        /// <summary>
-        /// Publishes MobData and subscribes to all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void ManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            PlayerAction += eventManager.OnPlayerAction_Aggregator;
 
-            //Subscribe to any needed events
-            eventManager.PlayerTurn += OnPlayerTurn_Handler;
-            eventManager.TurnEnd += OnTurnEnd_Handler;
-        }
-
-        /// <summary>
-        /// UnPublishes MobData and unsubscribes from all events
-        /// </summary>
-        /// <param name="eventManager"></param>
-        public void UnManageEvents(EventManager eventManager)
-        {
-            //publish events to eventManager
-            PlayerAction -= eventManager.OnPlayerAction_Aggregator;
-
-            //unSubscribe to any needed events
-            eventManager.PlayerTurn -= OnPlayerTurn_Handler;
-            eventManager.TurnEnd -= OnTurnEnd_Handler;
-        }
-
-        private void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnData)
+        public void OnTurnEnd_Handler(object sender, TurnEndEventArgs turnData)
         {
             //Unpack turnSummary and append to battleSummaryTBox
-            battleSummaryTBox.Text += $"{turnData.TurnSummary}\r\n";
-
-            // Scroll to the end of the textbox
-            battleSummaryTBox.SelectionStart = battleSummaryTBox.Text.Length;
-            battleSummaryTBox.ScrollToCaret();
+            BattleUpdate(turnData.TurnSummary);
         }
 
-        private void OnPlayerTurn_Handler(object sender, PlayerTurnEventArgs args)
+        public void OnPlayerTurn_Handler(object sender, PlayerTurnEventArgs args)
         {
             //find mobData using MobID
             int mobID = args.MobID;
@@ -328,10 +355,10 @@ namespace RPGPractice
             mobDictionary[mobID].Selected = true;
 
             //Show Hero name in Action Menu
-            TurnLabel.Text = mobData.Name;
+            TurnLabel.Text = mobData.ToString();
 
             //Setup Special Button to show what SpecialActionString ability current mob has.
-            UpdateSpecialAttack(mobData);
+            UpdateSpecialAction(mobData);
 
             //update targetedAbilityQueue Lists
             attackTargetList = args.AttackTargetList;
@@ -341,9 +368,11 @@ namespace RPGPractice
             ShowActionMenu();
         }
 
-        private void UpdateSpecialAttack(MobData mobData)
+        private void UpdateSpecialAction(MobData mobData)
         {
-            if (!mobData.SpecialActionString.Equals(""))
+            string action = mobData.SpecialActionString;
+
+            if (!action.Equals(""))
             {
                 SpecialButt.Visible = true;
                 SpecialButt.Text = mobData.SpecialActionString;
@@ -356,5 +385,6 @@ namespace RPGPractice
         }
 
         #endregion
+
     }
 }

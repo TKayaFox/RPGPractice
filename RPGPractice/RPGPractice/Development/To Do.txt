@@ -1,0 +1,231 @@
+RPG Project to do:
+	Prioritize ToDo list
+	rebalance mobs
+	Do a temporary Branch for "submission" version, without old documents.
+	Clear all TODO notes from project before submission.
+		Resolve if possible, if not put here.
+	Modify encounter generation so rather than looping until a valid number was randomly generated, 
+		simply make the list up to the max then stop adding.
+		Possibly find a way to randomize mob assignment order when assigning to list
+		Or when generating check the current mob count, and reduce max to match.
+	EventManager
+		Make sure all classes are getting unsubscribed when closed
+	Revisit access for all methods/objects. For instance most Invokers are public and should be made private or protected.
+	EventManager
+		setup to receive Registration events
+			determine type of object and subscribe appropriate events
+	Incorporate Async tasks when able.
+	Create custom exception for invalid mob action.
+	Store Mobs in List instead of array
+	Dragon special attacks
+	GameEngine
+		endgame
+			game over
+				Display results (rounds lasted)
+				Display leaderboard button
+			victory
+				save data to file
+					just update save data before each battle
+					new file for each game
+				start a new battle
+		after battle
+			heal all Heroes
+	Refactor:
+		Setup comments with consistent layout
+			Use XML tags
+				Add explanations for parameters and returns
+			Look into other XML tags and see if theres other ways to add clarity
+		Put in more data validation rather than assumptions
+			make sure numbers are in range (for instance > 0 for Roll class)
+			check for Null
+		Clear all yellow warnings if possible
+		Break large methods down into smaller parts
+			some methods got kidn of big.
+		Set consistent Method organization across classes
+		redo indenting
+	Enemy decision making
+		Orc
+			attack whoever attacked last, otherwise attack random.
+		Dragon
+			decide type of attack:
+				breath attack: (targets one)
+					if high on health
+						attack random
+					if below half health
+						attack hardest hitter
+				swipe attack:  (targets all)
+					seperate attack for ALL targets
+	Refactor Mob and Mobdata such that Mob is no longer storing the MobData object.
+	The main reason I was doing this was because MobData was getting rebuilt on multiple occasions, causing multiple event subscriptions and other weirdness.
+	However, does MobData even need used except for the Battlefield object?
+		Might be because MobData is given to the battlefield through the PlayerTurb method.
+			Perhaps instead pass list of uniqueIDs and then on battlefield side store the MobData for each id by using the mobdictionary
+			then just store all MobData objects once.
+
+Future ideas:
+	Add explicit DeInitialize methods for ALL classes.
+		Battle
+			Call DeInitialize for all mobs
+			clear all lists
+			UnManageObject all mobs
+			UnManageObject self
+		Mob
+			unsubscribe mobData from Update event
+			set mobData = null
+		BattleField
+			(Already set up, just optimize it probably)
+	Have X/close button for program save data? Or warn user that exiting now will lose data?
+
+	eventManager
+		Figure out a way to pass events to objects for subscription
+			Perhaps store on the EventManager side 
+				when OnManageObject event occurs, but add them to the appropriate list. 
+					ex: Core and Battle
+					seperate lists can make sure events are subscribed in correct order
+						Gui first, then battle, then core. Opposite order than you would think
+							want the GUI to finish updating before trying to do more battle logic.
+							want the battle to finish updating before doing core logic, to avoid weird issues such as a old instance being kept loaded because of unresolved events
+				Then have simple Methods to run subscriptions when ready
+					LoadGUI()
+					UnLoadGUI()
+					LoadBattle()
+					UnLoadBattle()
+					LoadCore()
+					UnLoadCore()
+	async tasks to make things process faster. Especially useful once the above is done.
+	I feel like theres a way to get rid of Hero and enemy subclasses, but keep functionality.
+		Ideally should be able to create a Warrior Mob that is an enemy for instance, or a Bandit that is a hero.
+		Could merge the TakeTurn methods and use the isPlayerControlled bool i originally planned, though that's a bit messy and ideally I want LESS in the main Mob class not more
+		Maybe have some sort of class that they hold instead? Like PlayerToken, or NPCToken?
+	Make a Caster Mob subclass with all mana logic.
+	for EncounterData return whether Mob is treated as a Boss
+		(first interaction should be)
+		modify encounterdata to handle differently if adding a boss
+			perhaps also pass max number of minions?
+			OR generate a new encounter with the minions first (maxMobs -1 so theres room for boss), but add in the Boss?
+			or something else?		
+		Would definitely want to be able to use CasterMob for other classes, but I want to be able to explicitly write the logic so an Interface wont work.
+			Or will it?
+	make instructions for creating a new Mob/Enemy/Hero class somehow (stuff not already covered by abstract)
+		add the new class to the appropriate enum for instance
+		explain any existing interfaces/abstract subclasses
+		must include EncounterData static class for enemies
+		modify Encounter generation to include new Enemy class
+		possibly an interface for spellcasting
+	have Encounter populate using a Dictionary for each EnemyType instead of having to enter manually
+		see dictionary branch for attempted implementation
+	look up naming conventions for:
+		enums
+		interfaces
+		object classes
+		subclasses
+	setup Boss subclass for NPC
+		dragon implements Boss
+		have minion count for each boss
+		in Encounter
+			setup logic so that number of minions is limited by minion count
+				though increment minion count at higher combat levels
+	Set better way of handling UniqueIDs so they are guarunteed to be Unique
+		Perhaps a UniqueID class.
+	Move Event Management back into event Manager?
+			Would need to handle cases such as Battle class needing to unmanage all Mobs
+				Or maybe make UnManageAllMobs method in eventManager
+				Could do for all Classes, since normally want to manage all existing classes of the same type.
+					Just be careful in cases when want SOME members to remain okay. For isntance Unmanaging all mobs when deleting only Enemy Mobs
+	improve handling for case when notSupportedException raises too many times in Battle class.
+	Have MobData track HP and Mana
+		setup Update event to update Gui displays
+		in Battlefield add display for each Mob's name, hp, mana(if applicable)
+			possibly put into own UserControl
+	Actually ROLL initiative instead of using a static value.
+		Currently just using static for reliability, and to make things slightly easier on grader
+	add Testing (should have done this first, but better late than never)
+	Improve Initiative Class
+		perhaps use a tree?
+		or revisit how to use existing PriorityQueue options in C#
+	In save data keep track of more data:
+		number of dead Heroes
+		number of dead enemies
+			count for each type of enemy
+		whether a Game over or not
+		Possibly XML format or something
+	Add Load data option
+		load an existing (but not lost) save.
+	Darkest Dungeon style, when a Mob dies dont revive it, create a new one.
+	Implement spell selection
+	GameEngine
+		Add character naming and selection
+		EndGame
+			if Victory
+				show new Battle results userControl instead of BattleForm
+					show results
+					tell user progress has been saved
+					tell user progress has been saved
+					button to start next battle
+					button to start new game
+	Implement tutorial for first round
+		make skippable
+	Add more hero types
+		Ranger
+		Barbarian
+	Add more damage types
+		blunt vs slashing
+		ranged
+	get new Mob sprites
+	Make a Caster interface for classes like Mage and Cleric that use magic
+	Have names randomized from a text document
+	
+ONLY AFTER SUBMITTING FINAL Project
+	Add story?
+	Add dungeon navigation
+	Add leveling system
+
+
+
+Old ScopeCreep ideas:
+	
+Easier to implement
+	show healthbar and mana bar
+	have an action to regenerate mana?
+	get player name
+	Customize Party
+		Select 3 party members
+			set class
+			set character name
+			select sprite
+	Save game
+		save party, number of victories all other data to file
+	Load Game
+		load data from file
+	Experience tracking
+		vary experience gained by what was defeated
+		store experienced gained on CHARACTERS
+	Spell selection
+		different spells have different effects
+		different characters have different spells
+	Hide Action Menu after character turn
+		hide or disable action buttons
+		resize battle display?
+			
+Harder to implement
+		Dynamically generate action menu
+			receives an event, generates a list of buttons, each button calls a specified event.
+			So instead of everyone having the same action menu, it is customized to what each character can do.
+				Opens up the ability to do things like different heroes having different spells.
+			OR
+			Simply use comboboxes to list possible actions, and have events populate that on turn start?
+		Encounter scaling
+			Difficulty of encounters scales with how long game has been going (Not just what encounters, but buffs monsters)
+		Leveling
+			characters can level up
+			OR
+			Player levels up, and it affects all characters?
+		Items
+			healing items
+		Mid-battle screen
+			Heal party members
+			level up party members
+			Change party configuration?
+			Encounter selection
+				Allow player to choose next encounter from a list of possible encounters
+		

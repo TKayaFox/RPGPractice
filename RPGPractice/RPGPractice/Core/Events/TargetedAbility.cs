@@ -1,4 +1,4 @@
-﻿using RPGPractice.GUI;
+﻿using RPGPractice.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPGPractice.Core.Events
 {
-    public class TargetedAbility
+    public class TargetedAbility : EventArgs
     {
         private MobData attacker;
         private MobData target;

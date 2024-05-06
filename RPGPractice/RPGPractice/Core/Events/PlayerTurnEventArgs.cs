@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
-using RPGPractice.GUI;
 
 namespace RPGPractice.Core.Events
 {
-    public class PlayerTurnEventArgs
+    public class PlayerTurnEventArgs : EventArgs
     {
         int mobID;
         List<MobData> attackTargetList = new List<MobData>();

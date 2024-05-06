@@ -23,11 +23,11 @@ namespace RPGPractice.Engine
             //Make Initiative list
             foreach (Mob mob in heroes)
             {
-                addNode(mob);
+                AddMob(mob);
             }
             foreach (Mob mob in enemies)
             {
-                addNode(mob);
+                AddMob(mob);
             }
         }
 
@@ -36,7 +36,6 @@ namespace RPGPractice.Engine
         /// </summary>
         public int NextTurn()
         {
-
             //Cycle to next Node
             //If at end of initiative, restart
             if (currentNode == null || currentNode.Next == null)
@@ -52,7 +51,7 @@ namespace RPGPractice.Engine
             return currentNode.Data;
         }
 
-        private void addNode(Mob mob)
+        private void AddMob(Mob mob)
         {
             //make node
             Node newNode = new Node(mob);
@@ -92,6 +91,7 @@ namespace RPGPractice.Engine
             //get initiatives and determine if newNode has higher initiative
             int initiative1 = placedNode.Initiative;
             int initiative2 = newNode.Initiative;
+
             return (initiative2 > initiative1);
         }
 
