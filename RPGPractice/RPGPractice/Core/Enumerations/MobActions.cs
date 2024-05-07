@@ -6,7 +6,7 @@ using System.Text;
 namespace RPGPractice.Core.Enumerations
 {
     /// <summary>
-    /// Enumerates an action type for player turn
+    /// Enumerates possible action types for Mob turn
     /// </summary>
     public enum MobActions
     {

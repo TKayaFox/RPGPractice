@@ -127,9 +127,11 @@ namespace RPGPractice.Engine
                 hero.Heal(5);
             }
 
+            //TODO update tally of all Mobs of each type killed
+
             //Increment victory count
             numWins++;
-            MessageBox.Show("Victory!");
+            MessageBox.Show($"Victory!\r\nYou Lasted {numWins} Rounds");
 
             //Start a new battle
             NewBattle();

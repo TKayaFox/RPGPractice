@@ -5,6 +5,9 @@ using System.Text;
 
 namespace RPGPractice
 {
+    /// <summary>
+    /// Used to differentiate between different types of damage
+    /// </summary>
     public enum DamageType
     {
         Physical,
