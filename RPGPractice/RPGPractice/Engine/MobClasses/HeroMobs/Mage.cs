@@ -1,5 +1,4 @@
-﻿using RPGPractice.Core.Events;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Policy;
@@ -9,6 +8,12 @@ using System.Xml.Linq;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
+    /// <summary>
+    /// A Magic User
+    ///    Casts Magic Damaging spells
+    ///    High Magic Defense
+    ///    Low Physical Defense
+    /// </summary>
     public class Mage : CasterMob
     {
         public Mage(string name) : base(name) { }

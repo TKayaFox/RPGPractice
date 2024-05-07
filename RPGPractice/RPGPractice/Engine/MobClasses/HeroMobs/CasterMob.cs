@@ -1,4 +1,4 @@
-﻿using RPGPractice.Core.Events;
+﻿using RPGPractice.Core.Events.Args;
 using System;
 using System.Collections.Generic;
 using System.Linq;

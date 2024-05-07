@@ -5,6 +5,13 @@ using System.Text;
 
 namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
+    /// <summary>
+    /// A Medium Difficulty Ogre Mob
+    ///     High Defense
+    ///     Physical Attacks
+    ///     Weak to Magic (Magic does more damage)
+    ///     Medium Hit Points
+    /// </summary>
     public class Ogre : EnemyMob
     {
         public Ogre(string name, Random random) : base(name, random) { }

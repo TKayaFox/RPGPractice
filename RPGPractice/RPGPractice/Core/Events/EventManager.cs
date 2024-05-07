@@ -1,4 +1,5 @@
-﻿using RPGPractice.Engine;
+﻿using RPGPractice.Core.Events.Args;
+using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
 
 namespace RPGPractice.Core.Events
@@ -10,11 +11,6 @@ namespace RPGPractice.Core.Events
     /// Trying to juggle subscribing to events for every object, and what events should be subscribed to, can be messy.
     /// Public methods allow the program to subscribe to all events that it needs at once.
     /// </summary>
-    /// Note: 
-    ///     Honestly, theres so much that can be done better
-    ///     and I probably spent way more time on getting the EventManager working than I really needed to
-    ///     But I'm pretty proud. I don't know if other programs bother with an eventmanager 
-    ///     but I think it really helps tie the large number of object types together
     public class EventManager
     {
         //=========================================
@@ -34,7 +30,7 @@ namespace RPGPractice.Core.Events
         //              Managers
         //  Relay Events to EventManager subscribers
         //===========================================
-        #region Main Methods
+        #region Public/Main Methods
 
         /// <summary>
         /// Unsubscribes all target and eventManager relationships
@@ -70,7 +66,7 @@ namespace RPGPractice.Core.Events
 
         #endregion
 
-        #region Type Specific Methods
+        #region Private Type Specific Methods
 
         private void ManageMob(Mob target, bool addMe)
         {
@@ -173,7 +169,7 @@ namespace RPGPractice.Core.Events
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void OnManageObject_Handler(object sender, EventManagerEventArgs args)
+        private void OnManageObject_Handler(object sender, EventManagerEventArgs args)
         {
             bool isActive = args.IsActive;
 
@@ -196,31 +192,31 @@ namespace RPGPractice.Core.Events
 
         public void OnPlayerAction_Relay(object sender, PlayerActionEventArgs e)
         {
-            PlayerAction.Invoke(sender, e);
+            PlayerAction?.Invoke(sender, e);
         }
         public void OnBattleStart_Relay(object sender, EventArgs e)
         {
-            BattleStart.Invoke(sender, e);
+            BattleStart?.Invoke(sender, e);
         }
         public void OnBattleResult_Relay(object sender, BattleResultEventArgs e)
         {
-            BattleResult.Invoke(sender, e);
+            BattleResult?.Invoke(sender, e);
         }
         public void OnNewBattle_Relay(object sender, NewBattleEventArgs e)
         {
-            NewBattle.Invoke(sender, e);
+            NewBattle?.Invoke(sender, e);
         }
         public void OnNewGame_Relay(object sender, EventArgs e)
         {
-            NewGame.Invoke(sender, e);
+            NewGame?.Invoke(sender, e);
         }
         public void OnPlayerTurn_Relay(object sender, PlayerTurnEventArgs e)
         {
-            PlayerTurn.Invoke(sender, e);
+            PlayerTurn?.Invoke(sender, e);
         }
         public void OnTurnEnd_Relay(object sender, TurnEndEventArgs e)
         {
-            TurnEnd.Invoke(sender, e);
+            TurnEnd?.Invoke(sender, e);
         }
         #endregion
     }

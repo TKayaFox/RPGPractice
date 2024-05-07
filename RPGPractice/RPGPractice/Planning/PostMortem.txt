@@ -1,0 +1,16 @@
+Issues I ran into:
+	- I spent a lot of time on organizing, which is nice to have, but might have gone beyond what is necessary.
+	- I am not sure if I have done too many Classes, might have gotten TOO complicated. A lot of my initial plan ended up getting changed rather drastically. (Even after I polished it some from my initial submission...).
+	- Honestly trying to MVP Model caused so many of the struggles to get more complicated. It's nice having the structure setup now, but this was the main area that my oritingal plan fell apart.
+	- I ended up setting up an EventManager class rather than seperate delegates, because making sure each class was subscribing and unsubscribing from the right events became a handful. (The Engine class has a Battle Class/userform which has the Mobs that throw events. And the point of MVP is that it's completely seperate from the Engine part)
+		However, while I like the idea I do hope to refactor it. I feel like the encapsulation could be better, and that there has to be a better option than case statements.
+	- For the initiative, I ended up making my own class for the Initiative Queue because I got annoyed trying to figure out the native PriorityQueue for C#. Why did they make it so complicated when C version is just better?
+		Anyways, ended up having to make what is essentially PriorityQueue from scratch, which there was probably a better solution
+	- Dictionaries are useful, I think i got a lot more used to using them in this project, because they made it far easier to do better encapsulation.
+	-Unfortunately I ran into a bunch of issues with stuff not being properly garbagecollected and unsubscribed from events. So I had a huge issue where old battles were trying to continue after they had already ended, resulting in recursive "Victory" messages.
+		-A lot of why this was happening turned out to be the MobData objects that were being held by the GUI. I setup the BattleField to unload them to fix the issue, though ideally I want them (Mob and MobData) to be less solidly connected.
+		-I promise I tried to make the GUI look good, but for some reason UI design, I get how to work with the objects but am not very good about the aesthetics.
+	- Theres a lot more refactoring that I would like to do, and wish I got to do before submission. 
+		You can see my todo list for examples.
+	-I used LinQ once, probably could use it more, but I didnt have time to go back and use it in other areas.
+	- I completely forgot about the Leaderboard until the end, and didnt have a lot of time to get it working. I got some of the groundwork done with saving game results, but wasnt able to put more logic into place.

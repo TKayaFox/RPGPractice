@@ -1,5 +1,6 @@
 using RPGPractice.Core;
 using RPGPractice.Core.Events;
+using RPGPractice.Core.Events.Args;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
 using static System.Runtime.InteropServices.JavaScript.JSType;

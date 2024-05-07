@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.Logging;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -6,6 +7,14 @@ using System.Text;
 
 namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
+    /// <summary>
+    /// Represents a low level Bandit Mob
+    /// Low defense
+    /// Low hit points
+    /// Physical attacks
+    /// Weak to both physical and magic damage.
+    /// Not very strong
+    /// </summary>
     public class Bandit : EnemyMob
     {
         public Bandit(string name, Random random) : base(name, random) { }

@@ -5,6 +5,11 @@ using System.Text;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
+    /// <summary>
+    /// A Basic Fighter class does physical attacks only
+    /// High physical defense
+    /// weak to magic
+    /// </summary>
     public class Warrior : PlayerMob
     {
         public Warrior(string name) : base(name) { }

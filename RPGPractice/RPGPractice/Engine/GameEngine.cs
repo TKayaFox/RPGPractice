@@ -9,6 +9,7 @@ using RPGPractice.Engine.MobClasses.EnemyMobs;
 using RPGPractice.Engine.MobClasses.HeroMobs;
 using RPGPractice;
 using RPGPractice.Core;
+using RPGPractice.Core.Events.Args;
 
 namespace RPGPractice.Engine
 {
@@ -51,8 +52,6 @@ namespace RPGPractice.Engine
         public GameEngine(EventManager eventManager)
         {
             random = new Random();
-
-            numWins = 4;
 
             //Subscribe to eventManager (handles relaying and subscribing to events)
             eventManager.ManageObjectSort(this,true);
@@ -101,7 +100,7 @@ namespace RPGPractice.Engine
             else
             {
                 //Display Game over and start wrap up process (ClearGameData handles all Game over logic)
-                MessageBox.Show("Game Over");
+                MessageBox.Show($"Game Over\r\nYou Lasted {numWins} Rounds");
                 UpdateLeaderBoard();
                 ClearGameData();
             }
@@ -131,7 +130,7 @@ namespace RPGPractice.Engine
 
             //Increment victory count
             numWins++;
-            MessageBox.Show($"Victory!\r\nYou Lasted {numWins} Rounds");
+            MessageBox.Show($"Victory!\r\nRound {numWins+1} Start!");
 
             //Start a new battle
             NewBattle();
@@ -153,7 +152,7 @@ namespace RPGPractice.Engine
         /// Starts a new Battle encounter
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        public async Task NewBattle()
+        public void NewBattle()
         {
             //TODO: Revive all heroes
 
@@ -166,10 +165,8 @@ namespace RPGPractice.Engine
 
             OnManageObject(battle, true);
 
-            //TODO: Revisit task logic. Is it necessary/can it be improved
-
             //Actually Start Battle logic
-            await battle.Start();
+            battle.Start();
         }
 
         private void UnManageBattle()

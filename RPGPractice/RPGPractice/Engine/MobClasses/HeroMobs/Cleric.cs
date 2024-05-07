@@ -1,12 +1,20 @@
-﻿using RPGPractice.Core.Events;
+﻿using Microsoft.VisualBasic.Logging;
+using RPGPractice.Core.Events.Args;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 
 namespace RPGPractice.Engine.MobClasses.HeroMobs
 {
+    /// <summary>
+    /// A Cleric
+    ///     Can heal party members
+    ///     Low attack
+    ///     Medium defense(both physical and magical)
+    /// </summary>
     public class Cleric : CasterMob
     {
 

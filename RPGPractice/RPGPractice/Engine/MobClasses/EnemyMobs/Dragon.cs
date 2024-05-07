@@ -1,5 +1,4 @@
-﻿using RPGPractice.Core.Events;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +6,15 @@ using System.Xml.Linq;
 
 namespace RPGPractice.Engine.MobClasses.EnemyMobs
 {
+    /// <summary>
+    /// A Difficult Boss Mob
+    ///     Two strong attacks
+    ///         Breathe Fire (Targets one hero, Magic)
+    ///         Swipe Attack (Targts all heroes, physical)
+    ///     Slow
+    ///     Strong against both physical and magic defense
+    ///     High HitPoints
+    /// </summary>
     public class Dragon : EnemyMob
     {
         public Dragon(string name, Random random) : base(name, random) { }
@@ -18,7 +26,7 @@ namespace RPGPractice.Engine.MobClasses.EnemyMobs
         protected override void Initialize()
         {
             Sprite = Properties.Resources.Dragon;
-            MaxHitPoints = 30;
+            MaxHitPoints = 25;
             Initiative = -1;
             Intelligence = 4;
             Strength = 3;

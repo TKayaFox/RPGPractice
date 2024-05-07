@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
-using RPGPractice.Core.Events;
+using RPGPractice.Core.Events.Args;
 using RPGPractice.Engine;
 using RPGPractice.Engine.MobClasses;
 

@@ -14,8 +14,18 @@ namespace RPGPractice.Core
     /// </summary>
     internal class FileManager
     {
+        //=========================================
+        //          Constant Variables
+        //    Identify notable files to access
+        //=========================================
+        // Const
         private const string ABOUT = "About.txt";
         private const string LEADERBOARD = "LeaderBoard.TXT";
+
+
+        //=========================================
+        //            Public Methods
+        //=========================================
 
         /// <summary>
         /// Returns the contents of the program About file

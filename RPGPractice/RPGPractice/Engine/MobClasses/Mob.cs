@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
-using RPGPractice.Core.Events;
+using RPGPractice.Core.Events.Args;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
@@ -384,7 +384,7 @@ namespace RPGPractice.Engine.MobClasses
             }
             else
             {
-                turnSummary = ($"{name} avoided the attack. \r\n\t[{attackRoll} < {defense}]");
+                turnSummary = ($"\t{name} avoided the attack. \r\n\t[{attackRoll} < {defense}]");
             }
 
             return turnSummary;

@@ -5,27 +5,22 @@ using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 using RPGPractice.Core;
 using RPGPractice.Core.Enumerations;
-using RPGPractice.Core.Events;
+using RPGPractice.Core.Events.Args;
 using RPGPractice.Engine.MobClasses;
 using RPGPractice.Engine.MobClasses.EnemyMobs;
 
 namespace RPGPractice.Engine
 {
     /// <summary>
-     /// FileManager class
-     /// Developer: Taylor Fox
-     /// Handles the Logic during 
-     /// </summary>
+    /// FileManager class
+    /// Developer: Taylor Fox
+    /// Handles the Logic during 
+    /// </summary>
     public class Battle
     {
         //=========================================
         //                Variables
         //=========================================
-
-        //Some items throw exceptions on purpose and attempt to loop until solved
-        //  MAX_EXCEPTIONS prevents infinite loops
-        private const int MAX_EXCEPTIONS = 5;
-
         private Mob[] enemies;
         private Mob[] heroes;
         private Mob turnHolder;
@@ -40,9 +35,22 @@ namespace RPGPractice.Engine
         #endregion
 
         //=========================================
+        //             Getters/Setters
+        //=========================================
+        #region Getters/Setters
+        public Mob[] Enemies { get => enemies; set => enemies = value; }
+        public Mob[] Heroes { get => heroes; set => heroes = value; }
+        #endregion
+
+        //=========================================
         //              Main Methods
         //=========================================
+        #region Public Methods
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="encounter">CombatEncounter object holds all data needed for generating Battle</param>
         public Battle(CombatEncounter encounter)
         {
             //Populate hero and enemies for battle
@@ -50,7 +58,11 @@ namespace RPGPractice.Engine
             this.enemies = encounter.Enemies;
         }
 
-        public async Task Start()
+        /// <summary>
+        /// Starts the Combat Logic, but does not initiate first turn.
+        ///     Seperate from constructor to allow for Event subscription
+        /// </summary>
+        public void Start()
         {
             initiative = new Initiative(heroes, enemies);
 
@@ -68,6 +80,10 @@ namespace RPGPractice.Engine
             OnManageMobs(true);
         }
 
+
+        #endregion
+
+        #region Private Methods
         /// <summary>
         /// Adds an array of mobs to dictionary using uniqueID
         ///     Also sets mob to be managed by eventManager
@@ -85,9 +101,9 @@ namespace RPGPractice.Engine
 
         /// <summary>
         /// Either tell NPCs to take their turn OR get Player input
+        /// Get next Mob in initiative that is alive.
         /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        public void NextTurn()
+        private void NextTurn()
         {
             //Check if all heroes or villains are dead.
             //  Victory is only assured if at least one hero lives
@@ -104,6 +120,9 @@ namespace RPGPractice.Engine
             }
         }
 
+        /// <summary>
+        /// Get next Mob in initiative that is alive.
+        /// </summary>
         private void AssignTurnHolder()
         {
             //Determine who is next in initiative, but skip dead mobs.
@@ -131,6 +150,11 @@ namespace RPGPractice.Engine
             turnHolder.StartTurn(heroTargetList, enemyTargetList);
         }
 
+        /// <summary>
+        /// Compile a list of all targetable (alive) mobs on both enemy and hero lists
+        /// </summary>
+        /// <param name="heroTargetList">List to be populated with targetable heros</param>
+        /// <param name="enemyTargetList">List to be populated with targetable enemies</param>
         private void GetTargetableMobs(List<MobData> heroTargetList, List<MobData> enemyTargetList)
         {
             //Only add living Mobs to Lists
@@ -157,7 +181,7 @@ namespace RPGPractice.Engine
         /// returns true if zero Mobs are still alive
         /// </summary>
         /// <param name="mobArr"></param>
-        /// <returns></returns>
+        /// <returns>true if all mobs in the array are dead</returns>
         private static bool AreMobsDead(Mob[] mobArr)
         {
             // Simplified with LINQ for readability and performance
@@ -165,12 +189,13 @@ namespace RPGPractice.Engine
         }
 
         /// <summary>
-        /// 
+        /// Get the MobData objects for all Mobs in a list.
         /// </summary>
         /// <param name="mobs"></param>
         /// <param name="mobDataList"></param>
         private static void CompileMobData(Mob[] mobs, List<MobData> mobDataList)
         {
+            //for each Mob get their data
             foreach (Mob mob in mobs)
             {
                 MobData data = mob.Data;
@@ -178,12 +203,66 @@ namespace RPGPractice.Engine
             }
         }
 
-        //=========================================
-        //             Getters/Setters
-        //=========================================
+        /// <summary>
+        /// Called at the end of a Mob's turn to determine the consequences
+        /// </summary>
+        /// <param name="turnEndData"></param>
+        private void TurnConsequences(TurnEndEventArgs turnEndData)
+        {
+            //Run through any pending TargetedActions
+            string turnSummary = "";
+            while (turnEndData.HasTargetedActions)
+            {
+                TargetedAbility ability = turnEndData.DequeueAction();
+                turnSummary = ProcessTargetedAction(turnSummary, ability);
+            }
 
-        public Mob[] Enemies { get => enemies; set => enemies = value; }
-        public Mob[] Heroes { get => heroes; set => heroes = value; }
+            turnEndData.TurnSummary += turnSummary;
+
+            //relay event
+            OnTurnEnd(turnEndData);
+        }
+
+        /// <summary>
+        /// Determines the type of targeted action being attempted, and reaches out to targeted mob to determine consequences
+        /// </summary>
+        /// <param name="turnSummary"></param>
+        /// <param name="ability"></param>
+        /// <returns>String summarizing results of the targetedAction</returns>
+        private string ProcessTargetedAction(string turnSummary, TargetedAbility ability)
+        {
+            string result = "";
+
+            //Unpack detailsof ability and what it does
+            MobData attackerData = ability.Attacker;
+            MobData targetData = ability.Target;
+            Mob target = mobDictionary[targetData.UniqueID];
+
+            //
+            int attackRoll = ability.AttackRoll;
+            int damage = ability.Damage;
+            DamageType damageType = ability.DamageType;
+
+            //Determine what logic to follow
+            switch (damageType)
+            {
+                case DamageType.Physical:
+                    result += $"\r\n{target.DefendPhysical(attackRoll, damage)}";
+                    break;
+                case DamageType.Magic:
+                    result += $"\r\n{target.DefendMagic(attackRoll, damage)}";
+                    break;
+                case DamageType.Heal:
+                    result += $"{target.Heal(damage)} ";
+                    break;
+            }
+
+            turnSummary += result;
+            return turnSummary;
+        }
+        #endregion
+
+
 
         //=========================================
         //                Events
@@ -244,7 +323,7 @@ namespace RPGPractice.Engine
             args.AddTargetArr = Enemies;
             args.AddTargetArr = Heroes;
 
-            //Direct subscription/unsubscription to TurnEnd
+            //Direct subscription/unsubscription to TurnConsequences
             foreach (Mob mob in heroes)
             {
                 mob.TurnEnd -= OnTurnEnd_Handler;
@@ -253,7 +332,7 @@ namespace RPGPractice.Engine
                     mob.TurnEnd += OnTurnEnd_Handler;
                 }
             }
-            //Direct subscription/unsubscription to TurnEnd
+            //Direct subscription/unsubscription to TurnConsequences
             foreach (Mob mob in enemies)
             {
                 mob.TurnEnd -= OnTurnEnd_Handler;
@@ -284,57 +363,22 @@ namespace RPGPractice.Engine
             //Store whether values are being subscrubed or unsubscribed
             args.AddTarget = this;
             args.IsActive = isActive;
-            ManageObject.Invoke(this, args);
+            ManageObject?.Invoke(this, args);
         }
         #endregion
 
         #region Event Handlers
         /// <summary>
-        /// At end of each turn, start the next turn
+        /// Called at the end of a Mob Turn
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void OnTurnEnd_Handler(object? sender, TurnEndEventArgs turnEndData)
         {
-            //Run through any pending TargetedActions
-            string turnSummary = "";
-            while (turnEndData.HasTargetedActions)
-            {
-                TargetedAbility ability = turnEndData.DequeueAction();
+            //Determine consequences of turn
+            TurnConsequences(turnEndData);
 
-                string result = "";
-
-                //Unpack detailsof ability and what it does
-                MobData attackerData = ability.Attacker;
-                MobData targetData = ability.Target;
-                Mob target = mobDictionary[targetData.UniqueID];
-
-                //
-                int attackRoll = ability.AttackRoll;
-                int damage = ability.Damage;
-                DamageType damageType = ability.DamageType;
-
-                //Determine what logic to follow
-                switch (damageType)
-                {
-                    case DamageType.Physical:
-                        result += $"\r\n{target.DefendPhysical(attackRoll, damage)}";
-                        break;
-                    case DamageType.Magic:
-                        result += $"\r\n{target.DefendMagic(attackRoll, damage)}";
-                        break;
-                    case DamageType.Heal:
-                        result += $"{target.Heal(damage)} ";
-                        break;
-                }
-
-                turnSummary += result;
-            }
-
-            turnEndData.TurnSummary += turnSummary;
-
-            //relay event then start next turn
-            OnTurnEnd(turnEndData);
+            //start next turn
             NextTurn();
         }
 
